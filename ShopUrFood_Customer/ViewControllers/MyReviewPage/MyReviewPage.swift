@@ -88,7 +88,7 @@ class MyReviewPage: BaseViewController,UITableViewDataSource,UITableViewDelegate
     
     func setNoitemFound()  {
         emptyView.isHidden = false
-        let tempView = LOTAnimationView(name: "EmptyReviewAlert")
+        let tempView = LottieAnimationView(name: "EmptyReviewAlert")
         tempView.frame = CGRect(x:0, y:0, width: 300, height: 200)
         animationView.addSubview(tempView)
         

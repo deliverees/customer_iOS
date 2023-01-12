@@ -78,7 +78,7 @@ class FavouritesViewController: BaseViewController,UITableViewDelegate,UITableVi
     func setNoitemFound()  {
         emptyAlertLbl.text = "Product not available!"
         emptyView.isHidden = false
-         let tempView = LOTAnimationView(name: "empty-box")
+         let tempView = LottieAnimationView(name: "empty-box")
             tempView.frame = CGRect(x:0, y:0, width: 250, height: 250
         )
         

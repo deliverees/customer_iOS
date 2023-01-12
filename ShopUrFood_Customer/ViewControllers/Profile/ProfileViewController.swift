@@ -266,7 +266,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         manager.responseSerializer.acceptableContentTypes = Set(["text/plain", "text/html", "application/json"]) as Set<String>?
         let finalURL = BASEURL_CUSTOMER + UPDATE_PROFILE
         manager.requestSerializer.setValue(tokenString, forHTTPHeaderField: "Authorization")
-        manager.post(finalURL, parameters: params, constructingBodyWith: {
+            manager.post(finalURL, parameters: params, headers: nil, constructingBodyWith: {
             (data: AFMultipartFormData!) in
                 //profileImageData = self.userImageView.image.jpegData(compressionQuality: 0.5)
                 //profileImageData = self.profileImagefile?.jpegData(compressionQuality: 0.5)!
@@ -378,7 +378,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             manager.responseSerializer.acceptableContentTypes = Set(["text/plain", "text/html", "application/json"]) as Set<String>?
             let finalURL = BASEURL_CUSTOMER + PROFILE_UPDATE_OTP
             manager.requestSerializer.setValue(tokenString, forHTTPHeaderField: "Authorization")
-            manager.post(finalURL, parameters: params, constructingBodyWith: {
+        manager.post(finalURL, parameters: params, headers: nil, constructingBodyWith: {
                 (data: AFMultipartFormData!) in
                 //profileImageData = self.userImageView.image.jpegData(compressionQuality: 0.5)
                 //profileImageData = self.profileImagefile?.jpegData(compressionQuality: 0.5)!

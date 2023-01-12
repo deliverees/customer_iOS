@@ -124,7 +124,7 @@ extension changePasswordViewController: MIBlurPopupDelegate {
     var popupView: UIView {
         return popupContentContainerView ?? UIView()
     }
-    var blurEffectStyle: UIBlurEffect.Style {
+    var blurEffectStyle: UIBlurEffect.Style? {
         return UIBlurEffect.Style.light
     }
     var initialScaleAmmount: CGFloat {

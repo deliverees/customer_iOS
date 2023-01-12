@@ -84,23 +84,23 @@ class filterViewController: BottomPopupViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    override func getPopupHeight() -> CGFloat {
+    override var popupHeight : CGFloat {
         return height ?? CGFloat(278)
     }
     
-    override func getPopupTopCornerRadius() -> CGFloat {
+    override var popupTopCornerRadius: CGFloat {
         return topCornerRadius ?? CGFloat(10)
     }
     
-    override func getPopupPresentDuration() -> Double {
+    override var popupPresentDuration : Double {
         return presentDuration ?? 1.0
     }
     
-    override func getPopupDismissDuration() -> Double {
+    override var popupDismissDuration : Double {
         return dismissDuration ?? 1.0
     }
     
-    override func shouldPopupDismissInteractivelty() -> Bool {
+    override var popupShouldDismissInteractivelty : Bool {
         return shouldDismissInteractivelty ?? true
     }
     

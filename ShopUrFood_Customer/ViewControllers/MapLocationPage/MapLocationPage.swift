@@ -99,14 +99,14 @@
         animtationView.isHidden = false
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         let lightBlackTranspertantColor = UIColor(red: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 0.3)
-        let tempView = LOTAnimationView(name: "TapAnimation")
+        let tempView = LottieAnimationView(name: "TapAnimation")
         tempView.frame = CGRect(x:((appDelegate?.window?.frame.size.width)! - 150)/2, y:((appDelegate?.window?.frame.size.height)! - 150)/2, width: 150, height: 150
         )
         animtationView.backgroundColor = lightBlackTranspertantColor
         animtationView.addSubview(tempView)
         
         tempView.play()
-        tempView.loopAnimation = true
+        //tempView.loopAnimation = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         animtationView.addGestureRecognizer(tap)
     }

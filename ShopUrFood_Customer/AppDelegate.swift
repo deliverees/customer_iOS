@@ -16,7 +16,7 @@ import SWRevealViewController
 import Firebase
 import IQKeyboardManager
 import UserNotifications
-import FirebaseInstanceID
+//import FirebaseInstanceID
 import FirebaseMessaging
 import Fabric
 import AVFoundation
@@ -126,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
          FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
-          Messaging.messaging().shouldEstablishDirectChannel = true
+          //Messaging.messaging().shouldEstablishDirectChannel = true
        
         if let token = Messaging.messaging().fcmToken {
             print("FCM token: \(token )")
@@ -138,13 +138,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
       
         Fabric.sharedSDK().debug = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
-                                               name: NSNotification.Name.InstanceIDTokenRefresh, object: nil)
+                                               name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
         
         application.applicationIconBadgeNumber = 0
         return true
     }
     @objc func tokenRefreshNotificaiton(_ notification: Foundation.Notification) {
-        InstanceID.instanceID().instanceID { (result, error) in
+        /*InstanceID.instanceID().instanceID { (result, error) in
             if let error = error {
                 print("Error fetching remote instance ID: \(error)")
             } else if let result = result {
@@ -152,7 +152,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
                 let refreshedToken  = "\(result.token)"
                 UserDefaults.standard.set(refreshedToken, forKey: "fcmToken")
             }
-        }
+        }*/
         ConnectToFCM()
     }
     
@@ -275,7 +275,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
 //        return nil
 //    }
     func ConnectToFCM() {
-        InstanceID.instanceID().instanceID { (result, error) in
+        /*InstanceID.instanceID().instanceID { (result, error) in
             if let error = error {
                 print("Error fetching remote instance ID: \(error)")
             } else if let result = result {
@@ -284,12 +284,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
                 print("DCS: " + token)
                 UserDefaults.standard.set(token, forKey: "fcmToken")
             }
-        }
+        }*/
         if let token = Messaging.messaging().fcmToken {
             print("FCM token: \(token )")
             UserDefaults.standard.set(token, forKey: "fcmToken")
         }
-        Messaging.messaging().shouldEstablishDirectChannel = true
+        //Messaging.messaging().shouldEstablishDirectChannel = true
     }
     func ManualLogoutOption(){
         let domain = Bundle.main.bundleIdentifier!
@@ -377,7 +377,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         // FCM token updated, update it on Backend Server
     }
     
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+    /*func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         print("remoteMessage: \(remoteMessage)")
         print("remoteMessage: \(remoteMessage.appData)")
         print("remoteMessage: \(remoteMessage)")
@@ -403,7 +403,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }
+    }*/
     //MARK: UNUserNotificationCenterDelegate Method
     //Called when a notification is delivered to a foreground app.
     @available(iOS 10.0, *)

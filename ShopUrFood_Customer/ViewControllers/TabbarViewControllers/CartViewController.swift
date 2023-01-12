@@ -678,11 +678,11 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             let max = Date().addingTimeInterval(60 * 60 * 24 * 10)
             let picker = DateTimePicker.create(minimumDate: min, maximumDate: max)
             picker.is12HourFormat = true
-            picker.includeMonth = true // if true the month shows at bottom of date cell
+        picker.includesMonth = true // if true the month shows at bottom of date cell
             picker.highlightColor = AppLightOrange
             picker.darkColor = UIColor.darkGray
             picker.doneButtonTitle = (LanguageDictonary.value(forKey: "pre-order") as? String)! 
-            picker.dateTitleLabel.text = "Deliverees"
+        //picker.dateTitleLabel.text = "Deliverees"
             
             picker.doneBackgroundColor = AppLightOrange
             picker.completionHandler = { date in
@@ -820,6 +820,12 @@ extension PopTipDirection {
         case .left:
             return .up
         case .none:
+            return .none
+        case .auto:
+            return .none
+        case .autoHorizontal:
+            return .none
+        case .autoVertical:
             return .none
         }
     }

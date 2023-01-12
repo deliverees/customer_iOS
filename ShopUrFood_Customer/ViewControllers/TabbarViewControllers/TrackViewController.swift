@@ -123,7 +123,7 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
         if firstTimeCalled{
             firstTimeCalled = false
         emptyView.isHidden = false
-        let tempView = LOTAnimationView(name: "EmptyCart")
+        let tempView = LottieAnimationView(name: "EmptyCart")
         tempView.frame = CGRect(x:0, y:0, width: 300, height: 300
         )
         animationView.addSubview(tempView)

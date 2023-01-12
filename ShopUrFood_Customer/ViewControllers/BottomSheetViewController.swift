@@ -509,7 +509,11 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate{
 }
 // MARK: MQTT Delegate
 extension BottomSheetViewController: CocoaMQTTDelegate {
-    func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topics: [String]) {
+    func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopics success: NSDictionary, failed: [String]) {
+        
+    }
+    
+    func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopics topics: [String]) {
         
     }
     

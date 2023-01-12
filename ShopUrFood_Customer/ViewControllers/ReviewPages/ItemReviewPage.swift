@@ -120,24 +120,24 @@ class ItemReviewPage: BottomPopupViewController,UITextViewDelegate {
         }
     }
     
-    override func getPopupHeight() -> CGFloat {
+    override var popupHeight : CGFloat {
         return height ?? CGFloat(278)
     }
     
-    override func getPopupTopCornerRadius() -> CGFloat {
+    override var popupTopCornerRadius: CGFloat {
         return topCornerRadius ?? CGFloat(10)
     }
     
-    override func getPopupPresentDuration() -> Double {
+    override var popupPresentDuration : Double {
         return presentDuration ?? 1.0
     }
     
-    @IBAction func closeBtnAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+    override var popupDismissDuration : Double {
+        return dismissDuration ?? 1.0
     }
     
-    override func getPopupDismissDuration() -> Double {
-        return dismissDuration ?? 1.0
+    override var popupShouldDismissInteractivelty : Bool {
+        return shouldDismissInteractivelty ?? true
     }
     
     @IBAction func reviewFourAction(_ sender: Any) {
@@ -168,12 +168,5 @@ class ItemReviewPage: BottomPopupViewController,UITextViewDelegate {
         reviewFourBtn.setImage(UIImage(named: "Review_four"), for: .normal)
         reviewSelection = 2
 
-    }
-
-    override func shouldPopupDismissInteractivelty() -> Bool {
-        return shouldDismissInteractivelty ?? true
-    }
-    
-
-    
+    }    
 }
