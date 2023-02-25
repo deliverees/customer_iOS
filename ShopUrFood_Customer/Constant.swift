@@ -112,8 +112,8 @@ let login_session = UserDefaults.standard
 //let BASEURL = "http://pofi5.com/victor_suf/api/"
 //let BASEURL_CUSTOMER = "http://pofi5.com/victor_suf/api/customer/"
 
-let BASEURL = "https://delivereesapp.com/api/"
-let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
+let BASEURL = "http://demo.delivereesapp.com/api/"
+let BASEURL_CUSTOMER = "http://demo.delivereesapp.com/api/customer/"
 //// V2.1 QA Dev URL
 //let BASEURL = "http://suf-app.pofi5.in/api/"
 //let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"

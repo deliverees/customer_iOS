@@ -57,5 +57,8 @@ pod 'AMPopTip'
 pod 'BetterSegmentedControl', '~> 1.0'
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'CountdownLabel'
+pod 'lottie-ios'
+pod 'CardIO', :git => 'https://github.com/card-io/card.io-iOS-SDK.git', :branch => 'master'
 
 end
