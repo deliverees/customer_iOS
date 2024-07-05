@@ -29,7 +29,7 @@ class changePasswordViewController: BaseViewController,UITextFieldDelegate {
         self.newPasswordTxt.placeholder = LanguageDictonary.value(forKey: "newpassword") as? String
         self.confirmPasswordtxt.placeholder = LanguageDictonary.value(forKey: "newconfirmpassword") as? String
         self.goBtn.setTitle(LanguageDictonary.value(forKey: "go") as? String, for: .normal)
-        self.goBtn.layer.cornerRadius = 25.0
+        //self.goBtn.layer.cornerRadius = 25.0
         self.goBtn.clipsToBounds = true
         // Do any additional setup after loading the view.
     }

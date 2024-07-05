@@ -69,8 +69,8 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         
         baseContentView.layer.cornerRadius = 5.0
         baseContentView = self.setCornorShadowEffects(sender: baseContentView)
-        continueBtn.layer.cornerRadius = 20.0
-        skipAndContinueBtn.layer.cornerRadius = 20.0
+        continueBtn.layer.cornerRadius = 2 //20.0
+        skipAndContinueBtn.layer.cornerRadius = 2 //20.0
         self.getData()
         sameShippingFlag = true
         restaurantNameLbl.text = "  " + storeName

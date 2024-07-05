@@ -11,13 +11,19 @@ import FacebookLogin
 import FacebookCore
 import FBSDKCoreKit
 import GoogleSignIn
+import AuthenticationServices
+import FirebaseAuth
+//import FirebaseFirestore
+import AuthenticationServices
+import CryptoKit
+import SCLAlertView
 
 
-
-class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDelegate,UITextFieldDelegate {
-
-    @IBOutlet weak var newUserLbl: UILabel!
-   
+class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDelegate,UITextFieldDelegate  {
+    //@IBOutlet weak var newUserLbl: UILabel!
+    
+    
+    @IBOutlet weak var btnAppleSignIn: UIImageView!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var socialLoginLbl: UILabel!
     @IBOutlet weak var goBtn: UIButton!
@@ -29,52 +35,243 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     @IBOutlet weak var signUpBtn: UIButton!
     
+    @IBOutlet weak var fbBtnSignIn: UIImageView!
+    @IBOutlet weak var googleBtnSignIn: UIImageView!
+    
     var iPhoneUDIDString = String()
+    var isRegister = Bool()
     let loginManager = LoginManager()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loginTitleLbl.text = LanguageDictonary.object(forKey: "login") as! String
+        self.loginTitleLbl.text = ""//LanguageDictonary.object(forKey: "login") as! String
         self.userNameTxt.placeholder = LanguageDictonary.object(forKey: "email") as! String
         self.passwordTxt.placeholder = LanguageDictonary.object(forKey: "password") as! String
-        self.goBtn.setTitle(LanguageDictonary.object(forKey: "go") as! String, for: .normal)
+        self.goBtn.setTitle(LanguageDictonary.object(forKey: "btn_login") as! String, for: .normal)
         self.forgetPasswordBtn.setTitle(LanguageDictonary.object(forKey: "forgotpassword") as! String, for: .normal)
-        self.socialLoginLbl.text = LanguageDictonary.object(forKey: "sociallogin") as! String
-        self.newUserLbl.text = LanguageDictonary.object(forKey: "neewuser") as! String
+        self.socialLoginLbl.text = LanguageDictonary.object(forKey: "continue_with") as! String
+        //self.newUserLbl.text = LanguageDictonary.object(forKey: "neewuser") as! String
         self.signUpBtn.setTitle(LanguageDictonary.object(forKey: "signup") as! String, for: .normal)
-
-
-        userLoginDataView.layer.cornerRadius = 8.0
-        userLoginDataView = self.setCornorShadowEffects(sender: userLoginDataView)
-        goBtn.layer.cornerRadius = 25.0
+        
+        self.signUpBtn.layer.borderWidth = 2
+        self.signUpBtn.layer.borderColor = UIColor.red.cgColor
+        
+        //userLoginDataView.layer.cornerRadius = 8.0
+        //userLoginDataView = self.setCornorShadowEffects(sender: userLoginDataView)
+        //goBtn.layer.cornerRadius = 25.0
         iPhoneUDIDString = UIDevice.current.identifierForVendor!.uuidString
         userNameTxt.delegate = self
         passwordTxt.delegate = self
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.ConnectToFCM()
-        self.logoImg.image = UIImage(named: "app_logo")
-      //  self.getIconsFromAPI()
+        //self.logoImg.image = UIImage(named: "app_logo")
+        //  self.getIconsFromAPI()
         
-    }
-    func getIconsFromAPI()
-    {
-    let Parse = CommomParsing()
-    Parse.getSplash(lang: login_session.value(forKey: "Language") as? String ?? "es", onSuccess: {
-    response in
-    if (response.value(forKey: "code")as! Int == 200){
-    print(response)
-    let tempDict = NSMutableDictionary()
-    tempDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
-    login_session.setValue(tempDict.object(forKey: "signup_logo_ios"), forKey: "logo")
-    login_session.synchronize()
-        let logoURL = URL(string: login_session.object(forKey: "logo")as! String)
-        //self.logoImg.kf.setImage(with: logoURL)
-        self.logoImg.image = UIImage(named: "app_logo")
-    }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+        userNameTxt.setPadding(left: 30, right: 0, imageName: "ic_user_email")
+        /*userNameTxt.leftViewMode = UITextField.ViewMode.always
+        let imageView = UIImageView(frame: CGRect(x: userNameTxt.frame.size.width - 0, y: 0, width: 32, height: 32))
+        let image = UIImage(named: "ic_user_email")
+        imageView.image = image
+        userNameTxt.leftView = imageView*/
+        
+        passwordTxt.setPadding(left: 30, imageName: "ic_user_password")
+        /*passwordTxt.leftViewMode = UITextField.ViewMode.always
+        let imageView2 = UIImageView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        let image2 = UIImage(named: "ic_user_password")
+        imageView2.image = image2
+        passwordTxt.leftView = imageView2*/
+        
+        let imageView3 = UIImageView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+        let image3 = UIImage(named: "show")
+        imageView3.image = image3
+        
+        let contentView = UIView()
+        contentView.addSubview(imageView3)
+        
+        contentView.frame = CGRect(x:0, y: 0, width: 24, height: 24)
+        imageView3.frame = CGRect(x:-10, y: 0, width: 24, height: 24)
+        
+        passwordTxt.rightView = contentView
+        passwordTxt.rightViewMode = UITextField.ViewMode.always
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imagedTaped(tapGestureRecognizer:)))
+        
+        imageView3.isUserInteractionEnabled = true
+        imageView3.addGestureRecognizer(tapGestureRecognizer)
+        
+        
+        let tapGestureRecognizerBtnFb = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnFb(tapGestureRecognizer:)))
+        
+        fbBtnSignIn.isUserInteractionEnabled = true
+        fbBtnSignIn.addGestureRecognizer(tapGestureRecognizerBtnFb)
+        
+        let tapGestureRecognizerGoogleBtnSignIn = UITapGestureRecognizer(target: self, action: #selector(imagedTapedGoogleBtnSignIn(tapGestureRecognizer:)))
+        
+        googleBtnSignIn.isUserInteractionEnabled = true
+        googleBtnSignIn.addGestureRecognizer(tapGestureRecognizerGoogleBtnSignIn)
+        
+        let tapGestureRecognizerAppleBtnSignIn = UITapGestureRecognizer(target: self, action: #selector(handleAppleIdRequest(tapGestureRecognizer:)))
+        
+        btnAppleSignIn.isUserInteractionEnabled = true
+        btnAppleSignIn.addGestureRecognizer(tapGestureRecognizerAppleBtnSignIn)
     }
     
-    }, onFailure: {errorResponse in})
+    func showSuccessPopUp(msgStr:String){
+        let appearance = SCLAlertView.SCLAppearance(
+            kTitleFont: UIFont(name: "TruenoBd", size: 20.0)!,
+            kTextFont: UIFont(name: "TruenoRg", size: 14.0)!,
+            kButtonFont: UIFont(name: "TruenoBd", size: 16.0)!,
+            showCloseButton: false,
+            dynamicAnimatorActive: true,
+            buttonsLayout: .horizontal
+        )
+        let alert = SCLAlertView(appearance: appearance)
+        _ = alert.addButton("Ok") {
+
+        }
+        
+        let icon = UIImage(named:"success_tick")
+        let color = SuccessGreenColor
+        
+        _ = alert.showCustom("", subTitle: msgStr, color: color, icon: icon!, circleIconImage: icon!)
+    }
+
+    
+    fileprivate var currentNonce: String?
+    
+    @objc func handleAppleIdRequest(tapGestureRecognizer:UITapGestureRecognizer) {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            return String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+        
+    private func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: Array<Character> =
+            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
+            randoms.forEach { random in
+                if length == 0 {
+                    return
+                }
+                
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        return result
+    }
+    
+    @objc func imagedTapedBtnFb(tapGestureRecognizer:UITapGestureRecognizer) {
+        if (Reachability()?.isReachable)!
+        {
+            self.showLoadingIndicator(senderVC: self)
+            let completion = {
+                (result:LoginResult) in
+                switch result
+                {
+                case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+                    print("YES! \n--- GRANTED PERMISSIONS ---\n\(grantedPermissions) \n--- DECLINED PERMISSIONS ---\n\(declinedPermissions) \n--- ACCESS TOKEN ---\n\(accessToken)")
+                    print("check\(declinedPermissions.description)")
+                    if(declinedPermissions.contains("email")){
+                        print("correct\(declinedPermissions.description)")
+                        let loginManager = LoginManager()
+                        loginManager.logOut()
+                        //Utility().showAlertWithTitle(alertTitle: APP_NAME as NSString, alertMsg:FB_PERMISSION_ALERT as NSString, viewController: self)
+                    }else{
+                        self.getFBUserData()
+                    }
+                case .failed(let error):
+                    self.stopLoadingIndicator(senderVC: self)
+                    print("No...\(error)")
+                case .cancelled:
+                    self.stopLoadingIndicator(senderVC: self)
+                    print("Cancelled.")
+                }
+            }
+            loginManager.logOut()
+            loginManager.logIn(permissions: [.publicProfile,.email], viewController: self, completion: completion)
+        }
+    }
+    
+    @objc func imagedTapedGoogleBtnSignIn(tapGestureRecognizer:UITapGestureRecognizer) {
+        if (Reachability()?.isReachable)!
+        {
+            self.showLoadingIndicator(senderVC: self)
+            GIDSignIn.sharedInstance().delegate = self
+            GIDSignIn.sharedInstance().uiDelegate = self
+            GIDSignIn.sharedInstance().signIn()
+        }
+    }
+    
+    var iconClick = true
+    
+    @objc func imagedTaped(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        if iconClick {
+            iconClick = false
+            tappedImage.image = UIImage(named: "hidden")
+            passwordTxt.isSecureTextEntry = false
+        } else {
+            iconClick = true
+            tappedImage.image = UIImage(named: "show")
+            passwordTxt.isSecureTextEntry = true
+        }
+    }
+    
+    
+    func getIconsFromAPI()
+    {
+        let Parse = CommomParsing()
+        Parse.getSplash(lang: login_session.value(forKey: "Language") as? String ?? "es", onSuccess: {
+            response in
+            if (response.value(forKey: "code")as! Int == 200){
+                print(response)
+                let tempDict = NSMutableDictionary()
+                tempDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
+                login_session.setValue(tempDict.object(forKey: "signup_logo_ios"), forKey: "logo")
+                login_session.synchronize()
+                let logoURL = URL(string: login_session.object(forKey: "logo")as! String)
+                //self.logoImg.kf.setImage(with: logoURL)
+                self.logoImg.image = UIImage(named: "app_logo")
+            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+            }
+            
+        }, onFailure: {errorResponse in})
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +283,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
         textField.resignFirstResponder()
         return true
     }
-
+    
     //MARK:- Button Actions
     @IBAction func forgetBtnAction(_ sender: Any) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -95,8 +292,8 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     }
     @IBAction func goBtnAction(_ sender: Any)
     {
-         if (Reachability()?.isReachable)!
-         {
+        if (Reachability()?.isReachable)!
+        {
             self.view.endEditing(true)
             let emailStr = userNameTxt.text
             let passwordStr = passwordTxt.text
@@ -107,7 +304,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                 self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.object(forKey: "pleaseenterpass") as! String)
             }else{
                 self.showLoadingIndicator(senderVC: self)
-
+                
                 let Parse = CommomParsing()
                 var fcmToken = String()
                 if login_session.object(forKey: "fcmToken") != nil
@@ -120,26 +317,26 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                     response in
                     print(response)
                     if response.object(forKey: "code") as! Int == 200{
-                    let dataDict = NSMutableDictionary()
-                    dataDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
-                    let user_email = dataDict.object(forKey: "user_email")as! String
-                    let user_id = dataDict.object(forKey: "user_id")
-                    let user_name = dataDict.object(forKey: "user_name")as! String
+                        let dataDict = NSMutableDictionary()
+                        dataDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
+                        let user_email = dataDict.object(forKey: "user_email")as! String
+                        let user_id = dataDict.object(forKey: "user_id")
+                        let user_name = dataDict.object(forKey: "user_name")as! String
                         let phone = dataDict.object(forKey: "user_phone")as! String
                         //phone = phone.replacingOccurrences(of: "+91", with: "")
                         let token = dataDict.object(forKey: "token")as! String
-                    login_session.setValue(user_email, forKey: "user_email")
-                    login_session.setValue("0", forKey: "userCartCount")
-                    login_session.setValue(user_id, forKey: "user_id")
-                    login_session.setValue(user_name, forKey: "user_name")
-                    login_session.setValue(phone, forKey: "user_mobileNo")
-                    login_session.setValue(token, forKey: "user_token")
-                    login_session.synchronize()
-                    self.stopLoadingIndicator(senderVC: self)
-                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                    let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+                        login_session.setValue(user_email, forKey: "user_email")
+                        login_session.setValue("0", forKey: "userCartCount")
+                        login_session.setValue(user_id, forKey: "user_id")
+                        login_session.setValue(user_name, forKey: "user_name")
+                        login_session.setValue(phone, forKey: "user_mobileNo")
+                        login_session.setValue(token, forKey: "user_token")
+                        login_session.synchronize()
+                        self.stopLoadingIndicator(senderVC: self)
+                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+                        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
                         nextViewController.ComingType = "FIRST"
-                    self.present(nextViewController, animated:true, completion:nil)
+                        self.present(nextViewController, animated:true, completion:nil)
                     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                         self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                     }else{
@@ -150,9 +347,9 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                     errorResponse in
                 })
             }
-         }
-         else
-         {
+        }
+        else
+        {
             
         }
     }
@@ -160,7 +357,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     @IBAction func signUpBtnAction(_ sender: Any) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SignUpViewController") as! SignUpViewController
-           nextViewController.modalPresentationStyle = .fullScreen
+        nextViewController.modalPresentationStyle = .fullScreen
         self.present(nextViewController, animated:true, completion:nil)
     }
     
@@ -169,10 +366,10 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     @IBAction func googleBtnAction(_ sender: Any) {
         if (Reachability()?.isReachable)!
         {
-        self.showLoadingIndicator(senderVC: self)
-        GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().signIn()
+            self.showLoadingIndicator(senderVC: self)
+            GIDSignIn.sharedInstance().delegate = self
+            GIDSignIn.sharedInstance().uiDelegate = self
+            GIDSignIn.sharedInstance().signIn()
         }
     }
     
@@ -216,7 +413,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
             }, onFailure: {errorResponse in})
             
         } else {
-           self.stopLoadingIndicator(senderVC: self)
+            self.stopLoadingIndicator(senderVC: self)
             print("\(error.localizedDescription)")
         }
     }
@@ -226,7 +423,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     {
         if (Reachability()?.isReachable)!
         {
-        self.showLoadingIndicator(senderVC: self)
+            self.showLoadingIndicator(senderVC: self)
             let completion = {
                 (result:LoginResult) in
                 switch result
@@ -251,14 +448,14 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                 }
             }
             loginManager.logOut()
-            loginManager.logIn(readPermissions: [.publicProfile,.email], viewController: self, completion: completion)
+            loginManager.logIn(permissions: [.publicProfile,.email], viewController: self, completion: completion)
         }
-       
+        
     }
     
     func getFBUserData(){
-        if((FBSDKAccessToken.current()) != nil){
-            FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, first_name, last_name, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
+        if((AccessToken.current) != nil){
+            GraphRequest(graphPath: "me", parameters: ["fields": "id, first_name, last_name, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
                 if (error == nil){
                     //    self.dict = result as! [String : AnyObject]
                     let responseDict = result as! NSDictionary
@@ -271,7 +468,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                         response in
                         print(response)
                         if (response.value(forKey: "code")as! Int == 200){
-                           let dataDict = NSMutableDictionary()
+                            let dataDict = NSMutableDictionary()
                             dataDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
                             let user_email = dataDict.object(forKey: "user_email")as! String
                             let user_id = String(dataDict.object(forKey: "user_id")as! Int)
@@ -295,7 +492,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                         }
                         self.stopLoadingIndicator(senderVC: self)
                     }, onFailure: {errorResponse in})
-                   
+                    
                 }
                 
             })
@@ -304,4 +501,122 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     
     
+}
+    
+extension UITextField {
+    
+    func setPadding(left: CGFloat? = nil, right: CGFloat? = nil, imageName:String, imageNameRight:String = ""){
+        if let left = left {
+            let paddingView = UIView()
+            paddingView.frame = CGRect.init(x: 5, y: 5, width: left, height: self.frame.size.height)
+            let imageIcon = UIImageView()
+            imageIcon.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
+            imageIcon.image = UIImage.init(named: imageName)
+            paddingView.addSubview(imageIcon)
+            self.leftView = paddingView
+            self.leftViewMode = .always
+        }
+        
+        if let right = right {
+            let paddingView = UIView()
+            paddingView.frame = CGRect.init(x: 5, y: 5, width: right, height: self.frame.size.height)        
+            let imageIcon = UIImageView()
+            imageIcon.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
+            imageIcon.image = UIImage.init(named: imageNameRight)
+            paddingView.addSubview(imageIcon)
+            self.rightView = paddingView
+            self.rightViewMode = .always
+        }
+    }
+    
+}
+
+@available(iOS 13.0, *)
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard var nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                      idToken: idTokenString,
+                                                      rawNonce: nonce)
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if (error != nil) {
+                    // Error. If error.code == .MissingOrInvalidNonce, make sure
+                    // you're sending the SHA256-hashed nonce as a hex string with
+                    // your request to Apple.
+                    print(error?.localizedDescription ?? "")
+                    return
+                }
+                guard let user = authResult?.user else { return }
+                let email = user.email ?? ""
+                let displayName = user.displayName ?? ""
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                
+                self.showLoadingIndicator(senderVC: self)
+                let Parse = CommomParsing()
+
+                Parse.AppleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", apple_id: uid, email: email, name: email, type: device_type,ios_fcm_id: login_session.object(forKey: "fcmToken") as! String,ios_device_id:self.iPhoneUDIDString, onSuccess: {
+                    response in
+                    print(response)
+                    if (response.value(forKey: "code")as! Int == 200){
+                        let dataDict = NSMutableDictionary()
+                        dataDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
+                        let user_email = dataDict.object(forKey: "user_email")as! String
+                        let user_id = String(dataDict.object(forKey: "user_id")as! Int)
+                        let user_name = dataDict.object(forKey: "user_name")as! String
+                        let phone = dataDict.object(forKey: "user_phone")as! String
+                        //phone = phone.replacingOccurrences(of: "+91", with: "")
+                        let token = dataDict.object(forKey: "token")as! String
+                        login_session.setValue(user_email, forKey: "user_email")
+                        login_session.setValue("0", forKey: "userCartCount")
+                        login_session.setValue(user_id, forKey: "user_id")
+                        login_session.setValue(user_name, forKey: "user_name")
+                        login_session.setValue(phone, forKey: "user_mobileNo")
+                        login_session.setValue(token, forKey: "user_token")
+                        login_session.synchronize()
+                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+                        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+                        nextViewController.ComingType = "FIRST"
+                        self.present(nextViewController, animated:true, completion:nil)
+                    }else{
+                        print("Failed")
+                    }
+                    self.stopLoadingIndicator(senderVC: self)
+                }, onFailure: {errorResponse in})
+                //let db = Firestore.firestore()
+                /*db.collection("User").document(uid).setData([
+                    "email": email,
+                    "displayName": displayName,
+                    "uid": uid
+                ]) { err in
+                    if let err = err {
+                        print("Error writing document: \(err)")
+                    } else {
+                        print("the user has sign up or is logged in")
+                    }
+                }*/
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // Handle error.
+        print("Sign in with Apple errored: \(error)")
+    }
+}
+
+extension LoginViewController : ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
 }

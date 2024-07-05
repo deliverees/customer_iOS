@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Lottie
 
 class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
 
@@ -26,12 +27,17 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     var resultDict1 = NSMutableDictionary()
     var ComingType = String()
 
+   
+    @IBOutlet weak var animationView: UIView!
+    
+    private var tempView: LottieAnimationView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        baseView.layer.cornerRadius = 10.0
+        baseView.layer.cornerRadius = 2.0
         baseView.addShadow()
         //currentLocBtn.layer.cornerRadius = 25.0
-        manualLocBtn.layer.cornerRadius = 25.0
+        //manualLocBtn.layer.cornerRadius = 25.0
         manualLocBtn.clipsToBounds = true
         let Text = (LanguageDictonary.object(forKey: "setdeliverylocation") as! String).uppercased()
         self.manualLocBtn.setTitle(Text, for: .normal)
@@ -44,6 +50,15 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
             self.baCKBTN.isHidden = false
         }
         
+        // 1. Set animation content mode
+        
+        tempView = .init(name: "anim_location")
+          
+        //tempView!.frame = view.bounds
+        tempView!.frame = CGRect(x:0, y:0, width: 200, height: 200)
+        animationView.addSubview(tempView!)
+        
+        tempView?.play()
         // Do any additional setup after loading the view.
         
     }

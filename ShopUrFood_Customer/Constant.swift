@@ -17,13 +17,12 @@ import CocoaMQTT
 class Singleton  {
     static var sharedInstance = Singleton()
     var resturantHomeModel : ResturantHome!
+    var categoriesHomeModel : CategoriesHomeModel!
     var CustomerProfileModel : CustomerProfile!
     var RestaurantDetailsModel : Restaurant_Details!
     var ItemDetailModel : itemDetailModel!
     var MyCartModel : MyCartModel!
     var MyOrdersModel : MyOrderModel!
-    
-    
 }
 
 // common variables
@@ -112,8 +111,10 @@ let login_session = UserDefaults.standard
 //let BASEURL = "http://pofi5.com/victor_suf/api/"
 //let BASEURL_CUSTOMER = "http://pofi5.com/victor_suf/api/customer/"
 
-let BASEURL = "http://demo.delivereesapp.com/api/"
-let BASEURL_CUSTOMER = "http://demo.delivereesapp.com/api/customer/"
+let BASEURL = "https://delivereesapp.com/api/"
+//let BASEURL = "https://phplaravel-1217347-4326198.cloudwaysapps.com/api/"
+//let BASEURL_CUSTOMER = "https://phplaravel-1217347-4326198.cloudwaysapps.com/api/customer/"
+let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
 //// V2.1 QA Dev URL
 //let BASEURL = "http://suf-app.pofi5.in/api/"
 //let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"
@@ -126,6 +127,7 @@ let BASEURL_CUSTOMER = "http://demo.delivereesapp.com/api/customer/"
 let USER_LOGIN = "user_login"
 let FB_LOGIN = "facebook_login"
 let GOOGLE_LOGIN = "google_login"
+let APPLE_LOGIN = "apple_login"
 let FORGET_PASSWORD = "customer_forgot_password"
 let PROFILE = "customer_my_account"
 let REGISTER = "registration"

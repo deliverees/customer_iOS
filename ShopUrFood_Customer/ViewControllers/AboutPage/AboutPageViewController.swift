@@ -24,7 +24,7 @@ class AboutPageViewController: BaseViewController {
           self.updateBtn.setTitle(LanguageDictonary.value(forKey: "versionupdate") as? String, for: .normal)
         self.titileLbl.text = LanguageDictonary.value(forKey: "about") as? String
         
-        self.updateBtn.layer.cornerRadius = 25
+        //self.updateBtn.layer.cornerRadius = 25
         self.updateBtn.layer.masksToBounds = true
         
         // Do any additional setup after loading the view.

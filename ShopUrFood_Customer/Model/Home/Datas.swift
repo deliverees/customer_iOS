@@ -11,6 +11,7 @@ class Datas : NSObject, NSCoding{
     var allRestaurant : [AllRestaurant]!
     var allRestaurantDetails : [AllRestaurantDetail]!
     var featuredRestaurant : [FeaturedRestaurant]!
+    var category_list : [AllCategoriesDetail]!
 
 
     /**
@@ -23,6 +24,7 @@ class Datas : NSObject, NSCoding{
                 let value = AllRestaurant(fromDictionary: dic)
                 allRestaurant.append(value)
             }
+            allRestaurant.reverse()
         }
         allRestaurantDetails = [AllRestaurantDetail]()
         if let allRestaurantDetailsArray = dictionary["all_restaurant_details"] as? [[String:Any]]{
@@ -30,12 +32,30 @@ class Datas : NSObject, NSCoding{
                 let value = AllRestaurantDetail(fromDictionary: dic)
                 allRestaurantDetails.append(value)
             }
+            //allRestaurantDetails.reverse()
         }
         featuredRestaurant = [FeaturedRestaurant]()
         if let featuredRestaurantArray = dictionary["featured_restaurant"] as? [[String:Any]]{
             for dic in featuredRestaurantArray{
                 let value = FeaturedRestaurant(fromDictionary: dic)
                 featuredRestaurant.append(value)
+            }
+        }
+        category_list = [AllCategoriesDetail]()
+        do {
+            var dictionary = [String:Any]()
+            dictionary["category_id"] = 0
+            dictionary["category_name"] = "Todos"
+            dictionary["category_image"] = "ic_cat_all_en"
+            let value = AllCategoriesDetail(fromDictionary: dictionary)
+            category_list.append(value)
+        } catch {
+            print("Unexpected error: \(error).")
+        }
+        if let categoryListArray = dictionary["category_list"] as? [[String:Any]]{
+            for dic in categoryListArray{
+                let value = AllCategoriesDetail(fromDictionary: dic)
+                category_list.append(value)
             }
         }
     }
@@ -67,6 +87,13 @@ class Datas : NSObject, NSCoding{
             }
             dictionary["featuredRestaurant"] = dictionaryElements
         }
+        if category_list != nil{
+            var dictionaryElements = [[String:Any]]()
+            for categoryListElement in category_list {
+                dictionaryElements.append(categoryListElement.toDictionary())
+            }
+            dictionary["category_list"] = dictionaryElements
+        }
         return dictionary
     }
 
@@ -79,6 +106,7 @@ class Datas : NSObject, NSCoding{
         allRestaurant = aDecoder.decodeObject(forKey: "all_restaurant") as? [AllRestaurant]
         allRestaurantDetails = aDecoder.decodeObject(forKey: "all_restaurant_details") as? [AllRestaurantDetail]
         featuredRestaurant = aDecoder.decodeObject(forKey: "featured_restaurant") as? [FeaturedRestaurant]
+        category_list = aDecoder.decodeObject(forKey: "category_list") as? [AllCategoriesDetail]
     }
 
     /**
@@ -95,6 +123,9 @@ class Datas : NSObject, NSCoding{
         }
         if featuredRestaurant != nil{
             aCoder.encode(featuredRestaurant, forKey: "featured_restaurant")
+        }
+        if category_list != nil{
+            aCoder.encode(category_list, forKey: "category_list")
         }
     }
 }

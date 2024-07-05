@@ -110,7 +110,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         filterBGPopUpView.layer.cornerRadius = 5.0
         filterBGPopUpView.layer.masksToBounds = true
         
-        firstShowDetailsButton.layer.cornerRadius = 15.0
+        firstShowDetailsButton.layer.cornerRadius = 2 //15.0
         firstShowDetailsButton.layer.masksToBounds = true
         self.firstShowDetailsButton.setTitle(LanguageDictonary.value(forKey: "showitems") as? String, for: .normal)
         self.secondShowDetailsButton.setTitle(LanguageDictonary.value(forKey: "showitems") as? String, for: .normal)
@@ -121,9 +121,18 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         self.byName.text = LanguageDictonary.object(forKey: "byname") as! String
         self.byPrice.text = LanguageDictonary.object(forKey: "byprice") as! String
         
-        secondShowDetailsButton.layer.cornerRadius = 15.0
+        secondShowDetailsButton.layer.cornerRadius = 2 //15.0
         secondShowDetailsButton.layer.masksToBounds = true
 
+        firstShowDetailsButton.layer.borderWidth = 2
+        firstShowDetailsButton.layer.borderColor = UIColor.red.cgColor
+        firstShowDetailsButton.setTitleColor(UIColor.red, for: .normal)
+        firstShowDetailsButton.layer.backgroundColor = UIColor.white.cgColor
+        
+        secondShowDetailsButton.layer.borderWidth = 2
+        secondShowDetailsButton.layer.borderColor = UIColor.red.cgColor
+        secondShowDetailsButton.setTitleColor(UIColor.red, for: .normal)
+        secondShowDetailsButton.layer.backgroundColor = UIColor.white.cgColor
         
         // Do any additional setup after loading the view.
         commonSearchArray.append(LanguageDictonary.value(forKey: "topoffers") as! String)
@@ -1129,7 +1138,26 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
             cell?.selectionStyle = .none
             cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+            cell?.addOneBtn.layer.borderWidth = 2
+            cell?.addOneBtn.layer.borderColor = UIColor.red.cgColor
+            cell?.addOneBtn.setTitleColor(UIColor.red, for: .normal)
+            cell?.addOneBtn.layer.backgroundColor = UIColor.white.cgColor
+           
+            let image3 = UIImage(named: "add")
+            
+            cell?.addOneBtn.setImage(image3, for: .normal)
+            cell?.addOneBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+            
             cell?.firstAddBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+            cell?.firstAddBtn.layer.borderWidth = 2
+            cell?.firstAddBtn.layer.borderColor = UIColor.red.cgColor
+            cell?.firstAddBtn.setTitleColor(UIColor.red, for: .normal)
+            cell?.firstAddBtn.layer.backgroundColor = UIColor.white.cgColor
+            
+            cell?.firstAddBtn.setImage(image3, for: .normal)
+            cell?.firstAddBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
             cell?.NoItemsFound.text = LanguageDictonary.value(forKey: "norecordsfound") as? String
             if itemsArray.count > 0
             {
@@ -1148,8 +1176,8 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             let tap = UITapGestureRecognizer(target: self, action: #selector(self.gestureTap(_:)))
             cell?.firstView.addGestureRecognizer(tap)
             cell?.firstView.isUserInteractionEnabled = true
-                cell?.addOneBtn.tag = actualIndex
-                cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
+            cell?.addOneBtn.tag = actualIndex
+            cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
 
                
                 

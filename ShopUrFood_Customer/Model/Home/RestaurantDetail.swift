@@ -15,7 +15,8 @@ class RestaurantDetail : NSObject, NSCoding{
     var restaurantRating : Int!
     var restaurantStatus : String!
     var todayWkingTime : String!
-
+    var deliveryTime : String!
+    var cat_id : String!
 
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
@@ -28,6 +29,8 @@ class RestaurantDetail : NSObject, NSCoding{
         restaurantRating = dictionary["restaurant_rating"] as? Int
         restaurantStatus = dictionary["restaurant_status"] as? String
         todayWkingTime = dictionary["today_wking_time"] as? String
+        deliveryTime = dictionary["delivery_time"] as? String
+        cat_id = dictionary["cat_id"] as? String
     }
 
     /**
@@ -57,6 +60,12 @@ class RestaurantDetail : NSObject, NSCoding{
         if todayWkingTime != nil{
             dictionary["today_wking_time"] = todayWkingTime
         }
+        if deliveryTime != nil{
+            dictionary["delivery_time"] = deliveryTime
+        }
+        if cat_id != nil{
+            dictionary["cat_id"] = deliveryTime
+        }
         return dictionary
     }
 
@@ -73,6 +82,8 @@ class RestaurantDetail : NSObject, NSCoding{
         restaurantRating = aDecoder.decodeObject(forKey: "restaurant_rating") as? Int
         restaurantStatus = aDecoder.decodeObject(forKey: "restaurant_status") as? String
         todayWkingTime = aDecoder.decodeObject(forKey: "today_wking_time") as? String
+        deliveryTime = aDecoder.decodeObject(forKey: "delivery_time") as? String
+        cat_id = aDecoder.decodeObject(forKey: "cat_id") as? String
     }
 
     /**
@@ -101,6 +112,12 @@ class RestaurantDetail : NSObject, NSCoding{
         }
         if todayWkingTime != nil{
             aCoder.encode(todayWkingTime, forKey: "today_wking_time")
+        }
+        if deliveryTime != nil{
+            aCoder.encode(deliveryTime, forKey: "delivery_time")
+        }
+        if cat_id != nil{
+            aCoder.encode(deliveryTime, forKey: "cat_id")
         }
     }
 }

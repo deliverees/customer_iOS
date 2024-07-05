@@ -27,7 +27,7 @@ class LanguageViewController: UIViewController {
         self.submitBut.setTitle(LanguageDictonary.object(forKey: "submit") as? String, for: .normal)
         
           modalPresentationCapturesStatusBarAppearance = true
-        self.closeBut.layer.cornerRadius = 20
+        self.closeBut.layer.cornerRadius = 2 //20
         self.closeBut.layer.masksToBounds = true
         self.submitBut.layer.cornerRadius = 5
          self.submitBut.layer.masksToBounds = true

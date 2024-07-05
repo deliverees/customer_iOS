@@ -24,20 +24,21 @@ class SettingsPageViewController: BaseViewController,UITableViewDelegate,UITable
         imageArray.append("key")
         imageArray.append("Info_orange")
         imageArray.append("login_username")
-        //imageArray.append("Language")
         imageArray.append("Payment_settings")
         imageArray.append("Terms")
         imageArray.append("Notification")
+        imageArray.append("Language")
         
         //adding Lable Name
         nameArray.append(LanguageDictonary.value(forKey: "changepassword") as! String)
         nameArray.append(LanguageDictonary.value(forKey: "about") as! String)
         nameArray.append(LanguageDictonary.value(forKey: "profile") as! String)
-        //nameArray.append("Language")
+        
         nameArray.append(LanguageDictonary.value(forKey: "paymentsettings") as! String)
         nameArray.append(LanguageDictonary.value(forKey: "termasconditions") as! String)
         nameArray.append("Promotional Notification")
-        
+        nameArray.append(LanguageDictonary.value(forKey: "language") as! String)
+        nameArray.append(LanguageDictonary.value(forKey: "language") as! String)
 //        baseContentView.layer.cornerRadius  = 10.0
 //        baseContentView = self.setCornorShadowEffects(sender: baseContentView)
         
@@ -115,6 +116,13 @@ class SettingsPageViewController: BaseViewController,UITableViewDelegate,UITable
             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "TermsAndConditionsViewController") as! TermsAndConditionsViewController
             self.present(nextViewController, animated:true, completion:nil)
             
+        }else if indexPath.row == 6 {
+            let nav = self.storyboard?.instantiateViewController(withIdentifier: "LanguageViewController") as? LanguageViewController
+            nav?.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            self.present(nav!, animated: true, completion: nil)
+            
         }
+        
+        
     }
 }

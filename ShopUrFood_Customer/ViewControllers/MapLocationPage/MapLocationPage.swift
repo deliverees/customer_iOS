@@ -84,7 +84,7 @@
         searchView = self.setCornorShadowEffects(sender: searchView)
         baseMapView.delegate = self
         bottomLocationView.backgroundColor = .white
-        currentLocationBtn.layer.cornerRadius = 25.0
+        //currentLocationBtn.layer.cornerRadius = 25.0
         currentLocationBtn.clipsToBounds = true
         currentLocationBtn.backgroundColor = UIColor.white
         

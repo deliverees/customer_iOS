@@ -11,8 +11,6 @@ import QuartzCore
 import MarqueeLabel
 import ListPlaceholder
 
-
-
 @available(iOS 11.0, *)
 class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
@@ -37,7 +35,8 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     @IBOutlet weak var food_two_collectionView: UICollectionView!
     @IBOutlet weak var shop_collectionView: UICollectionView!
     @IBOutlet weak var food_collectionView: UICollectionView!
-    @IBOutlet weak var resturantsCollectionView: UICollectionView!
+    @IBOutlet weak var resturantsCollectionView: UICollectionView! //restaurant_rating //delivery_time
+    @IBOutlet weak var categories_collectionView: UICollectionView!
     @IBOutlet weak var menuBtn: UIButton!
     
     @IBOutlet weak var staticResturentLbl: UILabel!
@@ -45,6 +44,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     @IBOutlet weak var featuredLblStatic: UILabel!
     
     let reuseIdentifier = "Home_Resturants_collection_cell"
+    let catIdentifier = "Home_Categories_Collection_Cell"
     
     //Search Views
     @IBOutlet weak var searchGrayView: UIView!
@@ -52,41 +52,49 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var searchBackButton: UIButton!
     @IBOutlet weak var searchRTextField: UITextField!
-
+    
     //PROMOTIONAL OFFERS VIEW
     @IBOutlet weak var promotionalOfferBGView: UIView!
     @IBOutlet weak var promotionalOfferPopupView: UIView!
     @IBOutlet weak var promotionalOfferTxtLbl: UILabel!
     @IBOutlet weak var promotionalHeaderTxtLbl: UILabel!
     @IBOutlet weak var promotionalOfferOkayButton: UIButton!
-
+    
     @IBOutlet weak var searchButton: UIButton!
     var searchTxtStr:String = ""
     var pagingIndex = Int()
     var resSelectedBool = Bool()
     var resultsArray = NSMutableArray()
-
+    
     var promotionOffersDict = NSMutableDictionary()
-
+    
+    @IBOutlet weak var btnAllHome: UIImageView!
+    @IBOutlet weak var btnAllRestaurantsHome: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         self.allResturants.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
-       
-         self.secondViewAll.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
-         self.categoryTwoViewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
-          self.categoryThreeViewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
+        self.allResturants.isHidden = true
         
-         self.promotionalOfferOkayButton.setTitle(LanguageDictonary.value(forKey: "okaygotit") as? String, for: .normal)
-        self.staticResturentLbl.text =  LanguageDictonary.value(forKey: "resturants") as? String
+        self.secondViewAll.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
+        self.secondViewAll.isHidden = true
+        
+        self.categoryTwoViewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
+        self.categoryTwoViewAllBtn.isHidden = true
+        self.categoryThreeViewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
+        self.categoryThreeViewAllBtn.isHidden = true
+        
+        self.promotionalOfferOkayButton.setTitle(LanguageDictonary.value(forKey: "okaygotit") as? String, for: .normal)
+        self.staticResturentLbl.text =  LanguageDictonary.value(forKey: "featured") as? String
+        //self.staticResturentLbl.isHidden = true
         self.noRestLbl.text =  LanguageDictonary.value(forKey: "No Restaurant found in your location. try new location") as? String
-         self.featuredLblStatic.text =  LanguageDictonary.value(forKey: "featuredresturants") as? String
+        self.featuredLblStatic.text =  LanguageDictonary.value(forKey: "featuredresturants") as? String
+        self.featuredLblStatic.isHidden = true
         isfromShippingAddressPage = false
         self.getHomeDataFromAPI()
         self.searchGrayView.isHidden = true
-
+        
         if revealViewController() != nil {
             self.revealViewController().rearViewRevealWidth = self.view.frame.width-80
             menuBtn.addTarget(self.revealViewController(), action: Selector(("revealToggle:")), for: UIControl.Event.touchUpInside)
@@ -108,7 +116,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self, action: #selector(didTapLocationLbl))
         locationLbl.addGestureRecognizer(tap)
-
+        
         actAsBaseTabbar = self.tabBarController!
         
         searchRTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -123,11 +131,86 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         
         // Set the newly created shape layer as the mask for the image view's layer
         promotionalOfferPopupView.layer.mask = maskLayer
-
-
-
+        
+        let tapGestureRecognizerBtnAllHome = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnAllHome(tapGestureRecognizer:)))
+        
+        //btnAllHome.isUserInteractionEnabled = true
+        //btnAllHome.addGestureRecognizer(tapGestureRecognizerBtnAllHome)
+        
+        //let tapGestureRecognizerBtnAllRestaurantsHome = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnAllRestaurantsHome(tapGestureRecognizer:)))
+        
+        //btnAllRestaurantsHome.isUserInteractionEnabled = true
+        //btnAllRestaurantsHome.addGestureRecognizer(tapGestureRecognizerBtnAllRestaurantsHome)
+        
+        //btnAllRestaurantsHome.alpha = 0.5
+        
+        view.addSubview(fb)
+        
+        fb.addTarget(self, action: #selector(onClickFB), for: .touchUpInside)
     }
     
+    @objc func imagedTapedBtnAllHome(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        btnAllHome.alpha = 1
+        btnAllRestaurantsHome.alpha = 0.5
+    }
+    
+    @objc func imagedTapedBtnAllRestaurantsHome(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        btnAllHome.alpha = 0.5
+        btnAllRestaurantsHome.alpha = 1
+    }
+    
+    @objc func onClickFB() {
+        actAsBaseTabbar.selectedIndex = 0
+        self.revealViewController().pushFrontViewController(actAsBaseTabbar, animated: true)
+    }
+    
+    let fb: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        
+        button.backgroundColor = .white
+        
+        //let image = UIImage(systemName: "cartfb", withConfiguration: UIImage.SymbolConfiguration(pointSize: 48, weight: .medium))
+        
+        let image = UIImage(named: "cartfb")
+        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24.0)
+        
+        let adjustedImage = image?.applyingSymbolConfiguration(symbolConfiguration)
+        
+        //let imageView2 = UIImageView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+        //let image2 = UIImage(named: "cart_fb")
+        //imageView2.image = image2
+        //passwordTxt.leftView = imageView2
+        
+        button.setImage(adjustedImage, for: .normal)
+        
+        //button.imageView = imageView2
+        
+        //button.tintColor = .red
+        //button.setTitleColor(.red, for: .normal)
+        //button.layer.shadowRadius = 10
+        //button.layer.shadowOpacity = 0.3
+        
+        button.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
+        button.layer.shadowOpacity = 0.5
+        button.layer.shadowRadius = 0.0
+        button.layer.masksToBounds = false
+        
+        button.layer.cornerRadius = 30
+        
+        return button
+    }()
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        fb.frame = CGRect(x: view.frame.size.width - 70,
+                          y: view.frame.size.height - 160,
+                          width: 60,
+                          height: 60)
+    }
     
     //MARK: - UITextField Delegate
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -138,26 +221,26 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         view.endEditing(true)
         if textField.text == ""
         {
-          self.searchTableView.isHidden = true
+            self.searchTableView.isHidden = true
         }
         textField.resignFirstResponder()
     }
     
     
     @objc func textFieldDidChange(_ textField: UITextField)
+    {
+        if textField.text!.count == 1
         {
-            if textField.text!.count == 1
-            {
-                searchTxtStr = textField.text!
-                self.pagingIndex = 1
-                self.searchTableView.isHidden = false
-                getSearchData()
-            }
-
-            if textField.text! == ""
-            {
-                self.searchTableView.isHidden = true
-            }
+            searchTxtStr = textField.text!
+            self.pagingIndex = 1
+            self.searchTableView.isHidden = false
+            getSearchData()
+        }
+        
+        if textField.text! == ""
+        {
+            self.searchTableView.isHidden = true
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
@@ -220,20 +303,20 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         
         return greeting
     }
-
+    
     
     @IBAction func locationBtnAction(_ sender: Any) {
         
         self.promotionalOfferBGView.isHidden = true
-
-//        let Parse = CommomParsing()
-//        Parse.commonTest(u_email:"lakshmi@pofitec.com",u_psd:"Lk123456",device_type:"ios",u_key:"121", onSuccess: {
-//            response in
-//            print (response)
-//        }, onFailure: {errorResponse in
-//            print (errorResponse?.localizedDescription as Any)
-//        })
-//
+        
+        //        let Parse = CommomParsing()
+        //        Parse.commonTest(u_email:"lakshmi@pofitec.com",u_psd:"Lk123456",device_type:"ios",u_key:"121", onSuccess: {
+        //            response in
+        //            print (response)
+        //        }, onFailure: {errorResponse in
+        //            print (errorResponse?.localizedDescription as Any)
+        //        })
+        //
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
         self.present(nextViewController, animated:true, completion:nil)
@@ -264,18 +347,18 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     override func viewWillAppear(_ animated: Bool)
     {
-
+        
         locationLbl.text = (login_session.object(forKey: "user_address")as! String)
         self.topUserNameLbl.text = self.greetingLogic()
         self.navigationController?.navigationBar.isHidden = true
         if isfromShippingAddressPage
         {
-          isfromShippingAddressPage = false
-          getHomeDataFromAPI()
+            isfromShippingAddressPage = false
+            getHomeDataFromAPI()
         }
         let cartCount = login_session.object(forKey: "userCartCount")as! String
         if (cartCount == "0"){
-             actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
+            actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
         }else{
             actAsBaseTabbar.tabBar.items?[0].badgeValue = cartCount
             actAsBaseTabbar.tabBar.items?[0].badgeColor = AppDarkOrange
@@ -288,19 +371,19 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     //MARK:- Calling API methods
     func getHomeDataFromAPI(){
-       // self.showLoadingIndicator(senderVC: self)
+        // self.showLoadingIndicator(senderVC: self)
         self.showCollectionLoader()
         let Parse = CommomParsing()
         Parse.Resturant_Home_Pasre(lang: login_session.value(forKey: "Language") as? String ?? "es", user_latitude: String(describing:login_session.object(forKey: "user_latitude") as AnyObject), user_longitude: String(describing: login_session.object(forKey: "user_longitude") as AnyObject), onSuccess: {
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
-            let mod = ResturantHome(fromDictionary: response as! [String : Any])
-            Singleton.sharedInstance.resturantHomeModel = mod
+                let mod = ResturantHome(fromDictionary: response as! [String : Any])
+                Singleton.sharedInstance.resturantHomeModel = mod
                 
                 if ((response.object(forKey: "data")as! NSDictionary).value(forKey: "offers") as? NSDictionary) != nil
                 {
-                self.promotionOffersDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary).value(forKey: "offers") as! [AnyHashable : Any])
+                    self.promotionOffersDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary).value(forKey: "offers") as! [AnyHashable : Any])
                     self.promotionalOfferBGView.isHidden = false
                     self.promotionalOfferTxtLbl.text = self.promotionOffersDict.value(forKey: "description") as? String
                     self.promotionalHeaderTxtLbl.text = self.promotionOffersDict.value(forKey: "title") as? String
@@ -308,21 +391,22 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 else
                 {
                     self.promotionalOfferBGView.isHidden = true
-
+                    
                 }
-
                 
-            self.hideCollectionLoader()
-            self.LoadHeaderTxt()
-            self.resturantsCollectionView.reloadData()
-            self.food_collectionView.reloadData()
-            self.shop_collectionView.reloadData()
-            self.food_two_collectionView.reloadData()
-            self.food_three_collectionView.reloadData()
+                self.hideCollectionLoader()
+                self.LoadHeaderTxt()
+                self.resturantsCollectionView.reloadData()
+                self.categories_collectionView.reloadData()
+                self.food_collectionView.reloadData()
+                self.shop_collectionView.reloadData()
+                //self.food_two_collectionView.reloadData()
+                //self.food_three_collectionView.reloadData()
                 self.resturantsCollectionView.isHidden = false
                 self.food_collectionView.isHidden = false
-                self.shop_collectionView.isHidden = false
-                self.food_two_collectionView.isHidden = false
+                self.shop_collectionView.isHidden = true
+                self.food_two_collectionView.isHidden = true
+                self.food_three_collectionView.isHidden = true
                 self.noItemsView.isHidden = true
                 self.checkUIwithData()
             }else if response.object(forKey: "code") as! Int == 400{
@@ -331,13 +415,13 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     self.tokenExpired()
                 }else{
                     self.hideCollectionLoader()
-                   self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                     self.resturantsCollectionView.isHidden = true
                     self.food_collectionView.isHidden = true
                     self.shop_collectionView.isHidden = true
                     self.food_two_collectionView.isHidden = true
                     self.noItemsView.isHidden = false
-
+                    
                 }
                 //print(response.object(forKey: "message") as Any)
             }
@@ -375,7 +459,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         print("resultsArray", resultsArray)
         if resultsArray.count == 0
         {
-           // searchTableView.isHidden = true
+            // searchTableView.isHidden = true
         }
         else
         {
@@ -391,6 +475,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         resturantsCollectionView.layoutIfNeeded()
         self.resturantsCollectionView.showLoader()
         
+        
         food_collectionView.reloadData()
         food_collectionView.layoutIfNeeded()
         self.food_collectionView.showLoader()
@@ -399,18 +484,22 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         shop_collectionView.layoutIfNeeded()
         self.shop_collectionView.showLoader()
         
-        food_two_collectionView.reloadData()
-        food_two_collectionView.layoutIfNeeded()
-        self.food_two_collectionView.showLoader()
+        categories_collectionView.reloadData()
+        categories_collectionView.layoutIfNeeded()
+        self.categories_collectionView.showLoader()
         
-        food_three_collectionView.reloadData()
-        food_three_collectionView.layoutIfNeeded()
-        self.food_three_collectionView.showLoader()
+        /*food_two_collectionView.reloadData()
+         food_two_collectionView.layoutIfNeeded()
+         self.food_two_collectionView.showLoader()
+         
+         food_three_collectionView.reloadData()
+         food_three_collectionView.layoutIfNeeded()
+         self.food_three_collectionView.showLoader()*/
     }
     func checkUIwithData()
     {
         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count < 2{
-            self.featureCollectionViewBottomHeight.constant = 20.0
+            //self.featureCollectionViewBottomHeight.constant = 20.0
             secondCategoryNameLbl.isHidden = true
             thirdCategoryNameLbl.isHidden = true
             categoryTwoViewAllBtn.isHidden = true
@@ -419,17 +508,17 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         else if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count == 2
         {
             self.featureCollectionViewBottomHeight.constant = 400.0
-            secondCategoryNameLbl.isHidden = false
-            categoryTwoViewAllBtn.isHidden = false
+            secondCategoryNameLbl.isHidden = true
+            categoryTwoViewAllBtn.isHidden = true
             thirdCategoryNameLbl.isHidden = true
             categoryThreeViewAllBtn.isHidden = true
         }
         else{
             self.featureCollectionViewBottomHeight.constant = 740.0
-            secondCategoryNameLbl.isHidden = false
-            thirdCategoryNameLbl.isHidden = false
-            categoryTwoViewAllBtn.isHidden = false
-            categoryThreeViewAllBtn.isHidden = false
+            secondCategoryNameLbl.isHidden = true
+            thirdCategoryNameLbl.isHidden = true
+            categoryTwoViewAllBtn.isHidden = true
+            categoryThreeViewAllBtn.isHidden = true
         }
     }
     func hideCollectionLoader()  {
@@ -438,18 +527,19 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         self.shop_collectionView.hideLoader()
         self.food_two_collectionView.hideLoader()
         self.food_three_collectionView.hideLoader()
-
+        self.categories_collectionView.hideLoader()
     }
     
     func LoadHeaderTxt()
     {
-        firstCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].categoryName.uppercased()
+        /*firstCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].categoryName.uppercased()
+        firstCategoryNameLbl.isHidden = true
         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 2 {
             secondCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].categoryName.uppercased()
         }
         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 3 {
             thirdCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].categoryName.uppercased()
-        }
+        }*/
     }
     
     //MARK:- UITableView Delegate & DataSource Methods
@@ -458,11 +548,11 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     {
         if self.resultsArray.count > 0
         {
-        return resultsArray.count
+            return resultsArray.count
         }
         else
         {
-        return 0
+            return 0
         }
     }
     
@@ -475,24 +565,24 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     {
         if indexPath.row == 0
         {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantListTableViewCell") as? RestaurantListTableViewCell
-        cell?.selectionStyle = .none
-        cell?.restaurantSelectedButtons.tag = indexPath.section
-      cell?.restaurantSelectedButtons.addTarget(self,action:#selector(restaurantBtnClicked(sender:)), for: .touchUpInside)
-
-        cell?.restaurantNameLbl.text = ((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "store_name") as? String)
-        return cell!
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantListTableViewCell") as? RestaurantListTableViewCell
+            cell?.selectionStyle = .none
+            cell?.restaurantSelectedButtons.tag = indexPath.section
+            cell?.restaurantSelectedButtons.addTarget(self,action:#selector(restaurantBtnClicked(sender:)), for: .touchUpInside)
+            
+            cell?.restaurantNameLbl.text = ((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "store_name") as? String)
+            return cell!
         }
         else
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ItemListTableViewCell") as? ItemListTableViewCell
             cell?.selectionStyle = .none
             cell?.itemNameLbl.text = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "item_list") as! NSArray).object(at: indexPath.row - 1) as! NSDictionary).value(forKey: "item_name") as! String)
-
+            
             return cell!
         }
     }
-
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
@@ -501,18 +591,18 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         
         if indexPath.row > 0
         {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-       
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "FoodDetailsPage") as! FoodDetailsPage
-        nextViewController.item_id = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "item_list") as! NSArray).object(at: indexPath.row - 1) as! NSDictionary).value(forKey: "item_id") as! String)
-        nextViewController.itemName = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "item_list") as! NSArray).object(at: indexPath.row - 1) as! NSDictionary).value(forKey: "item_name") as! String)
-        nextViewController.restaurant_id = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "store_id") as? NSNumber)!.stringValue))
-        self.present(nextViewController, animated:true, completion:nil)
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "FoodDetailsPage") as! FoodDetailsPage
+            nextViewController.item_id = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "item_list") as! NSArray).object(at: indexPath.row - 1) as! NSDictionary).value(forKey: "item_id") as! String)
+            nextViewController.itemName = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "item_list") as! NSArray).object(at: indexPath.row - 1) as! NSDictionary).value(forKey: "item_name") as! String)
+            nextViewController.restaurant_id = ((((self.resultsArray[indexPath.section] as AnyObject).value(forKey: "store_id") as? NSNumber)!.stringValue))
+            self.present(nextViewController, animated:true, completion:nil)
         }
     }
     
-     @objc func restaurantBtnClicked(sender:UIButton)
-     {
+    @objc func restaurantBtnClicked(sender:UIButton)
+    {
         let buttonRow = sender.tag
         print("buttonRow is:",buttonRow)
         
@@ -521,82 +611,250 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         nextViewController.rest_id = ((((self.resultsArray[buttonRow] as AnyObject).value(forKey: "store_id") as? NSNumber)!.stringValue))
         nextViewController.storeName = (((self.resultsArray[buttonRow] as AnyObject).value(forKey: "store_name") as? String)!)
         self.present(nextViewController, animated:true, completion:nil)
-     }
+    }
     
     //MARK:- ColloectionView Delegate & DataSource Methods
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10 // This is the minimum inter item spacing, can be more
     }
-
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-         if Singleton.sharedInstance.resturantHomeModel != nil{
+        if Singleton.sharedInstance.categoriesHomeModel != nil {
+            print(Singleton.sharedInstance.categoriesHomeModel)
+        }
+        if Singleton.sharedInstance.resturantHomeModel != nil{
             if collectionView == resturantsCollectionView{
-            return Singleton.sharedInstance.resturantHomeModel.data.allRestaurant.count
+                return Singleton.sharedInstance.resturantHomeModel.data.allRestaurant.count
             }else if collectionView == food_collectionView{
-            return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails.count
+                
+                var _count = 0
+                
+                var allCats = true
+                
+                if cat_selected == 0 {
+                    allCats = true
+                } else {
+                    allCats = false
+                }
+                
+                for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count {
+                    
+                    var cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
+                    
+                    if allCats == false && cat_id != cat_selected {
+                        continue
+                    }
+                        
+                    let ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].restaurantDetails.count
+                    _count = _count + ard
+                }
+                
+                return _count
             }else if collectionView == shop_collectionView{
-              return Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant.count
-            }else if collectionView == food_two_collectionView{
+                return Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant.count
+            } else if collectionView == categories_collectionView{
+                print(Singleton.sharedInstance.resturantHomeModel.data.category_list.count)
+                return Singleton.sharedInstance.resturantHomeModel.data.category_list.count
+            } else if collectionView == food_two_collectionView{
                 if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 2{
-                return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails.count
+                    return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails.count
                 }else{
                     return 0
                 }
-            }else{
-                if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 3{
+            }else {
+                /*if Singleton.sharedInstance.resturantHomeModel.data.category_list.count >= 3{
                     return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails.count
                 }
                 else{
                     return 0
-                }
+                }*/
+                return 0
             }
-         }else{
+        }else{
             return 4
         }
     }
     
+    var cat_selected = 0
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == resturantsCollectionView{
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! Home_Resturants_collection_cell
         
-        cell.resturantImg.layer.cornerRadius = 5.0
-        cell.ImgBGView.layer.cornerRadius = 5.0
+        if collectionView == resturantsCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! Home_Resturants_collection_cell
+            
+            cell.resturantImg.layer.cornerRadius = 5.0
+            cell.ImgBGView.layer.cornerRadius = 5.0
             cell.resturantImg.layer.borderWidth = 0.5
             cell.resturantImg.layer.borderColor = UIColor.lightGray.cgColor
-        
+            
             if Singleton.sharedInstance.resturantHomeModel != nil{
-            let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantLogo)
-            cell.resturantImg.kf.setImage(with:rest_img!)
-            cell.ImgBGView.backgroundColor = BlackTranspertantColor
-            cell.resturantNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantName
+                let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantLogo)
+                cell.resturantImg.kf.setImage(with:rest_img!)
+                //cell.ImgBGView.backgroundColor = BlackTranspertantColor
+                cell.resturantNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantName
             }
             cell.layer.cornerRadius = 5.0
-        return cell
+            return cell
+        }else if collectionView == categories_collectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: catIdentifier, for: indexPath) as! Home_Categories_Collection_Cell
+            
+            cell.category_image.layer.cornerRadius = 5.0
+            
+            if Singleton.sharedInstance.resturantHomeModel != nil {
+                if cat_selected == Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryId {
+                    cell.category_image.alpha = 1
+                } else {
+                    cell.category_image.alpha = 0.5
+                }
+                
+                if (indexPath.row != 0) {
+                    let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryImage)
+                    cell.category_image.kf.setImage(with:rest_img!)
+                    //cell.ImgBGView.backgroundColor = BlackTranspertantColor
+                } else {
+                    let imageName = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryImage
+                    cell.category_image.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
+                    cell.category_image.image = UIImage.init(named: imageName!)
+                }
+                cell.category_name.text = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryName
+            }
+            cell.layer.cornerRadius = 5.0
+            return cell
         }else if collectionView == food_collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCollectionCell", for: indexPath) as! FoodCollectionCell
             
             if Singleton.sharedInstance.resturantHomeModel != nil{
-            let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantImage)
-            cell.foodImg.kf.setImage(with: food_img)
-            cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantName
-            //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating)
-            cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].todayWkingTime
-            cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantDesc
                 
-                if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating == 0{
+                var allRestaurantDetails = [RestaurantDetail]()
+                
+                var allCats = true
+                
+                if cat_selected == 0 {
+                    allCats = true
+                } else {
+                    allCats = false
+                }
+                
+                for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count {
+                    var cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
+                    
+                    var ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].restaurantDetails
+                    
+                    for idx in 0..<ard!.count {
+                        
+                        if allCats == false && cat_id != cat_selected {
+                            continue
+                        }
+                        
+                        var dictionary = [String:Any]()
+                        
+                        dictionary["restaurant_desc"] = ard![idx].restaurantDesc
+                        dictionary["restaurant_id"] = ard![idx].restaurantId
+                        dictionary["restaurant_image"] = ard![idx].restaurantImage
+                        dictionary["restaurant_name"] = ard![idx].restaurantName
+                        dictionary["restaurant_rating"] = ard![idx].restaurantRating
+                        dictionary["restaurant_status"] = ard![idx].restaurantStatus
+                        dictionary["today_wking_time"] = ard![idx].todayWkingTime
+                        dictionary["delivery_time"] = ard![idx].deliveryTime
+                        dictionary["cat_id"] = cat_id
+                        
+                        let value = RestaurantDetail(fromDictionary: dictionary)
+                        allRestaurantDetails.append(value)
+                    }
+                    
+                }
+                
+                print(indexPath.row)
+                
+                let ard = allRestaurantDetails[indexPath.row]
+                    
+                let food_img = ard.restaurantImage.replacingOccurrences(of: " ", with: "%20")
+                if let food_img = URL(string: food_img) {
+                    cell.foodImg.kf.setImage(with: food_img)
+                } else {
+                    cell.foodImg.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
+                    cell.foodImg.image = UIImage.init(named: "2019-11-6")
+                }
+                
+                cell.food_titleLbl.text = ard.restaurantName
+                cell.lblDeliverTime.text = ard.deliveryTime
+                
+                let rating = ard.restaurantRating
+                if (rating == 0) {
+                    cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
+                } else {
+                    cell.lblRestaurantRating.text = "\(rating)"
+                }
+                
+                if ard.restaurantRating == 0{
+                    cell.ratingStar.isHidden = false
+                    cell.ratingValueLbl.isHidden = true
+                }else{
+                    cell.ratingStar.isHidden = true
+                    cell.ratingValueLbl.isHidden = false
+                    cell.ratingValueLbl.text = String(format: "%d", ard.restaurantRating)
+                }
+                
+                /*for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[indexPath.row].restaurantDetails.count {
+                    let ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[indexPath.row].restaurantDetails[index]
+                        
+                    let food_img = ard.restaurantImage.replacingOccurrences(of: " ", with: "%20")
+                    if let food_img = URL(string: food_img) {
+                        cell.foodImg.kf.setImage(with: food_img)
+                    } else {
+                        cell.foodImg.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
+                        cell.foodImg.image = UIImage.init(named: "2019-11-6")
+                    }
+                    
+                    cell.food_titleLbl.text = ard.restaurantName
+                    cell.lblDeliverTime.text = ard.deliveryTime
+                    
+                    let rating = ard.restaurantRating
+                    if (rating == 0) {
+                        cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
+                    } else {
+                        cell.lblRestaurantRating.text = "\(rating)"
+                    }
+                    
+                    if ard.restaurantRating == 0{
+                        cell.ratingStar.isHidden = false
+                        cell.ratingValueLbl.isHidden = true
+                    }else{
+                        cell.ratingStar.isHidden = true
+                        cell.ratingValueLbl.isHidden = false
+                        cell.ratingValueLbl.text = String(format: "%d", ard.restaurantRating)
+                    }
+                }*/
+                
+                
+                /*let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantImage)
+                cell.foodImg.kf.setImage(with: food_img)
+                cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantName
+                cell.lblDeliverTime.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].deliveryTime
+                let rating = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating
+                if (rating == 0) {
+                    cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
+                } else {
+                    cell.lblRestaurantRating.text = "\(rating)"
+                }*/
+                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating)
+                //cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].todayWkingTime
+                //cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantDesc
+                
+                /*if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating == 0{
                     cell.ratingStar.isHidden = false
                     cell.ratingValueLbl.isHidden = true
                 }else{
                     cell.ratingStar.isHidden = true
                     cell.ratingValueLbl.isHidden = false
                     cell.ratingValueLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating)
-                }
-            
-            
+                }*/
+                
+                
             }
             // code shadow effects
             cell.layer.cornerRadius = 5.0
@@ -608,18 +866,18 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             containerView.layer.cornerRadius = 5
             containerView.clipsToBounds = true
             return cell
-
+            
         }else if collectionView == food_two_collectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCollectionCell", for: indexPath) as! FoodCollectionCell
             
             if Singleton.sharedInstance.resturantHomeModel != nil{
-            let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantImage)
-            cell.foodImg.kf.setImage(with: food_img)
-            cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantName
-            //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantRating)
-            cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].todayWkingTime
-            cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantDesc
-            
+                let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantImage)
+                cell.foodImg.kf.setImage(with: food_img)
+                cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantName
+                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantRating)
+                cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].todayWkingTime
+                cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantDesc
+                
                 if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantRating == 0{
                     cell.ratingStar.isHidden = false
                     cell.ratingValueLbl.isHidden = true
@@ -629,9 +887,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     cell.ratingValueLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantRating)
                 }
             }
-            
-           
-            
             
             // code shadow effects
             cell.layer.cornerRadius = 5.0
@@ -647,9 +902,9 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         else if collectionView == shop_collectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StoreCollectionCell", for: indexPath) as! StoreCollectionCell
             if Singleton.sharedInstance.resturantHomeModel != nil{
-             let shop_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant[indexPath.row].restaurantLogo)
-            cell.storeImg.kf.setImage(with: shop_img)
-        }
+                let shop_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant[indexPath.row].restaurantLogo)
+                cell.storeImg.kf.setImage(with: shop_img)
+            }
             cell.layer.cornerRadius = 5.0
             cell.layer.masksToBounds = false
             cell.layer.shadowColor = UIColor.lightGray.cgColor
@@ -659,16 +914,16 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             containerView.layer.cornerRadius = 35.0
             containerView.clipsToBounds = true
             return cell
-        }else {
+        } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCollectionCell", for: indexPath) as! FoodCollectionCell
             
             if Singleton.sharedInstance.resturantHomeModel != nil{
-            let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantImage)
-            cell.foodImg.kf.setImage(with: food_img)
-            cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantName
-            //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating)
-            cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].todayWkingTime
-            cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantDesc
+                let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantImage)
+                cell.foodImg.kf.setImage(with: food_img)
+                cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantName
+                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating)
+                cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].todayWkingTime
+                cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantDesc
                 if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating == 0{
                     cell.ratingStar.isHidden = false
                     cell.ratingValueLbl.isHidden = true
@@ -677,7 +932,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     cell.ratingValueLbl.isHidden = false
                     cell.ratingValueLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating)
                 }
-            
+                
             }
             
             // code shadow effects
@@ -691,22 +946,35 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             containerView.clipsToBounds = true
             return cell
         }
-        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         var rest_id = String()
+        var cat_id = String()
         var storeName = String()
-        if(collectionView == resturantsCollectionView){
+        if(collectionView == resturantsCollectionView){ //primer grid el que es horizontal
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantId)
-        }else if collectionView == food_collectionView{
+        }else if collectionView == food_collectionView{ //segundo grid el que es vertical
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantName
-           rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantId)
+            rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantId)
         }else if collectionView == food_two_collectionView{
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantId)
         }else if collectionView == food_three_collectionView{
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantId)
+        }else if collectionView == categories_collectionView{
+            storeName = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryName
+            var cat_id_selected = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryId
+            
+            cat_selected = cat_id_selected!
+            
+            self.food_collectionView.reloadData()
+            self.categories_collectionView.reloadData()
+            //let filter = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails.filter({ $0.restaurantId == cat_id, options: .caseInsensitive) != nil})
+            
+            return
         }else{
             storeName = Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.featuredRestaurant[indexPath.row].restaurantId)
@@ -726,15 +994,15 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     @IBAction func promotionOfferOkBtnTapped(_ sender: Any)
     {
-       promotionalOfferBGView.isHidden = true
+        promotionalOfferBGView.isHidden = true
     }
-
+    
     
     
     @IBAction func searchBackBtnTapped(_ sender: Any)
     {
         self.searchGrayView.isHidden = true
-
+        
     }
     
     @IBAction func searchButtonTapped(_ sender: Any)

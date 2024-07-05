@@ -76,9 +76,9 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         topNavigationView.layer.shadowColor = UIColor.lightGray.cgColor
         userImageView.layer.cornerRadius = 50.0
         userImageView.clipsToBounds = true
-        saveBtn.layer.cornerRadius = 20.0
+        saveBtn.layer.cornerRadius = 2 //20.0
         mobileNumberTxt.keyboardType = .numberPad
-        photoBtn.layer.cornerRadius = 50.0
+        photoBtn.layer.cornerRadius = 2 //50.0
         photoBtn.clipsToBounds = true
         photoBtn.backgroundColor = OrangeTransperantColor
         userNameBtn.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)
@@ -89,7 +89,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         ActAsSelectedLatitude = ""
         ActAsSelectedLongitude = ""
         ActAsSelectedZipCode = ""
-        otpVerifyBtn.layer.cornerRadius = 20.0
+        otpVerifyBtn.layer.cornerRadius = 2 //20.0
         otpVerifyBtn.clipsToBounds = true
 
     }

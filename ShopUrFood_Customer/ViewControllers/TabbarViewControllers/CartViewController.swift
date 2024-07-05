@@ -103,9 +103,12 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             view.addGestureRecognizer(self.revealViewController().tapGestureRecognizer())
         }
         
-        emptyCartBtn.layer.cornerRadius = 25.0
         emptyCartBtn.clipsToBounds = true
 
+        emptyCartBtn.layer.borderWidth = 2
+        emptyCartBtn.layer.borderColor = UIColor.red.cgColor
+        emptyCartBtn.setTitleColor(UIColor.red, for: .normal)
+        emptyCartBtn.layer.backgroundColor = UIColor.white.cgColor
         
         popTip.font = UIFont(name: "Avenir-Medium", size: 12)!
         popTip.shouldDismissOnTap = true
@@ -320,7 +323,8 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
             cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
             
-            
+            cell?.checkOutBtn.layer.borderWidth = 2
+            cell?.checkOutBtn.layer.borderColor = UIColor.red.cgColor
             
             let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
             let subTotal = Singleton.sharedInstance.MyCartModel.data.cartSubTotal as String

@@ -100,6 +100,28 @@ class CommomParsing: BaseParsing {
         })
     }
     
+    //Apple Login
+    public func AppleLogin(lang:String,apple_id:String,email:String,name:String,type:String,ios_fcm_id:String,ios_device_id:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    {
+        let requestDict = NSMutableDictionary.init()
+        requestDict.setValue(lang, forKey: "lang")
+        requestDict.setValue(apple_id, forKey: "apple_id")
+        requestDict.setValue(email, forKey: "email")
+        requestDict.setValue(name, forKey: "name")
+        requestDict.setValue(ios_fcm_id, forKey: "ios_fcm_id")
+        requestDict.setValue(type, forKey: "type")
+        requestDict.setValue(ios_device_id, forKey: "ios_device_id")
+
+        self.blockResponse = self.blockStatus
+        
+        //make base method call
+        self.ParsingFunctionCall(subURl:APPLE_LOGIN as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+            success(response)
+        }, onFailure: {errorResponse in
+            failure(errorResponse)
+        })
+    }
+    
     
     //Google Login
     public func GoogleLogin(lang:String,google_id:String,email:String,name:String,type:String,ios_fcm_id:String,ios_device_id:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)

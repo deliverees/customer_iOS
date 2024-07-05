@@ -37,6 +37,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>947105282289402</string>
+	<key>FacebookClientToken</key>
+	<string>02ccf803a575321e38f59fefa157a4cc</string>
 	<key>FacebookDisplayName</key>
 	<string>Deliverees.Customer</string>
 	<key>LSApplicationCategoryType</key>
@@ -65,6 +67,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>would like to save photos to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>User can upload the user image using the camera and gallery</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -107,5 +111,9 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 </dict>
 </plist>

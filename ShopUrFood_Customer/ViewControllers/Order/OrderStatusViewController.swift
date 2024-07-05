@@ -22,7 +22,7 @@ class OrderStatusViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         backView.layer.cornerRadius = 8.0
-        homeBtn.layer.cornerRadius = 15
+        homeBtn.layer.cornerRadius = 2 //15
         self.foodReachedLbl.text = LanguageDictonary.value(forKey: "foodreached") as? String
          self.enjoyTheFoodLbl.text = LanguageDictonary.value(forKey: "enjoyfood") as? String
         self.homeBtn.setTitle(LanguageDictonary.value(forKey: "home") as? String, for: .normal)

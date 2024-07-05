@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         
         
         // Init FaceBook login
-        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         //Init Google
         GIDSignIn.sharedInstance().clientID = GOOGLE_CLIENT_ID
         //GMSServices.provideAPIKey("AIzaSyDnQ9-Asl8DIP8HL9RwFhGhPuD7BqVN73Y")
@@ -88,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .selected)
         
         // Init Paypal
-        PayPalMobile .initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
+        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
         //application.shared.applicationIconBadgeNumber = 0
         application.applicationIconBadgeNumber = 0 
         
@@ -143,6 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         application.applicationIconBadgeNumber = 0
         return true
     }
+    
     @objc func tokenRefreshNotificaiton(_ notification: Foundation.Notification) {
         /*InstanceID.instanceID().instanceID { (result, error) in
             if let error = error {
@@ -333,7 +334,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     
    
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        if (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
+        if (ApplicationDelegate.shared.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
         {
             return true
         }else if(GIDSignIn.sharedInstance().handle(url as URL?,
@@ -345,7 +346,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
   
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool
     {
-        return FBSDKApplicationDelegate.sharedInstance().application(app, open: url, sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplication.OpenURLOptionsKey.annotation])
+        return ApplicationDelegate.shared.application(app, open: url, sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplication.OpenURLOptionsKey.annotation])
     }
     
 

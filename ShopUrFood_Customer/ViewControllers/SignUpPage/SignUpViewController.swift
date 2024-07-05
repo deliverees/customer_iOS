@@ -14,9 +14,6 @@ import FacebookCore
 import FBSDKCoreKit
 import GoogleSignIn
 
-
-
-
 class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSignInDelegate,GIDSignInUIDelegate {
     @IBOutlet weak var SocialLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
@@ -33,10 +30,6 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
     @IBOutlet weak var NameTxt: UITextField!
     
     @IBOutlet weak var referralCodeStaticLbl: UILabel!
-    
-    
-    
-    
     
     //dropDown
     let countryCodeDropDown = DropDown()
@@ -69,30 +62,32 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
         self.referralCodeTxt.placeholder = LanguageDictonary.object(forKey: "enterreferralcode") as! String
         self.referralApplyBtn.setTitle(LanguageDictonary.object(forKey: "apply") as! String, for: .normal)
         
-      print(login_session.value(forKey: "Language") as? String)
+        print(login_session.value(forKey: "Language") as? String)
         
-            if login_session.value(forKey: "Language") as? String == "en"{
-                let string1 = "Referral code? "
-                let string2 = "Apply"
-                
-                let att = NSMutableAttributedString(string: "\(string1)\(string2)");
-                att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: string1.characters.count))
-                att.addAttribute(NSAttributedString.Key.foregroundColor, value: AppLightOrange, range: NSRange(location: string1.characters.count, length: string2.characters.count))
-                referralCodeBtn.setAttributedTitle(att, for: .normal)
-            }else{
-                let string1 = "¿Codigo de referencia? "
-                let string2 = "Aplicar"
-                
-                let att = NSMutableAttributedString(string: "\(string1)\(string2)");
-                att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: string1.characters.count))
-                att.addAttribute(NSAttributedString.Key.foregroundColor, value: AppLightOrange, range: NSRange(location: string1.characters.count, length: string2.characters.count))
-                referralCodeBtn.setAttributedTitle(att, for: .normal)
-            }
+        NameTxt.setPadding(left: 30, right: 0, imageName: "ic_user")
+        emailTxt.setPadding(left: 30, right: 0, imageName: "ic_user_email")
+        passwordTxt.setPadding(left: 30, right: 0, imageName: "ic_user_password")
+        mobileTxt.setPadding(left: 30, right: 0, imageName: "ic_phone")
         
+        if login_session.value(forKey: "Language") as? String == "en"{
+            let string1 = "Referral code? "
+            let string2 = "Apply"
+            
+            let att = NSMutableAttributedString(string: "\(string1)\(string2)");
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: string1.characters.count))
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: AppLightOrange, range: NSRange(location: string1.characters.count, length: string2.characters.count))
+            referralCodeBtn.setAttributedTitle(att, for: .normal)
+        }else{
+            let string1 = "¿Codigo de referencia? "
+            let string2 = "Aplicar"
+            
+            let att = NSMutableAttributedString(string: "\(string1)\(string2)");
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: string1.characters.count))
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: AppLightOrange, range: NSRange(location: string1.characters.count, length: string2.characters.count))
+            referralCodeBtn.setAttributedTitle(att, for: .normal)
+        }
         
-        
-        
-        goBtn.layer.cornerRadius = 25.0
+        //goBtn.layer.cornerRadius = 25.0
         baseView.layer.cornerRadius = 5.0
         baseView = self.setCornorShadowEffects(sender: baseView)
         iPhoneUDIDString = UIDevice.current.identifierForVendor!.uuidString
@@ -105,8 +100,75 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
         // self.logoImg.image = UIImage(named: "app_logo")
         logoBGView.layer.cornerRadius = 75.0
         logoBGView.clipsToBounds = true
-        referralApplyBtn.layer.cornerRadius = 20.0
+        referralApplyBtn.layer.cornerRadius = 2 //20.0
         mobileTxt.keyboardType = .numberPad
+        
+        let tapGestureRecognizerName = UITapGestureRecognizer(target: self, action: #selector(imagedTapedName(tapGestureRecognizer:)))
+        
+        showHideName.isUserInteractionEnabled = true
+        showHideName.addGestureRecognizer(tapGestureRecognizerName)
+        
+        let tapGestureRecognizerEmail = UITapGestureRecognizer(target: self, action: #selector(imagedTapedEmail(tapGestureRecognizer:)))
+        
+        showHideEmail.isUserInteractionEnabled = true
+        showHideEmail.addGestureRecognizer(tapGestureRecognizerEmail)
+        
+        let tapGestureRecognizerPassword = UITapGestureRecognizer(target: self, action: #selector(imagedTapedPassword(tapGestureRecognizer:)))
+        
+        showHidePassword.isUserInteractionEnabled = true
+        showHidePassword.addGestureRecognizer(tapGestureRecognizerPassword)
+    }
+    
+    var iconClick = false
+    var iconClick1 = false
+    var iconClick2 = true
+    
+    @IBOutlet weak var showHideName: UIImageView!
+    
+    @IBOutlet weak var showHideEmail: UIImageView!
+    
+    @IBOutlet weak var showHidePassword: UIImageView!
+    
+    @objc func imagedTapedName(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        if iconClick {
+            iconClick = false
+            tappedImage.image = UIImage(named: "hidden")
+            NameTxt.isSecureTextEntry = false
+        } else {
+            iconClick = true
+            tappedImage.image = UIImage(named: "show")
+            NameTxt.isSecureTextEntry = true
+        }
+    }
+    
+    @objc func imagedTapedEmail(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        if iconClick1 {
+            iconClick1 = false
+            tappedImage.image = UIImage(named: "hidden")
+            emailTxt.isSecureTextEntry = false
+        } else {
+            iconClick1 = true
+            tappedImage.image = UIImage(named: "show")
+            emailTxt.isSecureTextEntry = true
+        }
+    }
+    
+    @objc func imagedTapedPassword(tapGestureRecognizer:UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        
+        if iconClick2 {
+            iconClick2 = false
+            tappedImage.image = UIImage(named: "hidden")
+            passwordTxt.isSecureTextEntry = false
+        } else {
+            iconClick2 = true
+            tappedImage.image = UIImage(named: "show")
+            passwordTxt.isSecureTextEntry = true
+        }
     }
     
     @IBAction func applyReferralCodeBtnAction(_ sender: Any) {
@@ -198,13 +260,13 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
                     let user_email = dataDict.object(forKey: "user_email")as! String
                     let user_id = dataDict.object(forKey: "user_id")
                     let user_name = dataDict.object(forKey: "user_name")as! String
-                    let token = dataDict.object(forKey: "token")as! String
+                    /*let token = dataDict.object(forKey: "token")as! String
                     login_session.setValue(user_email, forKey: "user_email")
                     login_session.setValue("0", forKey: "userCartCount")
                     login_session.setValue(user_id, forKey: "user_id")
                     login_session.setValue(user_name, forKey: "user_name")
                     login_session.setValue(token, forKey: "user_token")
-                    login_session.synchronize()
+                    login_session.synchronize()*/
                     self.showSuccessPopUp(msgStr: response.object(forKey: "message")as! String)
                 }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
@@ -229,9 +291,10 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
         let alert = SCLAlertView(appearance: appearance)
         _ = alert.addButton("Ok") {
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-            nextViewController.ComingType = "FIRST"
-            self.present(nextViewController, animated:true, completion:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            let msg = LanguageDictonary.object(forKey: "WehavesentaverificationemailValidateyouraccounttocontinue") as! String
+            nextViewController.showSuccessPopUp(msgStr: msg)
+            self.dismiss(animated: true, completion: nil)
         }
         
         let icon = UIImage(named:"success_tick")
@@ -269,13 +332,13 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
                 }
             }
             loginManager.logOut()
-            loginManager.logIn(readPermissions: [.publicProfile,.email], viewController: self, completion: completion)
+            loginManager.logIn(permissions: [.publicProfile,.email], viewController: self, completion: completion)
         }
     }
     
     func getFBUserData(){
-        if((FBSDKAccessToken.current()) != nil){
-            FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, first_name, last_name, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
+        if((AccessToken.current) != nil){
+            GraphRequest(graphPath: "me", parameters: ["fields": "id, first_name, last_name, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
                 if (error == nil){
                     //    self.dict = result as! [String : AnyObject]
                     let responseDict = result as! NSDictionary
@@ -368,3 +431,4 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
         }
     }
 }
+

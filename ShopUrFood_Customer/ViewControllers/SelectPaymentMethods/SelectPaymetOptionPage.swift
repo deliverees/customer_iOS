@@ -208,8 +208,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         cartOrangelineView.layer.cornerRadius = 6
         cartOrangelineView.layer.masksToBounds = true
         
-        cartOKButton.layer.cornerRadius = 20.0
-        skipBtn.layer.cornerRadius = 20.0
+        cartOKButton.layer.cornerRadius = 2 //20.0
+        skipBtn.layer.cornerRadius = 2 //20.0
         
     }
     

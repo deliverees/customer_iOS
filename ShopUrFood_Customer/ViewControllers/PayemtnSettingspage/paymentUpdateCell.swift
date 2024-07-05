@@ -13,7 +13,7 @@ class paymentUpdateCell: UITableViewCell {
     @IBOutlet weak var updateBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
-        updateBtn.layer.cornerRadius = 20.0
+        //updateBtn.layer.cornerRadius = 20.0
         updateBtn.clipsToBounds = true
         // Initialization code
     }

@@ -87,7 +87,7 @@ class AllRestaurantViewController: BaseViewController,UITableViewDelegate,UITabl
         filterTableView.layer.cornerRadius = 5.0
         filterTableView.layer.masksToBounds = true
         
-        filterSearchButton.layer.cornerRadius = 15.0
+        filterSearchButton.layer.cornerRadius = 2 //15.0
         filterSearchButton.layer.masksToBounds = true
         self.filterSearchButton.setTitle(LanguageDictonary.value(forKey: "showrestaurants") as? String, for: .normal)
         self.filterHeaderLabel.text = LanguageDictonary.value(forKey: "filter") as? String
@@ -398,7 +398,7 @@ class AllRestaurantViewController: BaseViewController,UITableViewDelegate,UITabl
         cell?.titleLbl.text = ((allStoreArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_name")as! String)
         cell?.openTimeLbl.text = ((allStoreArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "category_name")as! String)
         cell?.descriptionLbl.text = "\(LanguageDictonary.value(forKey: "deliveryTime") as! String) " + ((allStoreArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_delivery_time")as! String)
-          
+          //restaurant_rating //delivery_time
         if ((allStoreArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_offer")as! NSNumber) == 0
         {
          cell?.offerPercentLbl.isHidden = true

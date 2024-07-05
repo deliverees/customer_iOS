@@ -21,13 +21,9 @@ class CustomTabBarController: UITabBarController,UITabBarControllerDelegate {
         tabBar.items?[4].title = LanguageDictonary.object(forKey: "wallet") as! String
         customTabBar = self.tabBar
       
+        //customTabBar.isHidden = true
         // Do any additional setup after loading the view.
     }
-    
-    
-    
-    
-    
     
     // UITabBarDelegate
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {

@@ -38,7 +38,7 @@ class CancelOrderPage: BottomPopupViewController,UITextViewDelegate {
         print(dataDict)
         restaurantNameLbl.text = (dataDict.object(forKey: "restaurant_name")as! String)
         dishNameLbl.text = (dataDict.object(forKey: "item_name")as! String)
-        cancelOrderBtn.layer.cornerRadius = 17.5
+        cancelOrderBtn.layer.cornerRadius = 2 //17.5
         msgTxt.delegate = self
         msgTxt.textColor = UIColor.lightGray
         closeBtn.addTarget(self, action: #selector(closeBtnTapped), for: .touchUpInside)

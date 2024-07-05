@@ -46,7 +46,7 @@ class ItemReviewPage: BottomPopupViewController,UITextViewDelegate {
         reviewMsgTxt.delegate = self
         reviewMsgTxt.textColor = UIColor.lightGray
         buttonIndicatorView.addSubview(CancelLoadingIndicator)
-        submitBtn.layer.cornerRadius = 20.0
+        submitBtn.layer.cornerRadius = 2 //20.0
         submitBtn.clipsToBounds = true
         if reviewType == "item"{
             reviewTitleLbl.text = LanguageDictonary.value(forKey: "review") as? String
