@@ -271,7 +271,7 @@ DEPENDENCIES:
   - MarqueeLabel/Swift
   - MIBlurPopup
   - NVActivityIndicatorView
-  - PayPal-iOS-SDK (from `PayPal-iOS-SDK_deprecated`)
+  - PayPal-iOS-SDK (from `https://github.com/paypal/PayPal-iOS-SDK.git`)
   - Popover
   - RAMAnimatedTabBarController
   - SCLAlertView
@@ -349,7 +349,7 @@ EXTERNAL SOURCES:
     :branch: master
     :git: https://github.com/jonSurrey/JonAlert.git
   PayPal-iOS-SDK:
-    :path: PayPal-iOS-SDK_deprecated
+    :git: https://github.com/paypal/PayPal-iOS-SDK.git
 
 CHECKOUT OPTIONS:
   DropDown:
@@ -358,6 +358,9 @@ CHECKOUT OPTIONS:
   JonAlert:
     :commit: c37cdd9d82fb5bb0af8952a4299d7c9b20e3237e
     :git: https://github.com/jonSurrey/JonAlert.git
+  PayPal-iOS-SDK:
+    :commit: ab176867b118e686fa041040156c1e9cf2de9891
+    :git: https://github.com/paypal/PayPal-iOS-SDK.git
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
@@ -421,6 +424,6 @@ SPEC CHECKSUMS:
   SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
   Toast-Swift: e42a638589a2f95036b4bb7626cfbdde7daf0393
 
-PODFILE CHECKSUM: ebad52e151c92b21fee762f7176c9ab49d5d38f8
+PODFILE CHECKSUM: 1afc954b6e43ad6c4a91d31b33d0e32dfe436132
 
 COCOAPODS: 1.14.3
