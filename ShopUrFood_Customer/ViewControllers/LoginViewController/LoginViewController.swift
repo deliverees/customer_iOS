@@ -559,13 +559,13 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                 }
                 guard let user = authResult?.user else { return }
                 let email = user.email ?? ""
-                let displayName = user.displayName ?? ""
+                let displayName = user.displayName ?? "Anonymous"
                 guard let uid = Auth.auth().currentUser?.uid else { return }
                 
                 self.showLoadingIndicator(senderVC: self)
                 let Parse = CommomParsing()
 
-                Parse.AppleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", apple_id: uid, email: email, name: email, type: device_type,ios_fcm_id: login_session.object(forKey: "fcmToken") as! String,ios_device_id:self.iPhoneUDIDString, onSuccess: {
+                Parse.AppleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", apple_id: uid, email: email, name: displayName, type: device_type,ios_fcm_id: login_session.object(forKey: "fcmToken") as! String,ios_device_id:self.iPhoneUDIDString, onSuccess: {
                     response in
                     print(response)
                     if (response.value(forKey: "code")as! Int == 200){
