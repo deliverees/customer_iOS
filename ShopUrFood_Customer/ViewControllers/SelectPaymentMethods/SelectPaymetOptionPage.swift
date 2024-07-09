@@ -638,7 +638,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 self.couponTableView.reloadData()
                 }
                 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "paypal") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "paypal") as? NSNumber)?.stringValue == "1"
                 {
                     self.adminManagepaypalFlag = true
 
@@ -648,7 +648,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
 
                 }
 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "stripe") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "stripe") as? NSNumber)?.stringValue == "1"
                 {
                    self.adminManageStripeFlag = true
                 }else
@@ -657,7 +657,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
 
                 }
                 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "cod") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "cod") as? NSNumber)?.stringValue == "1"
                 {
                     self.adminManageCODFlag = true
                 }else
