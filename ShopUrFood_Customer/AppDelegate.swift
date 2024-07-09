@@ -87,14 +87,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .selected)
         
-        // Init Paypal
-        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
-        //application.shared.applicationIconBadgeNumber = 0
-        application.applicationIconBadgeNumber = 0 
-        
         // [START register_for_notifications]
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
+        DispatchQueue.main.async {
+            // Init Paypal
+            PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
             UNUserNotificationCenter.current().delegate = self
             
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -102,45 +98,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
                 options: authOptions,
                 completionHandler: {_, _ in })
             UIApplication.shared.registerForRemoteNotifications()
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-        
-        
-        
-        application.registerForRemoteNotifications()
-        
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert], completionHandler: {(granted, error) in
-            if (granted) {
-                UIApplication.shared.registerForRemoteNotifications()
-            } else{
-                print("Notification permissions not granted")
+            
+            
+            
+            application.registerForRemoteNotifications()
+            
+            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert], completionHandler: {(granted, error) in
+                if (granted) {
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else{
+                    print("Notification permissions not granted")
+                }
+            })
+            FirebaseApp.configure()
+            Messaging.messaging().delegate = self
+              //Messaging.messaging().shouldEstablishDirectChannel = true
+           
+            if let token = Messaging.messaging().fcmToken {
+                print("FCM token: \(token )")
+                self.ConnectToFCM()
             }
-        })
-        
-        
-         FirebaseApp.configure()
-        
-        Messaging.messaging().delegate = self
-          //Messaging.messaging().shouldEstablishDirectChannel = true
-       
-        if let token = Messaging.messaging().fcmToken {
-            print("FCM token: \(token )")
+              self.languageUpdate()
             self.ConnectToFCM()
+            self.checkRootView()
+          
+            Fabric.sharedSDK().debug = true
+            NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
+                                                   name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
+            
+            application.applicationIconBadgeNumber = 0
         }
-          self.languageUpdate()
-        self.ConnectToFCM()
-        self.checkRootView()
-      
-        Fabric.sharedSDK().debug = true
-        NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
-                                               name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
         
-        application.applicationIconBadgeNumber = 0
         return true
     }
     

@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -79,6 +83,8 @@
 	<string>We show the restaurants based on the user location. So User can find near by resturants easily</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>User can upload the user image using the camera and gallery</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>User feedback collected for analytics reasons</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>TruenoRg.otf</string>

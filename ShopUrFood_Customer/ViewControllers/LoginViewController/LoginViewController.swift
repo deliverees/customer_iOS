@@ -17,6 +17,7 @@ import FirebaseAuth
 import AuthenticationServices
 import CryptoKit
 import SCLAlertView
+import AppTrackingTransparency
 
 
 class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDelegate,UITextFieldDelegate  {
@@ -116,6 +117,14 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
         btnAppleSignIn.isUserInteractionEnabled = true
         btnAppleSignIn.addGestureRecognizer(tapGestureRecognizerAppleBtnSignIn)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        ATTrackingManager.requestTrackingAuthorization { status in
+            print(status)
+        }
+    }
+    
     
     func showSuccessPopUp(msgStr:String){
         let appearance = SCLAlertView.SCLAppearance(
