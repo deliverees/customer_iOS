@@ -45,20 +45,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         
       
         
-        let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff")
-        do
-        {
-            self.player = try AVAudioPlayer(contentsOf: soundURL!)
-        }
-        catch
-        {
-            print("No sound found by URL")
-        }
-        if self.player.isPlaying
-        {
-            self.playerStop()
-           
-            
+        if let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff") {
+            do
+            {
+                self.player = try AVAudioPlayer(contentsOf: soundURL)
+            }
+            catch
+            {
+                print("No sound found by URL")
+            }
+            if self.player.isPlaying
+            {
+                self.playerStop()
+            }
         }
         
         
@@ -121,16 +120,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
                 print("FCM token: \(token )")
                 self.ConnectToFCM()
             }
-              self.languageUpdate()
-            self.ConnectToFCM()
-            self.checkRootView()
-          
+   
             Fabric.sharedSDK().debug = true
             NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
                                                    name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
             
             application.applicationIconBadgeNumber = 0
         }
+        
+        self.languageUpdate()
+        self.ConnectToFCM()
+        self.checkRootView()
+ 
         
         return true
     }
@@ -386,16 +387,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     func application(received remoteMessage: MessagingRemoteMessage) {
         print("remoteMessage: \(remoteMessage)")
         print("remoteMessage: \(remoteMessage.appData)")
-    }
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    } */
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(fcmToken)")
         print(fcmToken)
-        let dataDict:[String: String] = ["token": fcmToken]
+        let dataDict:[String: String] = ["token": fcmToken ?? ""]
         print(dataDict)
         //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }*/
+        if let fcmToken {
+            UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+        }
+    }
     //MARK: UNUserNotificationCenterDelegate Method
     //Called when a notification is delivered to a foreground app.
     @available(iOS 10.0, *)
