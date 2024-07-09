@@ -65,15 +65,15 @@ class PaymentSettingsPageViewController: BaseViewController,UITableViewDelegate,
                     self.bankDataDict.setValue("", forKey: "paypal_clientId")
                     //self.bankDataDict.setValue("", forKey: "paypal_secretId")
                 }
-//                if self.resultDict.object(forKey: "stripe_status")as! String == "Publish"
-//                {
-//                    self.StripeFlag = true
-//                    self.bankDataDict.setValue((self.resultDict.object(forKey: "stripe_clientId")as! String), forKey: "stripe_clientId")
-//                    self.bankDataDict.setValue((self.resultDict.object(forKey: "stripe_secretId")as! String), forKey: "stripe_secretId")
-//                }else{
-//                    self.bankDataDict.setValue("", forKey: "stripe_clientId")
-//                    self.bankDataDict.setValue("", forKey: "stripe_secretId")
-//                }
+                if self.resultDict.object(forKey: "stripe_status") as? String == "Publish"
+                {
+                    self.StripeFlag = true
+                    self.bankDataDict.setValue((self.resultDict.object(forKey: "stripe_clientId")as! String), forKey: "stripe_clientId")
+                    self.bankDataDict.setValue((self.resultDict.object(forKey: "stripe_secretId")as! String), forKey: "stripe_secretId")
+                }else{
+                    self.bankDataDict.setValue("", forKey: "stripe_clientId")
+                    self.bankDataDict.setValue("", forKey: "stripe_secretId")
+                }
                 if self.resultDict.object(forKey: "netBanking_status")as! String == "Publish"
                 {
                     self.NetBankingFlag = true
