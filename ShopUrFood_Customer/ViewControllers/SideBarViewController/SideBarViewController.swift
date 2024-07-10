@@ -308,17 +308,19 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         Parse.userLogout(lang: login_session.value(forKey: "Language") as? String ?? "es",token: tokenStr, ios_device_id: iPhoneUDIDString,type:device_type, onSuccess: {
             response in
             if (response.value(forKey: "code")as! Int == 200){
-                let domain = Bundle.main.bundleIdentifier!
-                login_session.persistentDomain(forName: domain)
-                login_session.synchronize()
-                print(login_session)
-                for key in login_session.dictionaryRepresentation().keys{
-                    login_session.removeObject(forKey: key.description)
-                }
-                login_session.synchronize()
-                let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                appDelegate?.checkRootView()
+                // Logout successful
             }
+            // Logout not successful but we must remove user session
+            let domain = Bundle.main.bundleIdentifier!
+            login_session.persistentDomain(forName: domain)
+            login_session.synchronize()
+            print(login_session)
+            for key in login_session.dictionaryRepresentation().keys{
+                login_session.removeObject(forKey: key.description)
+            }
+            login_session.synchronize()
+            let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
+            appDelegate?.checkRootView()
             self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in})
         

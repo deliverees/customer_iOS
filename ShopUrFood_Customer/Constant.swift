@@ -93,36 +93,10 @@ let OrangeTransperantColor = UIColor(red: 254/255.0, green: 128/255.0, blue: 17/
 //Adding Current User Details
 let login_session = UserDefaults.standard
 
-//  Base urlhttp
-
-//let BASEURL = "http://mobileappshopurfood2.1.mytaxisoft.com/api/"
-//let BASEURL_CUSTOMER = "http://mobileappshopurfood2.1.mytaxisoft.com/api/customer/"
-
-//let BASEURL = "http://suf-app.pofi5.in/api/"
-//let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"
-
-
-
-// V2.1 QA Testing URL
-
-//let BASEURL = "http://192.168.0.76/victor_suf/api/"
-//let BASEURL_CUSTOMER = "http://192.168.0.76/victor_suf/api/customer/"
-
-//let BASEURL = "http://pofi5.com/victor_suf/api/"
-//let BASEURL_CUSTOMER = "http://pofi5.com/victor_suf/api/customer/"
-
 let BASEURL = "https://delivereesapp.com/api/"
 //let BASEURL = "https://develop.delivereesapp.es/api/"
-//let BASEURL = "https://phplaravel-1217347-4326198.cloudwaysapps.com/api/"
-//let BASEURL_CUSTOMER = "https://phplaravel-1217347-4326198.cloudwaysapps.com/api/customer/"
 let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
-//let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
-//// V2.1 QA Dev URL
-//let BASEURL = "http://suf-app.pofi5.in/api/"
-//let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"
-
-//let BASEURL = "https://demo.shopurfood.com/api/"
-//let BASEURL_CUSTOMER = "https://demo.shopurfood.com/api/customer/"
+// let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
 
 
 //Customer Login Api
