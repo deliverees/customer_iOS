@@ -9607,15 +9607,15 @@
                                                                 <constraint firstAttribute="height" constant="50" id="mcx-Ay-efF"/>
                                                             </constraints>
                                                         </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pre Order" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PZT-0x-thn">
-                                                            <rect key="frame" x="112" y="18" width="131" height="21"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pre Order" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.84999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="PZT-0x-thn">
+                                                            <rect key="frame" x="112" y="18" width="131" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="131" id="2ep-Vc-puO"/>
-                                                                <constraint firstAttribute="height" constant="21" id="uvO-DF-4As"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="TruenoRg" family="Trueno" pointSize="12"/>
                                                             <color key="textColor" red="0.92941176470588238" green="0.10588235294117647" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
+                                                            <lineBreakStrategy key="lineBreakStrategy"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PreOrder" translatesAutoresizingMaskIntoConstraints="NO" id="CCG-Ca-c3R">
                                                             <rect key="frame" x="245" y="15" width="25" height="25"/>
