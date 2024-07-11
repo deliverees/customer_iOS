@@ -144,23 +144,28 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         }
     }
     func sendLatLang(deliverylatitude: String, deliverylongitude: String, storelatitude: String, storelongitude: String, customerlatitude: String, customerlongitude: String, customerAddressString:String) {
-        let dellat = Double(deliverylatitude)!
-        let dellon = Double(deliverylongitude)!
-        let deliveryMarkerPosition = CLLocationCoordinate2DMake(dellat, dellon)
-        CATransaction.begin()
-        CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
-        self.mapCamera = GMSCameraPosition.camera(withLatitude: dellat, longitude: dellon, zoom: self.zoomLevel)
-        CATransaction.commit()
-        self.deliveryBoyMarker = GMSMarker(position: deliveryMarkerPosition)
-        self.deliveryBoyMarker.icon = self.imageWithImage(image: UIImage(named: "ic_vehicle")!, scaledToSize: CGSize(width: 30.0, height:30.0))
-        deliveryBoyMarker.title = "DeliveryBoy Location"
-        deliveryBoyMarker.snippet = ""
-        self.deliveryBoyMarker.map = self.gMapView
-        allmarkers.insert(deliveryBoyMarker)
+        guard let storeLatDouble = Double(storelatitude),
+              let storeLongDouble = Double(storelongitude) else {
+            return
+        }
+        let storeMarkerPosition = CLLocationCoordinate2DMake(storeLatDouble, storeLongDouble)
+        if let dellat = Double(deliverylatitude),
+           let dellon = Double(deliverylongitude) {
+            let deliveryMarkerPosition = CLLocationCoordinate2DMake(dellat, dellon)
+            CATransaction.begin()
+            CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
+            self.mapCamera = GMSCameraPosition.camera(withLatitude: dellat, longitude: dellon, zoom: self.zoomLevel)
+            CATransaction.commit()
+            self.deliveryBoyMarker = GMSMarker(position: deliveryMarkerPosition)
+            self.deliveryBoyMarker.icon = self.imageWithImage(image: UIImage(named: "ic_vehicle")!, scaledToSize: CGSize(width: 30.0, height:30.0))
+            deliveryBoyMarker.title = "DeliveryBoy Location"
+            deliveryBoyMarker.snippet = ""
+            self.deliveryBoyMarker.map = self.gMapView
+            allmarkers.insert(deliveryBoyMarker)
+        } else {
+            self.mapCamera = GMSCameraPosition.camera(withLatitude: storeLatDouble, longitude: storeLongDouble, zoom: self.zoomLevel)
+        }
         
-        let storeLatDouble = Double(storelatitude)
-        let storeLongDouble = Double(storelongitude)
-        let storeMarkerPosition = CLLocationCoordinate2DMake(storeLatDouble!, storeLongDouble!)
         CATransaction.begin()
         CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
         CATransaction.commit()
@@ -197,7 +202,13 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
             gMapView.animate(to: self.mapCamera)
         }
         
-        self.getPolylineRoute(from: CLLocationCoordinate2D(latitude: Double(deliverylatitude)!, longitude: Double(deliverylongitude)!), to: CLLocationCoordinate2D(latitude: customerLatDouble!, longitude: customerLongDouble!))
+        if let deliveryLatDouble = Double(deliverylatitude),
+           let deliveryLonDouble = Double(deliverylongitude) {
+            self.getPolylineRoute(from: CLLocationCoordinate2D(latitude: deliveryLatDouble,
+                                                               longitude: deliveryLonDouble),
+                                                               to: CLLocationCoordinate2D(latitude: customerLatDouble!,
+                                                                                          longitude: customerLongDouble!))
+        }
         
         if deliverylatitude != "" && deliverylongitude != "" {
             let deliveryLocation = CLLocation(latitude: Double(deliverylatitude)!, longitude: Double(deliverylongitude)!)
