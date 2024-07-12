@@ -71,9 +71,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
 //        GMSServices.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
 //        GMSPlacesClient.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
         
-        GMSServices.provideAPIKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
-        GMSPlacesClient.provideAPIKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
-        GoogleApi.shared.initialiseWithKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
+        GMSServices.provideAPIKey("AIzaSyCUI2alnPkksusnFTrNp4jZpG_LjT1y6U4")
+        GMSPlacesClient.provideAPIKey("AIzaSyCUI2alnPkksusnFTrNp4jZpG_LjT1y6U4")
+        GoogleApi.shared.initialiseWithKey("AIzaSyCUI2alnPkksusnFTrNp4jZpG_LjT1y6U4")
 
         
         IQKeyboardManager.shared().isEnabled = true
