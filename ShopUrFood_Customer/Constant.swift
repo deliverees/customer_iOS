@@ -93,6 +93,7 @@ let OrangeTransperantColor = UIColor(red: 254/255.0, green: 128/255.0, blue: 17/
 //Adding Current User Details
 let login_session = UserDefaults.standard
 
+<<<<<<< HEAD
 //  Base urlhttp
 
 
@@ -103,6 +104,12 @@ let BASEURL = "https://delivereesapp.com/api/"
 //let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
 let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
 //// V2.1 QA Dev URL
+=======
+let BASEURL = "https://delivereesapp.com/api/"
+//let BASEURL = "https://develop.delivereesapp.es/api/"
+let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
+// let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
+>>>>>>> 75c253c95d0a0ea89ae71dd1e7a30c49de762d9b
 
 
 //Customer Login Api

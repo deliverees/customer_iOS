@@ -47,12 +47,12 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
     var storeLatitude: String = ""
     var storeLongitude: String = ""
     var bounds = GMSCoordinateBounds()
-    var allmarkers = [GMSMarker]()
+    var allmarkers = Set<GMSMarker>()
     
     var order_id = String()
     var store_id = String()
     var navigationTypeStr = String()
-     var orderTrackingDict = NSDictionary()
+    var orderTrackingDict = NSDictionary()
     var customerDetailsDict = NSDictionary()
     
     override func viewDidLoad() {
@@ -63,33 +63,37 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         iPhoneUDIDString = UIDevice.current.identifierForVendor!.uuidString
         print("iPhoneUDIDString UUID is : \(iPhoneUDIDString)")
         //mqttSetting()
-          orderTrackingApiCall()
         gMapView.layer.cornerRadius = 8.0
-        
-//        locationManager = CLLocationManager()
-//        locationManager.delegate = self
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.requestAlwaysAuthorization()
-//        locationManager.startMonitoringSignificantLocationChanges()
-//        locationManager.startUpdatingLocation()
-//
-////        print(locationManager.location?.coordinate.latitude as Any)
-////        print(locationManager.location?.coordinate.longitude as Any)
-////
-////        if  let lat = locationManager.location?.coordinate.latitude,
-////            let long = locationManager.location?.coordinate.longitude {
-////            customerLatitude = String(lat)
-////            customerLongitude = String(long)
-////        }
-////        else {
-////
-////        }
-//
-//        self.gMapView.delegate = self
-//        self.gMapView.isMyLocationEnabled = true
-//        self.gMapView.settings.myLocationButton = false
-//
-//        orderIdLbl.text = order_id
+        self.gMapView.delegate = self
+        self.gMapView.isMyLocationEnabled = true
+        self.gMapView.settings.myLocationButton = false
+        self.gMapView.moveCamera(.fit(.init(coordinate: .init(latitude: 36.72016, longitude: 4.42034), coordinate: .init(latitude: 36.72015, longitude: 4.42034))))
+        orderTrackingApiCall()
+        updateBottomSheet(status: "bottom")
+        //        locationManager = CLLocationManager()
+        //        locationManager.delegate = self
+        //        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        //        locationManager.requestAlwaysAuthorization()
+        //        locationManager.startMonitoringSignificantLocationChanges()
+        //        locationManager.startUpdatingLocation()
+        //
+        ////        print(locationManager.location?.coordinate.latitude as Any)
+        ////        print(locationManager.location?.coordinate.longitude as Any)
+        ////
+        ////        if  let lat = locationManager.location?.coordinate.latitude,
+        ////            let long = locationManager.location?.coordinate.longitude {
+        ////            customerLatitude = String(lat)
+        ////            customerLongitude = String(long)
+        ////        }
+        ////        else {
+        ////
+        ////        }
+        //
+        //        self.gMapView.delegate = self
+        //        self.gMapView.isMyLocationEnabled = true
+        //        self.gMapView.settings.myLocationButton = false
+        //
+        //        orderIdLbl.text = order_id
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -108,22 +112,19 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
-                  self.orderTrackingDict = response.value(forKey: "data") as! NSDictionary
+                self.orderTrackingDict = response.value(forKey: "data") as! NSDictionary
                 self.customerDetailsDict = self.orderTrackingDict.value(forKey: "customer_details") as! NSDictionary
                 self.customerLatitude = self.customerDetailsDict.value(forKey: "cus_latitude") as? String ?? ""
                 self.customerLongitude = self.customerDetailsDict.value(forKey: "cus_longitude") as? String ?? ""
-                self.locationManager = CLLocationManager()
-                self.locationManager.delegate = self
-                self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-                self.locationManager.requestAlwaysAuthorization()
-                self.locationManager.startMonitoringSignificantLocationChanges()
-                self.locationManager.startUpdatingLocation()
-                self.gMapView.delegate = self
-                self.gMapView.isMyLocationEnabled = true
-                self.gMapView.settings.myLocationButton = false
-                
+                let addressString = self.customerDetailsDict.value(forKey: "cus:address") as? String ?? ""
                 self.orderIdLbl.text = self.order_id
-                
+                if let restaurantDetails = self.orderTrackingDict.value(forKey: "restaurant_details") as? NSDictionary,
+                   let restLatitude = Double(restaurantDetails.object(forKey: "restaurant_latitude") as? String ?? "") as? NSNumber,
+                   let restLongitude = Double(restaurantDetails.object(forKey: "restaurant_longitude") as? String ?? "") as? NSNumber {
+                    self.storeLatitude = restLatitude.stringValue
+                    self.storeLongitude = restLongitude.stringValue
+                    self.storeMarker = .init(position: .init(latitude: restLatitude.doubleValue, longitude: restLongitude.doubleValue))
+                }
                 
                 
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
@@ -134,32 +135,37 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         }, onFailure: {errorResponse in})
     }
     
-   func updateBottomSheet(status : String) {
+    func updateBottomSheet(status : String) {
         if status == "top"{
-                 containerViewYOpsition.constant = 120
-               }else if status == "bottom"{
-                   let tempFrame = UIScreen.main.bounds
-                   containerViewYOpsition.constant = tempFrame.size.height - 200
-               }
+            containerViewYOpsition.constant = 120
+        }else if status == "bottom"{
+            let tempFrame = UIScreen.main.bounds
+            containerViewYOpsition.constant = tempFrame.size.height - 200
+        }
     }
     func sendLatLang(deliverylatitude: String, deliverylongitude: String, storelatitude: String, storelongitude: String, customerlatitude: String, customerlongitude: String, customerAddressString:String) {
-        self.deliveryBoyMarker.map = nil
-        let deliveryMarkerPosition = CLLocationCoordinate2DMake(Double(deliverylatitude)!, Double(deliverylongitude)!)
-        CATransaction.begin()
-        CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
-        self.mapCamera = GMSCameraPosition.camera(withLatitude: Double(deliverylatitude)!, longitude: Double(deliverylongitude)!, zoom: self.zoomLevel)
-        CATransaction.commit()
-        self.deliveryBoyMarker = GMSMarker(position: deliveryMarkerPosition)
-        self.deliveryBoyMarker.icon = self.imageWithImage(image: UIImage(named: "ic_vehicle")!, scaledToSize: CGSize(width: 30.0, height:30.0))
-        deliveryBoyMarker.title = "DeliveryBoy Location"
-        deliveryBoyMarker.snippet = ""
-        self.deliveryBoyMarker.map = self.gMapView
-        allmarkers.append(deliveryBoyMarker)
+        guard let storeLatDouble = Double(storelatitude),
+              let storeLongDouble = Double(storelongitude) else {
+            return
+        }
+        let storeMarkerPosition = CLLocationCoordinate2DMake(storeLatDouble, storeLongDouble)
+        if let dellat = Double(deliverylatitude),
+           let dellon = Double(deliverylongitude) {
+            let deliveryMarkerPosition = CLLocationCoordinate2DMake(dellat, dellon)
+            CATransaction.begin()
+            CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
+            self.mapCamera = GMSCameraPosition.camera(withLatitude: dellat, longitude: dellon, zoom: self.zoomLevel)
+            CATransaction.commit()
+            self.deliveryBoyMarker = GMSMarker(position: deliveryMarkerPosition)
+            self.deliveryBoyMarker.icon = self.imageWithImage(image: UIImage(named: "ic_vehicle")!, scaledToSize: CGSize(width: 30.0, height:30.0))
+            deliveryBoyMarker.title = "DeliveryBoy Location"
+            deliveryBoyMarker.snippet = ""
+            self.deliveryBoyMarker.map = self.gMapView
+            allmarkers.insert(deliveryBoyMarker)
+        } else {
+            self.mapCamera = GMSCameraPosition.camera(withLatitude: storeLatDouble, longitude: storeLongDouble, zoom: self.zoomLevel)
+        }
         
-        let storeLatDouble = Double(storelatitude)
-        let storeLongDouble = Double(storelongitude)
-        self.storeMarker.map = nil
-        let storeMarkerPosition = CLLocationCoordinate2DMake(storeLatDouble!, storeLongDouble!)
         CATransaction.begin()
         CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
         CATransaction.commit()
@@ -168,11 +174,10 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         storeMarker.title = "Store Location"
         storeMarker.snippet = ""
         self.storeMarker.map = self.gMapView
-        allmarkers.append(storeMarker)
+        allmarkers.insert(storeMarker)
         
         let customerLatDouble = Double(customerlatitude)
         let customerLongDouble = Double(customerlongitude)
-        self.customerMarker.map = nil
         let customerMarkerPosition = CLLocationCoordinate2DMake(customerLatDouble!, customerLongDouble!)
         CATransaction.begin()
         CATransaction.setValue(1.0, forKey: kCATransactionAnimationDuration)
@@ -185,19 +190,25 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         
         self.storeLatitude = storelatitude
         self.storeLongitude = storelongitude
-        allmarkers.append(customerMarker)
+        allmarkers.insert(customerMarker)
         
         for marker in self.allmarkers {
             bounds = bounds.includingCoordinate(marker.position)
         }
-        if onceAllowedFlag{
+        
+        if onceAllowedFlag {
             onceAllowedFlag = false
-            gMapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsets(top: 50.0 , left: 50.0 ,bottom: 50.0 ,right: 50.0)))
-            self.gMapView.animate(to: self.mapCamera)
-
-
+            gMapView.moveCamera(.fit(bounds, with: .init(top: 0, left: 0, bottom: 0, right: 0)))
+            gMapView.animate(to: self.mapCamera)
         }
-        self.getPolylineRoute(from: CLLocationCoordinate2D(latitude: Double(deliverylatitude)!, longitude: Double(deliverylongitude)!), to: CLLocationCoordinate2D(latitude: customerLatDouble!, longitude: customerLongDouble!))
+        
+        if let deliveryLatDouble = Double(deliverylatitude),
+           let deliveryLonDouble = Double(deliverylongitude) {
+            self.getPolylineRoute(from: CLLocationCoordinate2D(latitude: deliveryLatDouble,
+                                                               longitude: deliveryLonDouble),
+                                                               to: CLLocationCoordinate2D(latitude: customerLatDouble!,
+                                                                                          longitude: customerLongDouble!))
+        }
         
         if deliverylatitude != "" && deliverylongitude != "" {
             let deliveryLocation = CLLocation(latitude: Double(deliverylatitude)!, longitude: Double(deliverylongitude)!)
@@ -243,15 +254,16 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
                                         let durationStr:String = distance?[0]["duration"]?["text"] as! String
                                         print("\(distanceStr) \(durationStr)")
                                         
-                                        //Call this method to draw path on map
-                                        self.deliveryBoyMarker.title = "DeliveryBoy Location!"
-                                        self.deliveryBoyMarker.appearAnimation = GMSMarkerAnimation.pop
-                                        self.deliveryBoyMarker.opacity = 0.85
-                                        self.deliveryBoyMarker.snippet = durationStr
-                                        //self.gMapView.selectedMarker = self.deliveryBoyMarker
-                                        self.deliveryBoyMarker.map = self.gMapView
-                                        self.showPath(polyStr: points!)
-                                        DispatchQueue.main.async {}
+                                        DispatchQueue.main.async {
+                                            //Call this method to draw path on map
+                                            self.deliveryBoyMarker.title = "DeliveryBoy Location!"
+                                            self.deliveryBoyMarker.appearAnimation = GMSMarkerAnimation.pop
+                                            self.deliveryBoyMarker.opacity = 0.85
+                                            self.deliveryBoyMarker.snippet = durationStr
+                                            self.gMapView.selectedMarker = self.deliveryBoyMarker
+                                            self.deliveryBoyMarker.map = self.gMapView
+                                            self.showPath(polyStr: points!)
+                                        }
                                     }
                                     else {
                                         DispatchQueue.main.async {}
@@ -303,17 +315,17 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         self.locationManager.startUpdatingLocation()
         let location: CLLocation = locations.last!
         print("Location: \(location)")
-//        customerLatitude = "\(location.coordinate.latitude)"
-//        customerLongitude = "\(location.coordinate.longitude)"
+        //        customerLatitude = "\(location.coordinate.latitude)"
+        //        customerLongitude = "\(location.coordinate.longitude)"
         
         let customerLatDouble = Double(customerLatitude)
         let customerLongDouble = Double(customerLongitude)
         self.customerMarker.map = nil
-
-
-
-
-
+        
+        
+        
+        
+        
         if customerLatDouble != nil{
             let customerMarkerPosition = CLLocationCoordinate2DMake(customerLatDouble!, customerLongDouble!)
             CATransaction.begin()
@@ -326,10 +338,10 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
             customerMarker.title = "My Location"
             customerMarker.snippet = ""
             self.customerMarker.map = self.gMapView
-          self.locationManager.stopUpdatingLocation()
+            self.locationManager.stopUpdatingLocation()
         }
-
-       
+        
+        
         
     }
     

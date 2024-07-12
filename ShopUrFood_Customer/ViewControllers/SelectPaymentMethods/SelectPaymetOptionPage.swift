@@ -964,9 +964,9 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             }
             
         }
-        else if indexPath.section == 2
+        else if indexPath.section == 2 // Terms & Conditions Cell
         {
-            return 66
+            return UITableView.automaticDimension
         }
         else if indexPath.section == 3
         {

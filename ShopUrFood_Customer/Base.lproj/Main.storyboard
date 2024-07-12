@@ -1536,7 +1536,7 @@
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lNx-r1-H1r">
                                 <rect key="frame" x="0.0" y="74" width="414" height="1477"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Restaurant found in your location. try new location" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAR-oq-wSH">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Restaurant found in your location. try new location" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAR-oq-wSH">
                                         <rect key="frame" x="20" y="714.5" width="374" height="48"/>
                                         <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="20"/>
                                         <nil key="textColor"/>
@@ -3178,11 +3178,8 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="290" height="66"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By clicking this button are agree with our terms and conditions." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ebB-Ul-9rl">
-                                                            <rect key="frame" x="43" y="20.5" width="239" height="45"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="45" id="FvQ-Ia-GEe"/>
-                                                            </constraints>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By clicking this button are agree with our terms and conditions." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ebB-Ul-9rl">
+                                                            <rect key="frame" x="43" y="20.5" width="239" height="37.5"/>
                                                             <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="14"/>
                                                             <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -3197,6 +3194,7 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="LwQ-dg-ecH" firstAttribute="leading" secondItem="I0L-9A-7B7" secondAttribute="leading" constant="15" id="17Z-jd-Jvb"/>
+                                                        <constraint firstAttribute="bottom" secondItem="ebB-Ul-9rl" secondAttribute="bottom" constant="8" id="41T-fy-Ati"/>
                                                         <constraint firstItem="LwQ-dg-ecH" firstAttribute="top" secondItem="I0L-9A-7B7" secondAttribute="top" constant="27" id="EJz-DV-Ojr"/>
                                                         <constraint firstItem="ebB-Ul-9rl" firstAttribute="leading" secondItem="LwQ-dg-ecH" secondAttribute="trailing" constant="8" id="VN3-yN-ukg"/>
                                                         <constraint firstItem="ebB-Ul-9rl" firstAttribute="top" secondItem="I0L-9A-7B7" secondAttribute="top" constant="20.5" id="Y5A-fn-fQP"/>
@@ -9607,15 +9605,15 @@
                                                                 <constraint firstAttribute="height" constant="50" id="mcx-Ay-efF"/>
                                                             </constraints>
                                                         </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pre Order" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PZT-0x-thn">
-                                                            <rect key="frame" x="112" y="18" width="131" height="21"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pre Order" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.84999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="PZT-0x-thn">
+                                                            <rect key="frame" x="112" y="18" width="131" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="131" id="2ep-Vc-puO"/>
-                                                                <constraint firstAttribute="height" constant="21" id="uvO-DF-4As"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="TruenoRg" family="Trueno" pointSize="12"/>
                                                             <color key="textColor" red="0.92941176470588238" green="0.10588235294117647" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
+                                                            <lineBreakStrategy key="lineBreakStrategy"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PreOrder" translatesAutoresizingMaskIntoConstraints="NO" id="CCG-Ca-c3R">
                                                             <rect key="frame" x="245" y="15" width="25" height="25"/>
@@ -19386,7 +19384,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_BG" translatesAutoresizingMaskIntoConstraints="NO" id="Rv0-Wp-Dgc">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tracking_screen_bg" translatesAutoresizingMaskIntoConstraints="NO" id="Rv0-Wp-Dgc">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nbx-BV-3ea">
@@ -20966,6 +20964,7 @@ WXlZe9UN1RLVIdUl1TDVONVF1VLVZ9Vs1XDVctV01XbVf9WE1YrVktWU1ZbVmNWa5zrnP+dM50/nXOdh
         <image name="time" width="23.5" height="23.5"/>
         <image name="track" width="24" height="24"/>
         <image name="track_selected" width="24" height="24"/>
+        <image name="tracking_screen_bg" width="1080" height="770"/>
         <image name="unSelectRadio" width="16" height="16"/>
         <image name="view_cart" width="150.2608642578125" height="150.2608642578125"/>
         <image name="wallet" width="24" height="24"/>
