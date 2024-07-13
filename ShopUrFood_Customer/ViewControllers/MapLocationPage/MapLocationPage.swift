@@ -216,7 +216,7 @@
     }
     
     func getAddressFromLatLong(latitude: Double, longitude : Double) {
-        let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU"
+        let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(googleMapsApiKey)"
 
         Alamofire.request(url).validate().responseJSON { response in
             switch response.result {

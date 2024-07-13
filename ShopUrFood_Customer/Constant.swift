@@ -176,3 +176,5 @@ let USER_LOGOUT = "customer_logout"
 let TruenoBold14 = UIFont(name: "Trueno-Bold", size: 14.0)
 var globalmqtt: CocoaMQTT!
 
+// API Keys
+let googleMapsApiKey = "AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I"

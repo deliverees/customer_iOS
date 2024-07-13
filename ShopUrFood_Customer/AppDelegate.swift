@@ -71,9 +71,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
 //        GMSPlacesClient.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
     
         // This API Key is provided in GoogleService-Info.plist, API_KEY, improve this
-        GMSServices.provideAPIKey("AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I")
-        GMSPlacesClient.provideAPIKey("AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I")
-        GoogleApi.shared.initialiseWithKey("AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I")
+        GMSServices.provideAPIKey(googleMapsApiKey)
+        GMSPlacesClient.provideAPIKey(googleMapsApiKey)
+        GoogleApi.shared.initialiseWithKey(googleMapsApiKey)
 
         
         IQKeyboardManager.shared().isEnabled = true

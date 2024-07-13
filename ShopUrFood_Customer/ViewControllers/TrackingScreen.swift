@@ -225,7 +225,7 @@ class TrackingScreen: BaseViewController,CLLocationManagerDelegate, GMSMapViewDe
         var wayPoints = ""
         wayPoints = wayPoints.count == 0 ? "\(storeLatitude),\(storeLongitude)" : "\(wayPoints)%7C\(storeLatitude),\(storeLongitude)"
         
-        let url = URL(string: "https://maps.googleapis.com/maps/api/directions/json?origin=\(source.latitude),\(source.longitude)&destination=\(destination.latitude),\(destination.longitude)&mode=driving&waypoints=\(wayPoints)&key=AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")!
+        let url = URL(string: "https://maps.googleapis.com/maps/api/directions/json?origin=\(source.latitude),\(source.longitude)&destination=\(destination.latitude),\(destination.longitude)&mode=driving&waypoints=\(wayPoints)&key=\(googleMapsApiKey)")!
         let task = session.dataTask(with: url, completionHandler: {
             (data, response, error) in
             if error != nil {
