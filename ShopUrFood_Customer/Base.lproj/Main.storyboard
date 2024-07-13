@@ -8108,20 +8108,15 @@
                                                                             </constraints>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="veg Burger gjhgjhg kjhkjhkj j" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndj-Ox-GxI">
-                                                                            <rect key="frame" x="50" y="6" width="180" height="17"/>
-                                                                            <constraints>
-                                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" id="TTF-Ru-ump"/>
-                                                                                <constraint firstAttribute="height" constant="17" id="XQp-ho-QTf"/>
-                                                                            </constraints>
+                                                                            <rect key="frame" x="50" y="6" width="199.5" height="17"/>
                                                                             <fontDescription key="fontDescription" name="TruenoRg" family="Trueno" pointSize="14"/>
                                                                             <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 10.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p48-zv-41u">
-                                                                            <rect key="frame" x="227" y="7" width="64" height="15"/>
+                                                                            <rect key="frame" x="251.5" y="7" width="34" height="15"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="15" id="Ajg-0C-gtF"/>
-                                                                                <constraint firstAttribute="width" constant="64" id="yna-Ao-wWP"/>
                                                                             </constraints>
                                                                             <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="12"/>
                                                                             <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -8130,12 +8125,12 @@
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstItem="p48-zv-41u" firstAttribute="leading" secondItem="ndj-Ox-GxI" secondAttribute="trailing" constant="-3" id="RMw-eg-0Z2"/>
+                                                                        <constraint firstItem="p48-zv-41u" firstAttribute="leading" secondItem="ndj-Ox-GxI" secondAttribute="trailing" constant="2" id="RMw-eg-0Z2"/>
                                                                         <constraint firstItem="ndj-Ox-GxI" firstAttribute="top" secondItem="29H-rH-LG4" secondAttribute="top" constant="6" id="a8R-ry-XNT"/>
                                                                         <constraint firstItem="sdd-dW-u2Q" firstAttribute="top" secondItem="29H-rH-LG4" secondAttribute="top" constant="4.6666666666666288" id="jqL-bj-lQ9"/>
                                                                         <constraint firstItem="ndj-Ox-GxI" firstAttribute="leading" secondItem="sdd-dW-u2Q" secondAttribute="trailing" constant="5" id="ksH-3a-Pjl"/>
                                                                         <constraint firstItem="p48-zv-41u" firstAttribute="centerY" secondItem="ndj-Ox-GxI" secondAttribute="centerY" id="mng-kt-SAc"/>
-                                                                        <constraint firstAttribute="trailingMargin" secondItem="p48-zv-41u" secondAttribute="trailing" constant="77" id="tvV-HY-YNS"/>
+                                                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="p48-zv-41u" secondAttribute="trailing" constant="16" id="tvV-HY-YNS"/>
                                                                         <constraint firstItem="sdd-dW-u2Q" firstAttribute="leading" secondItem="29H-rH-LG4" secondAttribute="leading" constant="25" id="uS9-iV-jBu"/>
                                                                     </constraints>
                                                                 </tableViewCellContentView>
