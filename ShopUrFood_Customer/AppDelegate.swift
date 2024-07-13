@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  ShopUrFood_Customer
@@ -39,27 +40,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
             delegateTimer?.invalidate()
         }
     }
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        
-      
-        
-        if let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff") {
-            do
-            {
-                self.player = try AVAudioPlayer(contentsOf: soundURL)
-            }
-            catch
-            {
-                print("No sound found by URL")
-            }
-            if self.player.isPlaying
-            {
-                self.playerStop()
+    
+    private func playsoundifneeded() {
+        DispatchQueue.main.async {
+            if let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff") {
+                do
+                {
+                    self.player = try AVAudioPlayer(contentsOf: soundURL)
+                }
+                catch
+                {
+                    print("No sound found by URL")
+                }
+                if self.player.isPlaying
+                {
+                    self.playerStop()
+                }
             }
         }
-        
+    }
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        playsoundifneeded()
+        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -2)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .selected)
+        UITabBar.appearance().layer.borderWidth = 0.0
+        UITabBar.appearance().clipsToBounds = true
+        //UITabBarItem.appearance().setTitleTextAttributes(NSAttributedString.Key.foregroundColor: UIColor.gray, for:.Normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .selected)
         
         // Init FaceBook login
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -74,60 +84,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         GMSServices.provideAPIKey(googleMapsApiKey)
         GMSPlacesClient.provideAPIKey(googleMapsApiKey)
         GoogleApi.shared.initialiseWithKey(googleMapsApiKey)
-
-        
+        // Init Paypal
+        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
+        UNUserNotificationCenter.current().delegate = self
         IQKeyboardManager.shared().isEnabled = true
         
-        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -2)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .selected)
-        UITabBar.appearance().layer.borderWidth = 0.0
-        UITabBar.appearance().clipsToBounds = true
-        //UITabBarItem.appearance().setTitleTextAttributes(NSAttributedString.Key.foregroundColor: UIColor.gray, for:.Normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .selected)
-        
         // [START register_for_notifications]
-        DispatchQueue.main.async {
-            // Init Paypal
-            PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
-            UNUserNotificationCenter.current().delegate = self
-            
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-            UIApplication.shared.registerForRemoteNotifications()
-            
-            
-            
-            application.registerForRemoteNotifications()
-            
-            UNUserNotificationCenter.current().delegate = self
-            UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert], completionHandler: {(granted, error) in
-                if (granted) {
-                    DispatchQueue.main.async {
-                        UIApplication.shared.registerForRemoteNotifications()
-                    }
-                } else{
-                    print("Notification permissions not granted")
-                }
-            })
-            FirebaseApp.configure()
-            Messaging.messaging().delegate = self
-              //Messaging.messaging().shouldEstablishDirectChannel = true
-           
-            if let token = Messaging.messaging().fcmToken {
-                print("FCM token: \(token )")
-                self.ConnectToFCM()
-            }
-   
-            Fabric.sharedSDK().debug = true
-            NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
-                                                   name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
-            
-            application.applicationIconBadgeNumber = 0
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        //Messaging.messaging().shouldEstablishDirectChannel = true
+        
+        if let token = Messaging.messaging().fcmToken {
+            print("FCM token: \(token )")
+            self.ConnectToFCM()
         }
+        
+        Fabric.sharedSDK().debug = true
+        NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
+                                               name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
+        
+        application.applicationIconBadgeNumber = 0
         
         self.languageUpdate()
         self.ConnectToFCM()

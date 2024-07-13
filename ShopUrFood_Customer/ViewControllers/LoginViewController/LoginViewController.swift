@@ -17,6 +17,7 @@ import FirebaseAuth
 import AuthenticationServices
 import CryptoKit
 import SCLAlertView
+import UserNotifications
 import AppTrackingTransparency
 
 
@@ -120,8 +121,23 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        ATTrackingManager.requestTrackingAuthorization { status in
-            print(status)
+        DispatchQueue.main.async {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                print(status)
+                DispatchQueue.main.async {
+                    let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+                    UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {(granted, error) in
+                        if (granted) {
+                            DispatchQueue.main.async {
+                                UIApplication.shared.registerForRemoteNotifications()
+                            }
+                        } else{
+                            print("Notification permissions not granted")
+                        }
+                        
+                    })
+                }
+            }
         }
     }
     
