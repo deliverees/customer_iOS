@@ -10,6 +10,7 @@ import UIKit
 import FacebookLogin
 import FacebookCore
 import FBSDKCoreKit
+import FBSDKLoginKit
 import GoogleSignIn
 import AuthenticationServices
 import FirebaseAuth
@@ -25,7 +26,6 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     //@IBOutlet weak var newUserLbl: UILabel!
     
     
-    @IBOutlet weak var btnAppleSignIn: UIImageView!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var socialLoginLbl: UILabel!
     @IBOutlet weak var goBtn: UIButton!
@@ -37,8 +37,11 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     @IBOutlet weak var signUpBtn: UIButton!
     
-    @IBOutlet weak var fbBtnSignIn: UIImageView!
-    @IBOutlet weak var googleBtnSignIn: UIImageView!
+    private var fbBtnSignIn: FBLoginButton!
+    private var googleBtnSignIn: GIDSignInButton!
+    private var btnAppleSignIn: ASAuthorizationAppleIDButton!
+    
+    @IBOutlet weak var socialSignInButtonsStackView: UIStackView!
     
     var iPhoneUDIDString = String()
     var isRegister = Bool()
@@ -46,7 +49,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureSocialButtons()
         self.loginTitleLbl.text = ""//LanguageDictonary.object(forKey: "login") as! String
         self.userNameTxt.placeholder = LanguageDictonary.object(forKey: "email") as! String
         self.passwordTxt.placeholder = LanguageDictonary.object(forKey: "password") as! String
@@ -102,21 +105,6 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
         imageView3.isUserInteractionEnabled = true
         imageView3.addGestureRecognizer(tapGestureRecognizer)
         
-        
-        let tapGestureRecognizerBtnFb = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnFb(tapGestureRecognizer:)))
-        
-        fbBtnSignIn.isUserInteractionEnabled = true
-        fbBtnSignIn.addGestureRecognizer(tapGestureRecognizerBtnFb)
-        
-        let tapGestureRecognizerGoogleBtnSignIn = UITapGestureRecognizer(target: self, action: #selector(imagedTapedGoogleBtnSignIn(tapGestureRecognizer:)))
-        
-        googleBtnSignIn.isUserInteractionEnabled = true
-        googleBtnSignIn.addGestureRecognizer(tapGestureRecognizerGoogleBtnSignIn)
-        
-        let tapGestureRecognizerAppleBtnSignIn = UITapGestureRecognizer(target: self, action: #selector(handleAppleIdRequest(tapGestureRecognizer:)))
-        
-        btnAppleSignIn.isUserInteractionEnabled = true
-        btnAppleSignIn.addGestureRecognizer(tapGestureRecognizerAppleBtnSignIn)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -165,7 +153,13 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     fileprivate var currentNonce: String?
     
-    @objc func handleAppleIdRequest(tapGestureRecognizer:UITapGestureRecognizer) {
+    @objc func handleAppleIdRequest(_ sender: Any?) {
+//        login_session.set("Anonymous", forKey: "user_id")
+//        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+//        nextViewController.ComingType = "FIRST"
+//        self.present(nextViewController, animated:true, completion:nil)
+//        return
         let nonce = randomNonceString()
         currentNonce = nonce
         let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -300,6 +294,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     
@@ -388,12 +383,10 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     
     
     //MARK:Google SignIn Delegate
-    @IBAction func googleBtnAction(_ sender: Any) {
-        if (Reachability()?.isReachable)!
+    @IBAction func googleBtnAction(_ sender: Any?) {
+        if Reachability()?.isReachable ?? false
         {
             self.showLoadingIndicator(senderVC: self)
-            GIDSignIn.sharedInstance().delegate = self
-            GIDSignIn.sharedInstance().uiDelegate = self
             GIDSignIn.sharedInstance().signIn()
         }
     }
@@ -444,7 +437,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     }
     
     //MARK:FaceBook SignIn Delegate
-    @IBAction func fbBtnAction(_ sender: Any)
+    @objc func fbBtnAction(_ sender: Any)
     {
         if (Reachability()?.isReachable)!
         {
@@ -643,5 +636,40 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
 extension LoginViewController : ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
+    }
+}
+
+extension LoginViewController {
+    private func configureSocialButtons() {
+        let appleButton = ASAuthorizationAppleIDButton(type: .signIn,
+                                                       style: .whiteOutline)
+        appleButton.translatesAutoresizingMaskIntoConstraints = false
+        appleButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
+        let googleButton = GIDSignInButton()
+//        googleButton.addTarget(self, action: #selector(googleBtnAction), for: .touchUpInside) Not needed Google handles action already
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        googleButton.translatesAutoresizingMaskIntoConstraints = false
+        let facebookButton = FBLoginButton(frame: .zero, permissions: [.email])
+        facebookButton.addTarget(self, action: #selector(fbBtnAction), for: .touchUpInside)
+        facebookButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        facebookButton.isHidden = true
+        
+        [appleButton,
+         facebookButton]
+            .forEach { view in
+                NSLayoutConstraint.activate([
+                    view.heightAnchor.constraint(equalToConstant: 48)
+                ])
+            }
+        
+        [appleButton,
+         facebookButton,
+         googleButton]
+            .forEach(socialSignInButtonsStackView.addArrangedSubview)
+        
+        self.googleBtnSignIn = googleButton
+        
     }
 }

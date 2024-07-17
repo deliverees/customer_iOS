@@ -277,7 +277,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     
     func checkRootView()
     {
-        if login_session.object(forKey: "user_id") == nil{
+        if login_session.object(forKey: "user_id") == nil {
             self.window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
