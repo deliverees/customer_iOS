@@ -108,7 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         
         self.languageUpdate()
         self.ConnectToFCM()
-        self.checkRootView()
+        AppRouter.shared.initialize(in: &window)
  
         
         return true
@@ -267,42 +267,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         login_session.persistentDomain(forName: domain)
         login_session.synchronize()
         print(login_session)
-        for key in login_session.dictionaryRepresentation().keys{
-            login_session.removeObject(forKey: key.description)
+        for key in login_session.dictionaryRepresentation().keys {
+            login_session.removeObject(forKey: key)
         }
         login_session.synchronize()
-        self.checkRootView()
-    }
-   
-    
-    func checkRootView()
-    {
-        if login_session.object(forKey: "user_id") == nil {
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
-        }else{
-            if login_session.object(forKey: "user_longitude") != nil{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainViewController = storyboard.instantiateViewController(withIdentifier: "RevealRootView") as! SWRevealViewController
-                tabBarSelectedIndex = 2
-                self.window?.rootViewController = mainViewController
-                self.window?.makeKeyAndVisible()
-            }else{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
-                self.window?.rootViewController = initialViewController
-                self.window?.makeKeyAndVisible()
-            }
-        }
+        AppRouter.shared.presentLogin()
     }
     
-    
-   
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         if (ApplicationDelegate.shared.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
         {

@@ -33,8 +33,9 @@ class OrderStatusViewController: UIViewController {
     }
     
     @IBAction func homeBtnTapped(_ sender: Any) {
-        let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-        appDelegate?.checkRootView()
+//        let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
+//        appDelegate?.checkRootView()
+        AppRouter.shared.popToRoot()
     }
     
     /*

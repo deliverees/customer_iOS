@@ -41,7 +41,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         let referFriendStr = LanguageDictonary.object(forKey: "referfriend") as! String
         let helpStr = LanguageDictonary.object(forKey: "help") as! String
         let languageStr = LanguageDictonary.object(forKey: "language") as! String
-        let signoutStr = LanguageDictonary.object(forKey: "signout") as! String
+        let signoutStr = login_session.isUserLogged() ? LanguageDictonary.object(forKey: "signout") as! String : "Inicia sesión"
         let homeStr = LanguageDictonary.object(forKey: "home") as! String
         let deleteaccount = LanguageDictonary.object(forKey: "deleteaccount") as! String
         let settingsStr = LanguageDictonary.object(forKey: "settings") as! String
@@ -79,6 +79,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.getProfileData()
     }
     
@@ -250,15 +251,19 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)
         }else if indexPath.row == 7 {
-            let url = URL(string: "https://delivereesapp.com/compliance")
-            if UIApplication.shared.canOpenURL(url!) {
-                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-                //If you want handle the completion block than
-                UIApplication.shared.open(url!, options: [:], completionHandler: { (success) in
-                    print("Open url : \(success)")
-                })
+            if login_session.isUserLogged() {
+                let url = URL(string: "https://delivereesapp.com/compliance")
+                if UIApplication.shared.canOpenURL(url!) {
+                    UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+                    //If you want handle the completion block than
+                    UIApplication.shared.open(url!, options: [:], completionHandler: { (success) in
+                        print("Open url : \(success)")
+                    })
+                }
+                self.logOut()
+            } else {
+                AppRouter.shared.presentLogin()
             }
-            self.logOut()
         }else if indexPath.row == 8 {
             /*if login_session.object(forKey: "user_longitude") != nil{
                 self.window = UIWindow(frame: UIScreen.main.bounds)
@@ -275,7 +280,11 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
                 self.window?.rootViewController = initialViewController
                 self.window?.makeKeyAndVisible()
             }*/
-            self.logOut()
+            if login_session.isUserLogged() {
+                self.logOut()
+            } else {
+                AppRouter.shared.presentLogin()
+            }
         }
         else if indexPath.row == 8 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ReferFriendsPageViewController") as! ReferFriendsPageViewController
@@ -319,9 +328,8 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
                 login_session.removeObject(forKey: key.description)
             }
             login_session.synchronize()
-            let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-            appDelegate?.checkRootView()
             self.stopLoadingIndicator(senderVC: self)
+            AppRouter.shared.presentLogin()
         }, onFailure: {errorResponse in})
         
         login_session.setValue(lang, forKey: "Language")

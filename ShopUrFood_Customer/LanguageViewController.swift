@@ -54,8 +54,9 @@ class LanguageViewController: UIViewController {
     @IBAction func submitAct(_ sender: UIButton) {
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.languageUpdate()
-       
-        appDelegate?.checkRootView()
+        var window: UIWindow?
+        AppRouter.shared.initialize(in: &window)
+        appDelegate?.window = window
     }
     @IBAction func english_Act(_ sender: UIButton) {
         self.spanishImg.image = UIImage(named: "unSelectRadio")

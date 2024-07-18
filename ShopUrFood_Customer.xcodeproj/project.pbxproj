@@ -227,6 +227,8 @@
 		A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37B23C7073800654118 /* TrackingScreen.swift */; };
 		A855D37E23C7075900654118 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37D23C7075900654118 /* BottomSheetViewController.swift */; };
 		C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */; };
+		D44E57DB2C490A7F00FA10B2 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */; };
+		D44E57DE2C49134200FA10B2 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DD2C49134200FA10B2 /* UserSession.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
 		E1C089344BE94318655C6CA0 /* Pods_ShopUrFood_CustomerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */; };
 /* End PBXBuildFile section */
@@ -484,6 +486,8 @@
 		C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_Customer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.debug.xcconfig"; sourceTree = "<group>"; };
+		D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		D44E57DD2C49134200FA10B2 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -888,6 +892,8 @@
 				242745A0220D6D9C00D282C8 /* BaseParsingMethods */,
 				2444F87C220C35A000EF1574 /* Network */,
 				24346FBA2209C1A600446252 /* Resources */,
+				D44E57DC2C49132F00FA10B2 /* UserSession */,
+				D44E57D92C490A6700FA10B2 /* Routing */,
 				24346FA722098F8600446252 /* ViewControllers */,
 				24346F75220972C000446252 /* AppDelegate.swift */,
 				24346F77220972C000446252 /* ViewController.swift */,
@@ -1264,6 +1270,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		D44E57D92C490A6700FA10B2 /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */,
+			);
+			path = Routing;
+			sourceTree = "<group>";
+		};
+		D44E57DC2C49132F00FA10B2 /* UserSession */ = {
+			isa = PBXGroup;
+			children = (
+				D44E57DD2C49134200FA10B2 /* UserSession.swift */,
+			);
+			path = UserSession;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1586,6 +1608,7 @@
 				22D528DF22DF665A006142FF /* CouponTableViewCell.swift in Sources */,
 				24496AD1221FCA010021DDC8 /* ToppingTBCell.swift in Sources */,
 				24346FB62209A2B900446252 /* CustomTabBarController.swift in Sources */,
+				D44E57DE2C49134200FA10B2 /* UserSession.swift in Sources */,
 				24FCAAD2222FFDB200CFF631 /* Invoice_price_TBCell.swift in Sources */,
 				2405EAB022424020003F4766 /* WheelViewController.swift in Sources */,
 				245F37E5222506A1003024BC /* CartDetail.swift in Sources */,
@@ -1632,6 +1655,7 @@
 				24E9010F2215A3B90003F7B9 /* ViewAllDetailsCell.swift in Sources */,
 				5E40EABD29DF1A890091661E /* CategoriesHomeModel.swift in Sources */,
 				2403BCD82214015A00EBAD62 /* LocationOptionPage.swift in Sources */,
+				D44E57DB2C490A7F00FA10B2 /* AppRouter.swift in Sources */,
 				2405EAB122424020003F4766 /* SambagTheme.swift in Sources */,
 				245F37E6222506A1003024BC /* CartData.swift in Sources */,
 				227CCAB222D8A7C300D60FA4 /* FilterMostPreferTimeDetailsCell.swift in Sources */,

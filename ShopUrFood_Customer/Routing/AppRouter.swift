@@ -1,0 +1,46 @@
+//
+//  AppRouter.swift
+//  ShopUrFood_Customer
+//
+//  Created by Aitor Pagán on 18/7/24.
+//  Copyright © 2024 apple4. All rights reserved.
+//
+
+import Foundation
+import SWRevealViewController
+
+final class AppRouter {
+    public static var shared: AppRouter = AppRouter()
+    
+    private var root: UIViewController?
+    
+    func initialize(in window: inout UIWindow?) {
+        if login_session.object(forKey: "user_longitude") != nil {
+            window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let mainViewController = storyboard.instantiateViewController(withIdentifier: "RevealRootView") as! SWRevealViewController
+            tabBarSelectedIndex = 2
+            window?.rootViewController = mainViewController
+            window?.makeKeyAndVisible()
+            self.root = mainViewController
+        } else {
+            window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+            self.root = initialViewController
+        }
+    }
+    
+    func presentLogin() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+        loginViewController.modalPresentationStyle = .fullScreen
+        root?.present(loginViewController, animated: true)
+    }
+    
+    func popToRoot() {
+        root?.navigationController?.popToRootViewController(animated: true)
+    }
+}

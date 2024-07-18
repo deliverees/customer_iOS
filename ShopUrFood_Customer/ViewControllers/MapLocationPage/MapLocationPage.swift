@@ -348,7 +348,9 @@
                             login_session.setValue(self.passAddress, forKey: "user_address")
                             login_session.synchronize()
                             let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                            appDelegate?.checkRootView()
+                            var window: UIWindow?
+                            AppRouter.shared.initialize(in: &window)
+                            appDelegate?.window = window
                         }else{
                             ActAsSelectedAddress = self.passAddress
                             ActAsSelectedLatitude = self.passLat
@@ -356,7 +358,9 @@
                             ActAsSelectedZipCode = self.passZipCode
                             self.dismiss(animated: true, completion: nil)
                         }
-                        self.saveFinalShippingAddress()
+                        if let userToken = login_session.string(forKey: "user_token") {
+                            self.saveFinalShippingAddress()
+                        }
                     }
                     else
                     {
@@ -379,7 +383,9 @@
                         login_session.setValue(self.passAddress, forKey: "user_address")
                         login_session.synchronize()
                         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                        appDelegate?.checkRootView()
+                        var window: UIWindow?
+                        AppRouter.shared.initialize(in: &window)
+                        appDelegate?.window = window
                     }else{
                         ActAsSelectedAddress = self.passAddress
                         ActAsSelectedLatitude = self.passLat
@@ -387,7 +393,9 @@
                         ActAsSelectedZipCode = self.passZipCode
                         self.dismiss(animated: true, completion: nil)
                     }
-                    self.saveFinalShippingAddress()
+                    if let userToken = login_session.string(forKey: "user_token") {
+                        self.saveFinalShippingAddress()
+                    }
                 }else{
                     self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.object(forKey: "validlocation") as! String )
                 }

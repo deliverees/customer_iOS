@@ -298,8 +298,9 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         else if hourInt >= 20 && hourInt <= 24 {
             greeting = LanguageDictonary.object(forKey: "goodevening") as! String
         }
-        let userName = login_session.object(forKey: "user_name")as! String
-        greeting = greeting + ", " + userName
+        if let userName = login_session.object(forKey: "user_name") as? String {
+            greeting = greeting + ", " + userName
+        }
         
         return greeting
     }
@@ -347,7 +348,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     override func viewWillAppear(_ animated: Bool)
     {
-        
+        super.viewWillAppear(animated)
         locationLbl.text = (login_session.object(forKey: "user_address")as! String)
         self.topUserNameLbl.text = self.greetingLogic()
         self.navigationController?.navigationBar.isHidden = true
@@ -356,7 +357,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             isfromShippingAddressPage = false
             getHomeDataFromAPI()
         }
-        let cartCount = login_session.object(forKey: "userCartCount")as! String
+        let cartCount = login_session.object(forKey: "userCartCount") as? String ?? "0"
         if (cartCount == "0"){
             actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
         }else{
@@ -366,6 +367,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         promotionalOfferBGView.isHidden = true
     }
     
@@ -425,7 +427,9 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 }
                 //print(response.object(forKey: "message") as Any)
             }
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            
+        })
     }
     
     

@@ -161,7 +161,12 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
                 
             }
             self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+            MapLocationPageFrom = "login"
+            self.present(nextViewController, animated:true, completion:nil)
+        })
     }
     
     
@@ -264,7 +269,9 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
                     login_session.setValue(self.addressString, forKey: "user_address")
                     self.saveShippingAddress()
                     let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                    appDelegate?.checkRootView()
+                    var window: UIWindow?
+                    AppRouter.shared.initialize(in: &window)
+                    appDelegate?.window = window
                 }
         })
     }

@@ -63,7 +63,7 @@ class BaseParsing: NSObject {
         
         if login_session.value(forKey: "user_token") == nil
         {
-            let postheaders : HTTPHeaders = ["Authorization" : (token as String)]
+            let postheaders : HTTPHeaders = [:]
             print(postheaders)
             
             Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
