@@ -19320,6 +19320,18 @@
                                     <constraint firstAttribute="trailing" secondItem="NDD-Us-pJ4" secondAttribute="trailing" id="tzT-JU-ZBF"/>
                                 </constraints>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nh5-Yo-KCn">
+                                <rect key="frame" x="2" y="20" width="32" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="32" id="h1N-xX-gQd"/>
+                                    <constraint firstAttribute="height" constant="32" id="ln6-mW-uqf"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="white_close"/>
+                                <connections>
+                                    <action selector="close:" destination="J7f-5M-0YU" eventType="touchUpInside" id="WzL-Lf-AGX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="V3F-2C-yWn"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -19328,11 +19340,13 @@
                             <constraint firstItem="fZr-yP-Sbd" firstAttribute="bottom" secondItem="V3F-2C-yWn" secondAttribute="bottom" id="6g9-fo-Krv"/>
                             <constraint firstItem="V3F-2C-yWn" firstAttribute="trailing" secondItem="Ysi-Ct-haz" secondAttribute="trailing" id="Mns-WM-Hl0"/>
                             <constraint firstItem="fZr-yP-Sbd" firstAttribute="leading" secondItem="V3F-2C-yWn" secondAttribute="leading" id="Qws-h7-hIa"/>
+                            <constraint firstItem="nh5-Yo-KCn" firstAttribute="top" secondItem="V3F-2C-yWn" secondAttribute="top" id="Y6y-du-BSW"/>
                             <constraint firstItem="Ysi-Ct-haz" firstAttribute="height" secondItem="dQh-m6-k9K" secondAttribute="height" multiplier="0.45" id="Zec-36-FKf"/>
                             <constraint firstItem="V3F-2C-yWn" firstAttribute="trailing" secondItem="fZr-yP-Sbd" secondAttribute="trailing" id="fMo-oi-7NY"/>
                             <constraint firstItem="Ysi-Ct-haz" firstAttribute="leading" secondItem="V3F-2C-yWn" secondAttribute="leading" id="puM-f5-YiJ"/>
                             <constraint firstItem="Ysi-Ct-haz" firstAttribute="top" secondItem="dQh-m6-k9K" secondAttribute="top" id="sA7-vC-f8X"/>
                             <constraint firstItem="V3F-2C-yWn" firstAttribute="top" secondItem="fZr-yP-Sbd" secondAttribute="top" constant="20" id="xKd-ek-tV9"/>
+                            <constraint firstItem="nh5-Yo-KCn" firstAttribute="leading" secondItem="V3F-2C-yWn" secondAttribute="leading" constant="2" id="zgr-Sp-VsD"/>
                         </constraints>
                     </view>
                     <size key="freeformSize" width="320" height="750"/>

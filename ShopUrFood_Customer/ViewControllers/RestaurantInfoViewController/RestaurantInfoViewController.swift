@@ -185,8 +185,9 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.InfoTable.isHidden = true
-        let cartCount = login_session.object(forKey: "userCartCount")as! String
+        let cartCount = login_session.object(forKey: "userCartCount") as? String ?? "0"
         if (cartCount == "0"){
             cartBatchLbl.isHidden = true
         }else{
@@ -445,7 +446,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             }else{
                 print(response.object(forKey: "message") as Any)
             }
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            self.stopLoadingIndicator(senderVC: self)
+            dump(errorResponse)
+        })
     }
     
     

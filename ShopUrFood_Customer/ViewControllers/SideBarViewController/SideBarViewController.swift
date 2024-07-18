@@ -182,6 +182,10 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard [1,6].contains(indexPath.row) || login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin()
+            return
+        }
         if indexPath.row == 0{
             let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
             profilepageComesFrom = "sideBar"
@@ -330,7 +334,21 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
             AppRouter.shared.presentLogin()
-        }, onFailure: {errorResponse in})
+            login_session.setValue(lang, forKey: "Language")
+        }, onFailure: {errorResponse in
+            // Logout not successful but we must remove user session
+            let domain = Bundle.main.bundleIdentifier!
+            login_session.persistentDomain(forName: domain)
+            login_session.synchronize()
+            print(login_session)
+            for key in login_session.dictionaryRepresentation().keys{
+                login_session.removeObject(forKey: key.description)
+            }
+            login_session.synchronize()
+            self.stopLoadingIndicator(senderVC: self)
+            AppRouter.shared.presentLogin()
+            login_session.setValue(lang, forKey: "Language")
+        })
         
         login_session.setValue(lang, forKey: "Language")
     }

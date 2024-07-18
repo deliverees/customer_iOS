@@ -14,7 +14,23 @@ public typealias Parameters = [String: Any]
 
 class BaseParsing: NSObject {
     var blockResponse = Bool()
-
+    
+    public func ParsingFunctionCallQueryParams(subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void) {
+        let finalURL = URL(string: BASEURL+(subURl as String))
+        
+        print("BASE URL : \(BASEURL+(subURl as String))")
+        print("PARAMETER : \(params!)")
+            //webservice call
+        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.queryString, headers: ["Content-Type": "application/json"]).responseJSON { response in
+                //sucesss block
+            if let JSON = response.result.value as? NSDictionary {
+                success(JSON)
+                return
+            }
+            let error = response.result.error
+            failure(error)
+        }
+    }
     
     // POST METHOD
     public func ParsingFunctionCall(subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
@@ -24,14 +40,15 @@ class BaseParsing: NSObject {
         print("BASE URL : \(BASEURL+(subURl as String))")
         print("PARAMETER : \(params!)")
             //webservice call
-            Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: nil).responseJSON { response in
+        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: ["Content-Type": "application/json"]).responseJSON { response in
                 //sucesss block
-                let JSON = response.result.value as? NSDictionary
-                if((JSON) != nil)
-                {
-                    success(JSON!)
-                }
-                }
+            if let JSON = response.result.value as? NSDictionary {
+                success(JSON)
+                return
+            }
+            let error = response.result.error
+            failure(error)
+        }
     }
     
     // POST METHOD
@@ -63,10 +80,10 @@ class BaseParsing: NSObject {
         
         if login_session.value(forKey: "user_token") == nil
         {
-            let postheaders : HTTPHeaders = [:]
+            let postheaders : HTTPHeaders = ["Content-Type":"application/json"]
             print(postheaders)
-            
-            Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
+            let url = URL(string: BASEURL_CUSTOMER+("v1_"+(subURl as String)))
+            Alamofire.request(url!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
                 //sucesss block
                 switch response.result {
                 case .success:
@@ -79,6 +96,7 @@ class BaseParsing: NSObject {
                 case .failure(let error):
                     //handler(nil)
                     print(error)
+                    failure(error)
                     break
                 }
             }
@@ -86,7 +104,8 @@ class BaseParsing: NSObject {
         else
         {
         
-        let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String)]
+        let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String),
+                                         "Content-Type": "application/json"]
         print(postheaders)
 
         Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
@@ -118,7 +137,8 @@ class BaseParsing: NSObject {
         //let BearerStr = "Bearer " + token
         //let PostHeaders : HTTPHeaders = [
         //"Authorization" : BearerStr]
-        let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String)]
+        let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String),
+                                         "Content-Type": "application/json"]
         print(postheaders)
     
         

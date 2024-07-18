@@ -362,6 +362,7 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
                             login_session.setValue(user_id, forKey: "user_id")
                             login_session.setValue(user_name, forKey: "user_name")
                             login_session.setValue(token, forKey: "user_token")
+                            login_session.setUserLogged(true)
                             login_session.synchronize()
                             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
                             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
@@ -417,6 +418,7 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
                 login_session.setValue(user_id, forKey: "user_id")
                 login_session.setValue(user_name, forKey: "user_name")
                 login_session.setValue(token, forKey: "user_token")
+                login_session.setUserLogged(true)
                 login_session.synchronize()
                 self.stopLoadingIndicator(senderVC: self)
                 let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)

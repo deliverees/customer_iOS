@@ -305,6 +305,9 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     }
     
     //MARK:- Button Actions
+    @IBAction func close(_ sender: Any) {
+        dismiss(animated: true)
+    }
     @IBAction func forgetBtnAction(_ sender: Any) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "ForgetPasswordPage") as! ForgetPasswordPage
@@ -351,6 +354,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                         login_session.setValue(user_name, forKey: "user_name")
                         login_session.setValue(phone, forKey: "user_mobileNo")
                         login_session.setValue(token, forKey: "user_token")
+                        login_session.setUserLogged(true)
                         login_session.synchronize()
                         self.stopLoadingIndicator(senderVC: self)
                         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -422,6 +426,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                 login_session.setValue(user_name, forKey: "user_name")
                 login_session.setValue(phone, forKey: "user_mobileNo")
                 login_session.setValue(token, forKey: "user_token")
+                login_session.setUserLogged(true)
                 login_session.synchronize()
                 self.stopLoadingIndicator(senderVC: self)
                 let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -500,6 +505,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                             login_session.setValue(user_name, forKey: "user_name")
                             login_session.setValue(phone, forKey: "user_mobileNo")
                             login_session.setValue(token, forKey: "user_token")
+                            login_session.setUserLogged(true)
                             login_session.synchronize()
                             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
                             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
@@ -601,6 +607,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                         login_session.setValue(user_name, forKey: "user_name")
                         login_session.setValue(phone, forKey: "user_mobileNo")
                         login_session.setValue(token, forKey: "user_token")
+                        login_session.setUserLogged(true)
                         login_session.synchronize()
                         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
                         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage

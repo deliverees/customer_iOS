@@ -36,4 +36,12 @@ class CustomTabBarController: UITabBarController,UITabBarControllerDelegate {
     private func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         print("Selected view controller")
     }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        guard viewController.children.first is HomeViewController || login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin()
+            return false
+        }
+        return true
+    }
 }
