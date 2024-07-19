@@ -369,6 +369,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         PermissionsManager.shared.requestAuthorizationAndNotificationsPermissions()
+        fb.isHidden = !login_session.isUserLogged()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
