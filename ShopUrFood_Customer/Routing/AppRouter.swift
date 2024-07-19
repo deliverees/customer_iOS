@@ -33,14 +33,19 @@ final class AppRouter {
         }
     }
     
-    func presentLogin() {
+    func presentLogin(in viewController: UIViewController? = nil) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
         loginViewController.modalPresentationStyle = .fullScreen
-        root?.present(loginViewController, animated: true)
+        if let viewController {
+            viewController.present(loginViewController, animated: true)
+        } else {
+            root?.present(loginViewController, animated: true)
+        }
     }
     
     func popToRoot() {
+        root?.presentedViewController?.dismiss(animated: true)
         root?.navigationController?.popToRootViewController(animated: true)
     }
 }

@@ -180,13 +180,16 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         
     }
     @IBAction func topCartBtnAction(_ sender: Any) {
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
         actAsBaseTabbar.selectedIndex = 0
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.InfoTable.isHidden = true
         let cartCount = login_session.object(forKey: "userCartCount") as? String ?? "0"
         if (cartCount == "0"){
             cartBatchLbl.isHidden = true
@@ -435,7 +438,6 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 }
                 else
                 {
-                    self.stopLoadingIndicator(senderVC: self)
                     self.showTokenExpiredPopUp(msgStr: LanguageDictonary.value(forKey: "noitemsfound") as! String)
                      self.dismiss(animated: true, completion: nil)
                 }
@@ -445,10 +447,14 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 
             }else{
                 print(response.object(forKey: "message") as Any)
+                self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as? String ?? "")
+                self.InfoTable.isHidden = true
             }
+            self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in
             self.stopLoadingIndicator(senderVC: self)
-            dump(errorResponse)
+            self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+            self.InfoTable.isHidden = true
         })
     }
     
@@ -518,7 +524,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         print(response.object(forKey: "message") as Any)
                     }
                     self.stopLoadingIndicator(senderVC: self)
-            }, onFailure: {errorResponse in})
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.InfoTable.isHidden = true
+            })
         }
         else
         {
@@ -578,7 +588,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         print(response.object(forKey: "message") as Any)
                     }
                     self.stopLoadingIndicator(senderVC: self)
-            }, onFailure: {errorResponse in})
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.InfoTable.isHidden = true
+            })
         }
     }
     
@@ -730,7 +744,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 self.stopLoadingIndicator(senderVC: self)
 
 
-            }, onFailure: {errorResponse in})
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.InfoTable.isHidden = true
+            })
         }
         else
         {
@@ -821,7 +839,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             self.stopLoadingIndicator(senderVC: self)
 
 
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            self.stopLoadingIndicator(senderVC: self)
+            self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+            self.InfoTable.isHidden = true
+        })
     }
 }
     
@@ -854,7 +876,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 self.InfoTable.cr.endHeaderRefresh()
                 self.InfoTable.cr.endLoadingMore()
 
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            self.stopLoadingIndicator(senderVC: self)
+            self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+            self.InfoTable.isHidden = true
+        })
             
         }
         else
@@ -902,7 +928,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                     self.InfoTable.cr.endHeaderRefresh()
                     self.InfoTable.cr.endLoadingMore()
 
-            }, onFailure: {errorResponse in})
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.InfoTable.isHidden = true
+            })
             
         }
     }
@@ -1376,6 +1406,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @objc func addOneBtnTapped(_ sender: UIButton)
     {
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
         let resultdata = NSMutableDictionary()
         let index = sender.tag
         resultdata.addEntries(from: (itemsArray.object(at: index)as! NSDictionary) as! [AnyHashable : Any])
@@ -1408,6 +1442,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @objc func firstAddBtnTapped(_ sender: UIButton)
     {
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
         let resultdata = NSMutableDictionary()
         let index = sender.tag
         resultdata.addEntries(from: (itemsArray.object(at: index)as! NSDictionary) as! [AnyHashable : Any])
@@ -1444,6 +1482,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @objc func gestureTap(_ sender: UITapGestureRecognizer)
     {
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
        let resultdata = NSMutableDictionary()
         let index = sender.view?.tag
         resultdata.addEntries(from: (itemsArray.object(at: index!)as! NSDictionary) as! [AnyHashable : Any])
@@ -1475,6 +1517,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @objc func firstgestureTap(_ sender: UITapGestureRecognizer)
     {
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
         let resultdata = NSMutableDictionary()
         let index = sender.view?.tag
         resultdata.addEntries(from: (itemsArray.object(at: index!)as! NSDictionary) as! [AnyHashable : Any])

@@ -15,33 +15,18 @@ public typealias Parameters = [String: Any]
 class BaseParsing: NSObject {
     var blockResponse = Bool()
     
-    public func ParsingFunctionCallQueryParams(subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void) {
-        let finalURL = URL(string: BASEURL+(subURl as String))
-        
-        print("BASE URL : \(BASEURL+(subURl as String))")
-        print("PARAMETER : \(params!)")
-            //webservice call
-        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.queryString, headers: ["Content-Type": "application/json"]).responseJSON { response in
-                //sucesss block
-            if let JSON = response.result.value as? NSDictionary {
-                success(JSON)
-                return
-            }
-            let error = response.result.error
-            failure(error)
-        }
-    }
-    
     // POST METHOD
     public func ParsingFunctionCall(subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL+(subURl as String))
-        
-        print("BASE URL : \(BASEURL+(subURl as String))")
+        let prunedParameters = prunedParameters(params: params)
+        print("BASE URL : \(finalURL!)")
         print("PARAMETER : \(params!)")
-            //webservice call
-        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: ["Content-Type": "application/json"]).responseJSON { response in
-                //sucesss block
+        print("Pruned PARAMETERs : \(prunedParameters!)")
+        //webservice call
+        Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: ["Content-Type": "application/json"]).responseJSON { response in
+            print(response.request?.cURL(pretty: true) ?? "")
+            //sucesss block
             if let JSON = response.result.value as? NSDictionary {
                 success(JSON)
                 return
@@ -56,7 +41,7 @@ class BaseParsing: NSObject {
     {
         let finalURL = URL(string: "https://demo.homestaydnn.com/json/mobile_login")
         
-       
+        
         //webservice call
         Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: nil).responseJSON { response in
             //sucesss block
@@ -71,19 +56,22 @@ class BaseParsing: NSObject {
     public func ParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL_CUSTOMER+(subURl as String))
-        print("BASE URL : \(BASEURL_CUSTOMER+(subURl as String))")
+        let prunedParameters = prunedParameters(params: params)
+        print("BASE URL : \(finalURL!)")
         print("PARAMETER : \(params!)")
+        print("Pruned PARAMETERs : \(prunedParameters!)")
         //webservice call
         //let BearerStr = "Bearer " + token
         //let PostHeaders : HTTPHeaders = [
-            //"Authorization" : BearerStr]
+        //"Authorization" : BearerStr]
         
         if login_session.value(forKey: "user_token") == nil
         {
             let postheaders : HTTPHeaders = ["Content-Type":"application/json"]
             print(postheaders)
             let url = URL(string: BASEURL_CUSTOMER+("v1_"+(subURl as String)))
-            Alamofire.request(url!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
+            Alamofire.request(url!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: postheaders).responseJSON { response in
+                print(response.request?.cURL(pretty: true) ?? "")
                 //sucesss block
                 switch response.result {
                 case .success:
@@ -103,26 +91,28 @@ class BaseParsing: NSObject {
         }
         else
         {
-        
-        let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String),
-                                         "Content-Type": "application/json"]
-        print(postheaders)
-
-        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: postheaders).responseJSON { response in
-            //sucesss block
-            switch response.result {
-            case .success:
-                let JSON = response.result.value as? NSDictionary
-                if((JSON) != nil)
-                {
-                    success(JSON!)
+            
+            let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String),
+                                             "Content-Type": "application/json"]
+            print(postheaders)
+            
+            Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: postheaders).responseJSON { response in
+                //sucesss block
+                print(response.request?.cURL(pretty: true) ?? "")
+                switch response.result {
+                case .success:
+                    let JSON = response.result.value as? NSDictionary
+                    if((JSON) != nil)
+                    {
+                        success(JSON!)
+                    }
+                    break
+                case .failure(let error):
+                    //handler(nil)
+                    print(error)
+                    failure(error)
+                    break
                 }
-                break
-            case .failure(let error):
-                //handler(nil)
-                print(error)
-                break
-            }
             }
             
         }
@@ -131,8 +121,10 @@ class BaseParsing: NSObject {
     public func RawParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL_CUSTOMER+(subURl as String))
-        print("BASE URL : \(BASEURL_CUSTOMER+(subURl as String))")
+        let prunedParameters = prunedParameters(params: params)
+        print("BASE URL : \(finalURL!)")
         print("PARAMETER : \(params!)")
+        print("Pruned PARAMETERs : \(prunedParameters!)")
         //webservice call
         //let BearerStr = "Bearer " + token
         //let PostHeaders : HTTPHeaders = [
@@ -140,9 +132,10 @@ class BaseParsing: NSObject {
         let postheaders : HTTPHeaders = ["Authorization" : "Bearer " + (token as String),
                                          "Content-Type": "application/json"]
         print(postheaders)
-    
         
-        Alamofire.request(finalURL!, method: .post, parameters: params!, encoding: URLEncoding.default, headers: postheaders).responseJSON{ response in
+        
+        Alamofire.request(finalURL!, method: .post, parameters: prunedParameters, encoding: URLEncoding.default, headers: postheaders).responseJSON{ response in
+            print(response.request?.cURL(pretty: true) ?? "")
             switch(response.result) {
             case .success(_):
                 if let data = response.result.value{
@@ -166,5 +159,39 @@ class BaseParsing: NSObject {
         }
         return nil
     }
+    
+    private func prunedParameters(params: Parameters?) -> Parameters? {
+        params?.compactMapValues({ value in
+            if (value as? String)?.isEmpty ?? false {
+                return nil
+            }
+            return value
+        })
+    }
+}
 
+private extension URLRequest {
+    func cURL(pretty: Bool = false) -> String {
+        let newLine = pretty ? "\\\n" : ""
+        let method = (pretty ? "--request " : "-X ") + "\(self.httpMethod ?? "GET") \(newLine)"
+        let url: String = (pretty ? "--url " : "") + "\'\(self.url?.absoluteString ?? "")\' \(newLine)"
+        
+        var cURL = "curl "
+        var header = ""
+        var data: String = ""
+        
+        if let httpHeaders = self.allHTTPHeaderFields, httpHeaders.keys.count > 0 {
+            for (key,value) in httpHeaders {
+                header += (pretty ? "--header " : "-H ") + "\'\(key): \(value)\' \(newLine)"
+            }
+        }
+        
+        if let bodyData = self.httpBody, let bodyString = String(data: bodyData, encoding: .utf8),  !bodyString.isEmpty {
+            data = "--data '\(bodyString)'"
+        }
+        
+        cURL += method + url + header + data
+        
+        return cURL
+    }
 }

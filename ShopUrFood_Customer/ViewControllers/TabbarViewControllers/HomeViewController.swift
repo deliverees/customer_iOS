@@ -366,6 +366,11 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        PermissionsManager.shared.requestAuthorizationAndNotificationsPermissions()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         promotionalOfferBGView.isHidden = true
