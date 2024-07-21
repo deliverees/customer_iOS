@@ -21,9 +21,9 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     @IBOutlet weak var NavigationTitlelbl: UILabel!
     @IBOutlet weak var segmentedControl: ScrollableSegmentedControl!
     @IBOutlet weak var noItemsLbl: UILabel!
-
+    
     var showIndex = Int()
-
+    
     var rest_id = String()
     var storeName = String()
     var responseDict = NSMutableDictionary()
@@ -37,9 +37,9 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     var orderBy_splOffers = String()
     var orderBy_topOffers = String()
     var search_combo = String()
-
+    
     var selAvailableTimeBool = Bool()
-
+    
     
     @IBOutlet weak var topNavigationView: UIView!
     @IBOutlet weak var InfoTable: UITableView!
@@ -48,12 +48,12 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     @IBOutlet weak var filterGrayView: UIView!
     @IBOutlet weak var filterBGPopUpView: UIView!
     @IBOutlet weak var filterPopUpCloseButton: UIButton!
-
-
+    
+    
     @IBOutlet weak var firstView: UIView!
-    @IBOutlet weak var firstTableView: UITableView! 
+    @IBOutlet weak var firstTableView: UITableView!
     @IBOutlet weak var firstShowDetailsButton: UIButton!
-
+    
     @IBOutlet weak var secondView: UIView!
     @IBOutlet weak var secondInnerView: UIView!
     @IBOutlet weak var secondShowDetailsButton: UIButton!
@@ -63,9 +63,9 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     @IBOutlet weak var lowtoHighBtn: UIButton!
     @IBOutlet weak var byName: UILabel!
     @IBOutlet weak var byPrice: UILabel!
-
-
-
+    
+    
+    
     var selectedIndexTableSec0 = NSMutableArray()
     var selectedIndexTableSec1 = Int()
     var selectedIndexTableSec2 = NSMutableArray()
@@ -82,19 +82,19 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     var showResNameArray = [String]()
     var mostPreTimeNameArray = [String]()
     var commonSearchArray = [String]()
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         showIndex = 0
         self.setSegmentData()
-
+        
         orderBy_splOffers = ""
         search_combo = ""
         orderBy_topOffers = ""
         search_halal = ""
-
+        
         categoryIDArray.removeAllObjects()
         morePreferTimeArray = ["1", "2", "3", "4", "5"]
         vegNonVegArray = ["1", "2", ""]
@@ -123,7 +123,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         
         secondShowDetailsButton.layer.cornerRadius = 2 //15.0
         secondShowDetailsButton.layer.masksToBounds = true
-
+        
         firstShowDetailsButton.layer.borderWidth = 2
         firstShowDetailsButton.layer.borderColor = UIColor.red.cgColor
         firstShowDetailsButton.setTitleColor(UIColor.red, for: .normal)
@@ -136,23 +136,23 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         
         // Do any additional setup after loading the view.
         commonSearchArray.append(LanguageDictonary.value(forKey: "topoffers") as! String)
-         commonSearchArray.append(LanguageDictonary.value(forKey: "specialoffers") as! String)
-         commonSearchArray.append(LanguageDictonary.value(forKey: "combo") as! String)
-         commonSearchArray.append(LanguageDictonary.value(forKey: "halal") as! String)
-       
+        commonSearchArray.append(LanguageDictonary.value(forKey: "specialoffers") as! String)
+        commonSearchArray.append(LanguageDictonary.value(forKey: "combo") as! String)
+        commonSearchArray.append(LanguageDictonary.value(forKey: "halal") as! String)
+        
         mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "breakfast") as! String)
-         mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "brunch") as! String)
-         mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "lunch") as! String)
-         mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "supper") as! String)
-         mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "dinner") as! String)
+        mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "brunch") as! String)
+        mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "lunch") as! String)
+        mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "supper") as! String)
+        mostPreTimeNameArray.append(LanguageDictonary.value(forKey: "dinner") as! String)
         
         showResNameArray.append(LanguageDictonary.value(forKey: "veg") as! String)
         showResNameArray.append(LanguageDictonary.value(forKey: "nonveg") as! String)
         showResNameArray.append(LanguageDictonary.value(forKey: "both") as! String)
-       
+        
         
         veg_NonVegItemsStr = ""
-       // self.showLoadingIndicator(senderVC: self)
+        // self.showLoadingIndicator(senderVC: self)
         
         cartBatchLbl.layer.cornerRadius = 9.0
         cartBatchLbl.layer.borderWidth = 1.0
@@ -163,20 +163,20 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         topNavigationView.layer.shadowOpacity = 0.6
         topNavigationView.layer.shadowRadius = 3.0
         topNavigationView.layer.shadowColor = UIColor.lightGray.cgColor
-
+        
         /// animator: your customize animator, default is NormalFootAnimator
-//
-//        InfoTable.cr.addFootRefresh(animator: NormalFooterAnimator()) { [weak self] in
-//
-//            /// start refresh
-//
-//            /// Do anything you want...
-//
-//            pagingIndex += 1
-//            self!.showItemsBasedOnCategory()
-//
-//        }
-
+        //
+        //        InfoTable.cr.addFootRefresh(animator: NormalFooterAnimator()) { [weak self] in
+        //
+        //            /// start refresh
+        //
+        //            /// Do anything you want...
+        //
+        //            pagingIndex += 1
+        //            self!.showItemsBasedOnCategory()
+        //
+        //        }
+        
         
     }
     @IBAction func topCartBtnAction(_ sender: Any) {
@@ -218,13 +218,13 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         showIndex = sender.selectedSegmentIndex
         if showIndex == 0
         {
-           self.firstTableView.isHidden = false
-           self.secondView.isHidden = true
+            self.firstTableView.isHidden = false
+            self.secondView.isHidden = true
         }
         else if showIndex == 1
         {
-           self.secondView.isHidden = false
-           self.firstTableView.isHidden = true
+            self.secondView.isHidden = false
+            self.firstTableView.isHidden = true
         }
     }
     
@@ -241,15 +241,15 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
         self.filterGrayView.isHidden = false
         
-//        currentPopUpName = "sort"
-//        guard let popupVC = storyboard?.instantiateViewController(withIdentifier: "filterViewController") as? filterViewController else { return }
-//        popupVC.height = 278
-//        popupVC.topCornerRadius = 30.0
-//        popupVC.presentDuration = 0.5
-//        popupVC.dismissDuration = 0.5
-//        popupVC.shouldDismissInteractivelty = true
-//        popupVC.popupDelegate = self
-//        present(popupVC, animated: true, completion: nil)
+        //        currentPopUpName = "sort"
+        //        guard let popupVC = storyboard?.instantiateViewController(withIdentifier: "filterViewController") as? filterViewController else { return }
+        //        popupVC.height = 278
+        //        popupVC.topCornerRadius = 30.0
+        //        popupVC.presentDuration = 0.5
+        //        popupVC.dismissDuration = 0.5
+        //        popupVC.shouldDismissInteractivelty = true
+        //        popupVC.popupDelegate = self
+        //        present(popupVC, animated: true, completion: nil)
     }
     
     
@@ -287,7 +287,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @IBAction func firstShowDetailsBtnTapped(_ sender: Any)
     {
-       pagingIndex = 1
+        pagingIndex = 1
         if allcategoryItemsStr == "1"
         {
             self.getRestaurantItems()
@@ -297,12 +297,12 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             self.showItemsBasedOnCategory()
         }
         self.filterGrayView.isHidden = true
-
+        
     }
     
     @IBAction func secondShowDetailsBtnTapped(_ sender: Any)
     {
-      pagingIndex = 1
+        pagingIndex = 1
         
         if allcategoryItemsStr == "1"
         {
@@ -317,7 +317,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     @IBAction func filterPopupCloseBtnTapped(_ sender: Any)
     {
-       self.filterGrayView.isHidden = true
+        self.filterGrayView.isHidden = true
     }
     
     @IBAction func infoBtnAction(_ sender: Any) {
@@ -355,34 +355,58 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         
         
         Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: "", item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", page_no: 1, initial_loading: "", onSuccess:
-        
-        //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id,review_page_no: "1", onSuccess:
-            
-            {
+                                    
+                                    //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id,review_page_no: "1", onSuccess:
+                                
+                                {
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
                 self.responseDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
                 let strArray = self.responseDict.object(forKey: "category_list")as! NSArray
                 if strArray.count != 0{
-                let StrmutableArray = strArray.mutableCopy() as! NSMutableArray
-                main_category_id = (StrmutableArray.object(at: 0)as! NSDictionary).object(forKey: "main_category_id") as! NSNumber
-                let subCateArray = (StrmutableArray.object(at: 0)as! NSDictionary).object(forKey: "sub_category_list")as! NSArray
-                 let subCategoryArray = subCateArray.value(forKey: "sub_category_id") as! NSArray
-                sub_category_id = subCategoryArray.object(at: 0)as! NSNumber
-                 
-               // let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
+                    let StrmutableArray = strArray.mutableCopy() as! NSMutableArray
+                    main_category_id = (StrmutableArray.object(at: 0)as! NSDictionary).object(forKey: "main_category_id") as! NSNumber
+                    let subCateArray = (StrmutableArray.object(at: 0)as! NSDictionary).object(forKey: "sub_category_list")as! NSArray
+                    let subCategoryArray = subCateArray.value(forKey: "sub_category_id") as! NSArray
+                    sub_category_id = subCategoryArray.object(at: 0)as! NSNumber
+                    
+                    // let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
                     getRestaurentID = self.rest_id
-                let Str = self.responseDict.object(forKey: "sel_available_time")
-
-                 if Str as? String != nil
-                 {
-                    if Str as? String == ""
+                    let Str = self.responseDict.object(forKey: "sel_available_time")
+                    
+                    if Str as? String != nil
                     {
-                        self.initialMorePreferTimeIDArray.removeAllObjects()
-                        self.getRestaurantItems()
+                        if Str as? String == ""
+                        {
+                            self.initialMorePreferTimeIDArray.removeAllObjects()
+                            self.getRestaurantItems()
+                        }
+                        else
+                        {
+                            let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
+                            let indexStr = (self.responseDict.object(forKey: "sel_available_time") as! Int)
+                            
+                            self.initialMorePreferTimeIDArray.removeAllObjects()
+                            self.initialMorePreferTimeIDArray.add(Str)
+                            self.morePreferTimeIDArray.add(self.morePreferTimeArray[indexStr-1])
+                            
+                            self.selectedIndexTableSec2.add(indexStr)
+                            
+                            let indexPath = IndexPath(item: indexStr, section: 1)
+                            
+                            UIView.performWithoutAnimation
+                            {
+                                self.firstTableView.reloadRows(at: [indexPath], with: .none)
+                            }
+                            self.selAvailableTimeBool = true
+                            
+                            self.getRestaurantItems()
+                            
+                        }
+                        
                     }
-                    else
+                    else if Str as? Int != nil
                     {
                         let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
                         let indexStr = (self.responseDict.object(forKey: "sel_available_time") as! Int)
@@ -396,53 +420,29 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         let indexPath = IndexPath(item: indexStr, section: 1)
                         
                         UIView.performWithoutAnimation
-                            {
-                                self.firstTableView.reloadRows(at: [indexPath], with: .none)
+                        {
+                            self.firstTableView.reloadRows(at: [indexPath], with: .none)
                         }
                         self.selAvailableTimeBool = true
                         
                         self.getRestaurantItems()
-
                     }
-
-                 }
-                 else if Str as? Int != nil
-                 {
-                    let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
-                    let indexStr = (self.responseDict.object(forKey: "sel_available_time") as! Int)
-                    
-                    self.initialMorePreferTimeIDArray.removeAllObjects()
-                    self.initialMorePreferTimeIDArray.add(Str)
-                    self.morePreferTimeIDArray.add(self.morePreferTimeArray[indexStr-1])
-                    
-                    self.selectedIndexTableSec2.add(indexStr)
-                    
-                    let indexPath = IndexPath(item: indexStr, section: 1)
-                    
-                    UIView.performWithoutAnimation
+                    else
                     {
-                    self.firstTableView.reloadRows(at: [indexPath], with: .none)
+                        self.initialMorePreferTimeIDArray.removeAllObjects()
+                        self.getRestaurantItems()
+                        
                     }
-                    self.selAvailableTimeBool = true
-
-                    self.getRestaurantItems()
-                 }
-                 else
-                 {
-                    self.initialMorePreferTimeIDArray.removeAllObjects()
-                    self.getRestaurantItems()
-
-                  }
-                self.InfoTable.isHidden = false
-                self.InfoTable.reloadData()
+                    self.InfoTable.isHidden = false
+                    self.InfoTable.reloadData()
                 }
                 else
                 {
                     self.showTokenExpiredPopUp(msgStr: LanguageDictonary.value(forKey: "noitemsfound") as! String)
-                     self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
                 }
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-               
+                
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                 
             }else{
@@ -458,7 +458,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         })
     }
     
-    
+    private var isLoadingMore = false
     
     //MARK:- first manually load first index of category and subcategory
     func getRestaurantItems()  {
@@ -470,24 +470,24 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             let Parse = CommomParsing()
             
             Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: "", item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: self.initialMorePreferTimeIDArray, page_no: 1, initial_loading: "", onSuccess:
-
-            
-            //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
-                
-                // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                
-                {
-                    response in
-                    print (response)
-                    if response.object(forKey: "code") as! Int == 200{
-                        self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-                        
-                        if ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray).count != 0
-                        {
+                                        
+                                        
+                                        //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
+                                    
+                                    // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                    
+                                    {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200{
+                    self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
+                    
+                    if ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray).count != 0
+                    {
                         
                         if pagingIndex > 1
                         {
-                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
+                            self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
                         }
                         else
                         {
@@ -497,33 +497,33 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         
                         self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
                         
-                        }
-                        
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
-                        
-                    }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                        self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                     }
-                    else
+                    
+                    if self.itemsArray.count > 0
                     {
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
-                        print(response.object(forKey: "message") as Any)
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
                     }
-                    self.stopLoadingIndicator(senderVC: self)
+                    
+                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }
+                else
+                {
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                    print(response.object(forKey: "message") as Any)
+                }
+                self.stopLoadingIndicator(senderVC: self)
             }, onFailure: {errorResponse in
                 self.stopLoadingIndicator(senderVC: self)
                 self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
@@ -533,156 +533,161 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         else
         {
             //allcategoryItemsStr = "0"
+            guard !isLoadingMore else {
+                return
+            }
+            isLoadingMore = true
             let Parse = CommomParsing()
             
             Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: sortByStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, page_no: pagingIndex, initial_loading: "no", onSuccess:
-
-            
-            //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                
-                //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                
-                {
-                    response in
-                    print (response)
-                    if response.object(forKey: "code") as! Int == 200{
-                        self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-                        
-                        
-                        if pagingIndex > 1
-                        {
-                            self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
-                        }
-                        else
-                        {
-                            self.itemsArray.removeAllObjects()
-                            self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
-                        }
-                        
-//                        self.itemsArray.removeAllObjects()
-//                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
-
-                        self.InfoTable.reloadData()
-                       // self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-                        
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
+                                        
+                                        
+                                        //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
+                                    
+                                    //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                    
+                                    {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200{
+                    let entries = (response.object(forKey: "data")as! NSDictionary)
+                    self.storeDict.addEntries(from: entries as! [AnyHashable : Any])
+                    
+                    let newItemsList = entries.object(forKey: "item_list") as! [Any]
+                    
+                    guard !newItemsList.isEmpty else {
+                        self.itemLimitReached = true // TODO: Review this, this is a hack to avoid eternal reloading
+                        self.stopLoadingIndicator(senderVC: self)
+                        return
                     }
-                    else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                        self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                    }else{
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
-                        print(response.object(forKey: "message") as Any)
+                    if pagingIndex > 1
+                    {
+                        self.itemsArray.addObjects(from: newItemsList)
                     }
-                    self.stopLoadingIndicator(senderVC: self)
+                    else
+                    {
+                        self.itemsArray.removeAllObjects()
+                        self.itemsArray.addObjects(from: newItemsList)
+                    }
+                    
+                    //                        self.itemsArray.removeAllObjects()
+                    //                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
+                    
+                    self.InfoTable.reloadData()
+                    // self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                    
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                }
+                else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }else{
+                    self.noItemsLbl.isHidden = self.itemsArray.count > 0
+                    print(response.object(forKey: "message") as Any)
+                }
+                self.stopLoadingIndicator(senderVC: self)
+                self.isLoadingMore = false
             }, onFailure: {errorResponse in
                 self.stopLoadingIndicator(senderVC: self)
                 self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
-                self.InfoTable.isHidden = true
+                self.isLoadingMore = false
             })
         }
     }
     
     //MARK:- first manually load first index of category and subcategory
-  /*  func getRestaurantItems()  {
-        self.showLoadingIndicator(senderVC: self)
-        if isLoadForFirstTime
-        {
-            isLoadForFirstTime = false
-            allcategoryItemsStr = "1"
-            let Parse = CommomParsing()
-            
-            Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
-            
-           // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                
-                {
-                response in
-                print (response)
-                if response.object(forKey: "code") as! Int == 200{
-                    self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-                    self.itemsArray.removeAllObjects()
-                    self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-                    self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                }else{
-                    print(response.object(forKey: "message") as Any)
-                }
-                self.stopLoadingIndicator(senderVC: self)
-            }, onFailure: {errorResponse in})
-        }
-        else
-        {
-        //allcategoryItemsStr = "0"
-        let Parse = CommomParsing()
-            
-            Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-
-      //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-            
-            {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200{
-                self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-                self.itemsArray.removeAllObjects()
-                self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-                self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                print(response.object(forKey: "message") as Any)
-            }
-            self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
-    }
-    }*/
+    /*  func getRestaurantItems()  {
+     self.showLoadingIndicator(senderVC: self)
+     if isLoadForFirstTime
+     {
+     isLoadForFirstTime = false
+     allcategoryItemsStr = "1"
+     let Parse = CommomParsing()
+     
+     Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
+     
+     // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+     
+     {
+     response in
+     print (response)
+     if response.object(forKey: "code") as! Int == 200{
+     self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
+     self.itemsArray.removeAllObjects()
+     self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+     self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+     }else{
+     print(response.object(forKey: "message") as Any)
+     }
+     self.stopLoadingIndicator(senderVC: self)
+     }, onFailure: {errorResponse in})
+     }
+     else
+     {
+     //allcategoryItemsStr = "0"
+     let Parse = CommomParsing()
+     
+     Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
+     
+     //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+     
+     {
+     response in
+     print (response)
+     if response.object(forKey: "code") as! Int == 200{
+     self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
+     self.itemsArray.removeAllObjects()
+     self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+     self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+     }else{
+     print(response.object(forKey: "message") as Any)
+     }
+     self.stopLoadingIndicator(senderVC: self)
+     }, onFailure: {errorResponse in})
+     }
+     }*/
     
     //MARK:-Dynamically Load Items depends on category & subcategory Selection
     func showItemsBasedOnCategory() {
         
         self.selAvailableTimeBool = false
-
+        
         if allcategoryItemsStr == "1"
         {
             let Parse = CommomParsing()
             
             Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-            
-           // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: "",search_text: "",page_no: pagingIndex,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                
-                {
+                                            
+                                            // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: "",search_text: "",page_no: pagingIndex,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                        
+                                        {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200
                 {
                     if pagingIndex > 1
                     {
-                    //self.itemsArray.removeAllObjects()
-                    self.itemLimitReached = false
-
-                    self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+                        //self.itemsArray.removeAllObjects()
+                        self.itemLimitReached = false
+                        
+                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
                     }
                     else
                     {
                         self.itemLimitReached = false
                         self.itemsArray.removeAllObjects()
                         self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-
+                        
                     }
                     //self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
                     self.InfoTable.reloadData()
@@ -695,26 +700,26 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         self.noItemsLbl.isHidden = false
                         
                     }
-
-
+                    
+                    
                 }
                 else if response.object(forKey: "code")as! Int == 400
                 {
                     if pagingIndex > 1
                     {
-                       self.itemLimitReached = true
+                        self.itemLimitReached = true
                     }
                     else if pagingIndex == 1
                     {
                         self.itemLimitReached = false
-
+                        
                         self.itemsArray.removeAllObjects()
                     }
                     else
                     {
                         
                     }
-
+                    
                     self.InfoTable.reloadData()
                     
                     if self.itemsArray.count > 0
@@ -725,7 +730,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         self.noItemsLbl.isHidden = false
                         
                     }
-
+                    
                 }
                 else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
@@ -739,148 +744,148 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                         self.noItemsLbl.isHidden = false
                         
                     }
-
+                    
                 }
                 self.stopLoadingIndicator(senderVC: self)
-
-
+                
+                
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.itemLimitReached = true
+            })
+        }
+        else
+        {
+            let Parse = CommomParsing()
+            
+            Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
+                                            
+                                            // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: "",page_no: pagingIndex,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                        
+                                        {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200{
+                    
+                    if pagingIndex > 1
+                    {
+                        self.itemLimitReached = false
+                        
+                        //                self.itemsArray.removeAllObjects()
+                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+                    }
+                    else
+                    {
+                        self.itemLimitReached = false
+                        
+                        self.itemsArray.removeAllObjects()
+                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+                        
+                    }
+                    //self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                    self.InfoTable.reloadData()
+                    
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                    
+                    
+                }
+                else if response.object(forKey: "code")as! Int == 400
+                {
+                    if pagingIndex > 1
+                    {
+                        self.itemLimitReached = true
+                        
+                    }
+                    else if pagingIndex == 1
+                    {
+                        self.itemLimitReached = false
+                        
+                        self.itemsArray.removeAllObjects()
+                    }
+                    else
+                    {
+                        
+                    }
+                    self.InfoTable.reloadData()
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                    
+                    
+                }
+                
+                else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }else{
+                    print(response.object(forKey: "message") as Any)
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                    
+                }
+                self.stopLoadingIndicator(senderVC: self)
+                
+                
             }, onFailure: {errorResponse in
                 self.stopLoadingIndicator(senderVC: self)
                 self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
                 self.InfoTable.isHidden = true
             })
         }
-        else
-        {
-        let Parse = CommomParsing()
-          
-        Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                
-       // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: "",page_no: pagingIndex,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-            
-            {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200{
-                
-                if pagingIndex > 1
-                {
-                    self.itemLimitReached = false
-
-//                self.itemsArray.removeAllObjects()
-                self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-                }
-                else
-                {
-                    self.itemLimitReached = false
-
-                    self.itemsArray.removeAllObjects()
-                    self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-
-                }
-                //self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-                self.InfoTable.reloadData()
-                
-                if self.itemsArray.count > 0
-                {
-                    self.noItemsLbl.isHidden = true
-                }else
-                {
-                    self.noItemsLbl.isHidden = false
-                    
-                }
-
-
-            }
-            else if response.object(forKey: "code")as! Int == 400
-            {
-                if pagingIndex > 1
-                {
-                    self.itemLimitReached = true
-
-                }
-                else if pagingIndex == 1
-                {
-                    self.itemLimitReached = false
-
-                    self.itemsArray.removeAllObjects()
-                }
-                else
-                {
-                    
-                }
-                self.InfoTable.reloadData()
-                if self.itemsArray.count > 0
-                {
-                    self.noItemsLbl.isHidden = true
-                }else
-                {
-                    self.noItemsLbl.isHidden = false
-                    
-                }
-
-                
-            }
-
-            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                print(response.object(forKey: "message") as Any)
-                if self.itemsArray.count > 0
-                {
-                    self.noItemsLbl.isHidden = true
-                }else
-                {
-                    self.noItemsLbl.isHidden = false
-                    
-                }
-
-            }
-            self.stopLoadingIndicator(senderVC: self)
-
-
-        }, onFailure: {errorResponse in
-            self.stopLoadingIndicator(senderVC: self)
-            self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
-            self.InfoTable.isHidden = true
-        })
     }
-}
     
     func showItemBasedOnName(nameStr:String)
     {
         self.selAvailableTimeBool = false
-
+        
         if allcategoryItemsStr == "1"
         {
-        let Parse = CommomParsing()
-        Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: nameStr, page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-
-       // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: nameStr,page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-            
-            {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200{
-                self.itemsArray.removeAllObjects()
-                self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-                self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                print(response.object(forKey: "message") as Any)
-                self.itemsArray.removeAllObjects()
-                self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-            }
-            self.stopLoadingIndicator(senderVC: self)
+            let Parse = CommomParsing()
+            Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: nameStr, page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
+                                            
+                                            // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: nameStr,page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                        
+                                        {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200{
+                    self.itemsArray.removeAllObjects()
+                    self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+                    self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }else{
+                    print(response.object(forKey: "message") as Any)
+                    self.itemsArray.removeAllObjects()
+                    self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                }
+                self.stopLoadingIndicator(senderVC: self)
                 self.InfoTable.cr.endHeaderRefresh()
                 self.InfoTable.cr.endLoadingMore()
-
-        }, onFailure: {errorResponse in
-            self.stopLoadingIndicator(senderVC: self)
-            self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
-            self.InfoTable.isHidden = true
-        })
+                
+            }, onFailure: {errorResponse in
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
+                self.InfoTable.isHidden = true
+            })
             
         }
         else
@@ -889,45 +894,45 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             let Parse = CommomParsing()
             
             Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: nameStr, page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                
-                // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: nameStr,page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                
-                {
-                    response in
-                    print (response)
-                    if response.object(forKey: "code") as! Int == 200{
-                        self.itemsArray.removeAllObjects()
-                        self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-                        self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                                            
+                                            // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: "",search_text: nameStr,page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
+                                        
+                                        {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200{
+                    self.itemsArray.removeAllObjects()
+                    self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
+                    self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                    
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
                         
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
-
-                        
-                    }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                        self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                    }else{
-                        print(response.object(forKey: "message") as Any)
-                        if self.itemsArray.count > 0
-                        {
-                            self.noItemsLbl.isHidden = true
-                        }else
-                        {
-                            self.noItemsLbl.isHidden = false
-                            
-                        }
-
                     }
-                    self.stopLoadingIndicator(senderVC: self)
-                    self.InfoTable.cr.endHeaderRefresh()
-                    self.InfoTable.cr.endLoadingMore()
-
+                    
+                    
+                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }else{
+                    print(response.object(forKey: "message") as Any)
+                    if self.itemsArray.count > 0
+                    {
+                        self.noItemsLbl.isHidden = true
+                    }else
+                    {
+                        self.noItemsLbl.isHidden = false
+                        
+                    }
+                    
+                }
+                self.stopLoadingIndicator(senderVC: self)
+                self.InfoTable.cr.endHeaderRefresh()
+                self.InfoTable.cr.endLoadingMore()
+                
             }, onFailure: {errorResponse in
                 self.stopLoadingIndicator(senderVC: self)
                 self.showToastAlert(senderVC: self, messageStr: errorResponse?.localizedDescription ?? "")
@@ -940,16 +945,16 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     
     
     
-   //MARK:- Tableview Delegate & DataSource Methods
+    //MARK:- Tableview Delegate & DataSource Methods
     func numberOfSections(in tableView: UITableView) -> Int
     {
         if tableView == firstTableView
         {
-          return 3
+            return 3
         }
         else
         {
-        return 2
+            return 2
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
@@ -960,17 +965,17 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
         else
         {
-        if indexPath.section == 0
-        {
-            if allcategoryItemsStr == "1"{
-                return 210
+            if indexPath.section == 0
+            {
+                if allcategoryItemsStr == "1"{
+                    return 210
+                }
+                return 270
             }
-            return 270
-        }
-        else
-        {
-            return 265
-        }
+            else
+            {
+                return 265
+            }
         }
     }
     
@@ -982,45 +987,45 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             self.noItemsLbl.isHidden = true
             if section == 0
             {
-              return commonSearchArray.count + 1
+                return commonSearchArray.count + 1
             }
             else if section == 1
             {
-              return mostPreTimeNameArray.count + 1
+                return mostPreTimeNameArray.count + 1
             }
             else
             {
-               return showResNameArray.count + 1
+                return showResNameArray.count + 1
             }
             
         }
         else
         {
-        
-        if section == 0{
-            return 1
-        }else{
             
-            if itemsArray.count == 1
-            {
-                noOfRows = 1
+            if section == 0{
                 return 1
+            }else{
                 
-            }else if itemsArray.count == 0{
-                noOfRows = 0
-                return 1
+                if itemsArray.count == 1
+                {
+                    noOfRows = 1
+                    return 1
+                    
+                }else if itemsArray.count == 0{
+                    noOfRows = 0
+                    return 1
+                }
+                else if itemsArray.count % 2 == 0{
+                    noOfRows = itemsArray.count/2
+                    return itemsArray.count/2
+                }
+                else{
+                    let temp  = itemsArray.count/2 + itemsArray.count % 2
+                    noOfRows = temp
+                    return temp
+                }
+                
             }
-            else if itemsArray.count % 2 == 0{
-                noOfRows = itemsArray.count/2
-                return itemsArray.count/2
-            }
-            else{
-                let temp  = itemsArray.count/2 + itemsArray.count % 2
-                noOfRows = temp
-                return temp
-            }
-            
-        }
         }
     }
     
@@ -1117,133 +1122,139 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         
         else
         {
-        if indexPath.section == 0
-        {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantInfoTBCell") as? RestaurantInfoTBCell
-            cell?.selectionStyle = .none
-            
-            
-            
-            
-            if responseDict.object(forKey: "category_list") != nil
+            if indexPath.section == 0
             {
-                if (responseDict.object(forKey: "category_list") as? NSArray)?.count != 0
-                {
-                cell?.getCategoryData(result: responseDict)
-                cell?.delegate = self
-                }
-                
-                if allcategoryItemsStr == "1"
-                {
-                  cell?.subCategoryBtn.isHidden = true
-                  cell?.subCategoryBtn.isUserInteractionEnabled = false
-                  cell?.subCategoryDropDown.isHidden = true
-                  cell?.subCategoryLineView.isHidden = true
-                }
-                else
-                {
-                    cell?.subCategoryBtn.isHidden = false
-                    cell?.subCategoryBtn.isUserInteractionEnabled = true
-                    cell?.subCategoryDropDown.isHidden = false
-                    cell?.subCategoryLineView.isHidden = false
-                }
+                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantInfoTBCell") as? RestaurantInfoTBCell
+                cell?.selectionStyle = .none
                 
                 
                 
-                cell?.dishNameTxt.placeholder = LanguageDictonary.value(forKey: "enterdishname") as? String
-                if self.selAvailableTimeBool == true
+                
+                if responseDict.object(forKey: "category_list") != nil
                 {
-                    cell?.preferableItemTextLbl.isHidden = false
-                    let Str = (self.responseDict.object(forKey: "sel_available_time") as! Int)
+                    if (responseDict.object(forKey: "category_list") as? NSArray)?.count != 0
+                    {
+                        cell?.getCategoryData(result: responseDict)
+                        cell?.delegate = self
+                    }
                     
-                    let PreferableText = LanguageDictonary.value(forKey: "preferableitems") as! String
+                    if allcategoryItemsStr == "1"
+                    {
+                        cell?.subCategoryBtn.isHidden = true
+                        cell?.subCategoryBtn.isUserInteractionEnabled = false
+                        cell?.subCategoryDropDown.isHidden = true
+                        cell?.subCategoryLineView.isHidden = true
+                    }
+                    else
+                    {
+                        cell?.subCategoryBtn.isHidden = false
+                        cell?.subCategoryBtn.isUserInteractionEnabled = true
+                        cell?.subCategoryDropDown.isHidden = false
+                        cell?.subCategoryLineView.isHidden = false
+                    }
                     
-                    cell?.preferableItemTextLbl.text = PreferableText + " " + mostPreTimeNameArray[Str - 1]
+                    
+                    
+                    cell?.dishNameTxt.placeholder = LanguageDictonary.value(forKey: "enterdishname") as? String
+                    if self.selAvailableTimeBool == true
+                    {
+                        cell?.preferableItemTextLbl.isHidden = false
+                        let Str = (self.responseDict.object(forKey: "sel_available_time") as! Int)
+                        
+                        let PreferableText = LanguageDictonary.value(forKey: "preferableitems") as! String
+                        
+                        cell?.preferableItemTextLbl.text = PreferableText + " " + mostPreTimeNameArray[Str - 1]
+                    }
+                    else
+                    {
+                        cell?.preferableItemTextLbl.isHidden = true
+                    }
                 }
-                else
-                {
-                    cell?.preferableItemTextLbl.isHidden = true
-                }
-            }
-            return cell!
-        }
-        else
-        {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
-            cell?.selectionStyle = .none
-            cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
-            cell?.addOneBtn.layer.borderWidth = 2
-            cell?.addOneBtn.layer.borderColor = UIColor.red.cgColor
-            cell?.addOneBtn.setTitleColor(UIColor.red, for: .normal)
-            cell?.addOneBtn.layer.backgroundColor = UIColor.white.cgColor
-           
-            let image3 = UIImage(named: "add")
-            
-            cell?.addOneBtn.setImage(image3, for: .normal)
-            cell?.addOneBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            
-            
-            cell?.firstAddBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
-            cell?.firstAddBtn.layer.borderWidth = 2
-            cell?.firstAddBtn.layer.borderColor = UIColor.red.cgColor
-            cell?.firstAddBtn.setTitleColor(UIColor.red, for: .normal)
-            cell?.firstAddBtn.layer.backgroundColor = UIColor.white.cgColor
-            
-            cell?.firstAddBtn.setImage(image3, for: .normal)
-            cell?.firstAddBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            
-            cell?.NoItemsFound.text = LanguageDictonary.value(forKey: "norecordsfound") as? String
-            if itemsArray.count > 0
-            {
-                cell?.firstView.isHidden = false
-                cell?.secondView.isHidden = false
-                 cell?.NoItemsFound.isHidden = true
-
-            let actualIndex = indexPath.row + indexPath.row
-            cell?.loadFirstFoodItems(item: itemsArray.object(at: actualIndex)as! NSDictionary)
-            cell?.secondView.isHidden = true
-            if actualIndex+1 < itemsArray.count{
-                 cell?.loadSecondFoodItems(item: itemsArray.object(at: actualIndex+1)as! NSDictionary)
-                cell?.secondView.isHidden = false
-            }
-            cell?.firstView.tag = actualIndex
-            let tap = UITapGestureRecognizer(target: self, action: #selector(self.gestureTap(_:)))
-            cell?.firstView.addGestureRecognizer(tap)
-            cell?.firstView.isUserInteractionEnabled = true
-            cell?.addOneBtn.tag = actualIndex
-            cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
-
-               
-                
-            cell?.secondView.tag = actualIndex + 1
-            let firsttap = UITapGestureRecognizer(target: self, action: #selector(self.firstgestureTap(_:)))
-            cell?.secondView.addGestureRecognizer(firsttap)
-            cell?.secondView.isUserInteractionEnabled = true
-                cell?.firstAddBtn.tag = actualIndex + 1
-                cell?.firstAddBtn.addTarget(self, action: #selector(firstAddBtnTapped), for: .touchUpInside)
-
+                return cell!
             }
             else
             {
-               cell?.firstView.isHidden = true
-               cell?.secondView.isHidden = true
-                cell?.NoItemsFound.isHidden = false
-            }
-            
-            if indexPath.row == noOfRows - 1 && self.itemsArray.count % 10 == 0 && self.itemLimitReached == false {
-                pagingIndex += 1
-                if allcategoryItemsStr == "1"
+                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
+                cell?.selectionStyle = .none
+                cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+                cell?.addOneBtn.layer.borderWidth = 2
+                cell?.addOneBtn.layer.borderColor = UIColor.red.cgColor
+                cell?.addOneBtn.setTitleColor(UIColor.red, for: .normal)
+                cell?.addOneBtn.layer.backgroundColor = UIColor.white.cgColor
+                
+                let image3 = UIImage(named: "add")
+                
+                cell?.addOneBtn.setImage(image3, for: .normal)
+                cell?.addOneBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                
+                
+                cell?.firstAddBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+                cell?.firstAddBtn.layer.borderWidth = 2
+                cell?.firstAddBtn.layer.borderColor = UIColor.red.cgColor
+                cell?.firstAddBtn.setTitleColor(UIColor.red, for: .normal)
+                cell?.firstAddBtn.layer.backgroundColor = UIColor.white.cgColor
+                
+                cell?.firstAddBtn.setImage(image3, for: .normal)
+                cell?.firstAddBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+                
+                cell?.NoItemsFound.text = LanguageDictonary.value(forKey: "norecordsfound") as? String
+                if itemsArray.count > 0
                 {
-                self.getRestaurantItems()
+                    cell?.firstView.isHidden = false
+                    cell?.secondView.isHidden = false
+                    cell?.NoItemsFound.isHidden = true
+                    
+                    let actualIndex = indexPath.row + indexPath.row
+                    cell?.loadFirstFoodItems(item: itemsArray.object(at: actualIndex)as! NSDictionary)
+                    cell?.secondView.isHidden = true
+                    if actualIndex+1 < itemsArray.count{
+                        cell?.loadSecondFoodItems(item: itemsArray.object(at: actualIndex+1)as! NSDictionary)
+                        cell?.secondView.isHidden = false
+                    }
+                    cell?.firstView.tag = actualIndex
+                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.gestureTap(_:)))
+                    cell?.firstView.addGestureRecognizer(tap)
+                    cell?.firstView.isUserInteractionEnabled = true
+                    cell?.addOneBtn.tag = actualIndex
+                    cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
+                    
+                    
+                    
+                    cell?.secondView.tag = actualIndex + 1
+                    let firsttap = UITapGestureRecognizer(target: self, action: #selector(self.firstgestureTap(_:)))
+                    cell?.secondView.addGestureRecognizer(firsttap)
+                    cell?.secondView.isUserInteractionEnabled = true
+                    cell?.firstAddBtn.tag = actualIndex + 1
+                    cell?.firstAddBtn.addTarget(self, action: #selector(firstAddBtnTapped), for: .touchUpInside)
+                    
                 }
                 else
                 {
-                self.showItemsBasedOnCategory()
+                    cell?.firstView.isHidden = true
+                    cell?.secondView.isHidden = true
+                    cell?.NoItemsFound.isHidden = false
                 }
+                
+                return cell!
+                
             }
-            return cell!
-
-         }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == noOfRows - 1 
+            && self.itemsArray.count % 10 == 0
+            && !itemLimitReached
+            && !isLoadingMore {
+            pagingIndex += 1
+            if allcategoryItemsStr == "1"
+            {
+                self.getRestaurantItems()
+            }
+            else
+            {
+                self.showItemsBasedOnCategory()
+            }
         }
     }
     
@@ -1260,29 +1271,29 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 if categoryIDArray.contains((commonSearchArray[indexPath.row - 1]))
                 {
                     categoryIDArray.remove((commonSearchArray[indexPath.row - 1]))
-
+                    
                     if indexPath.row == 1
                     {
-                      orderBy_topOffers = ""
+                        orderBy_topOffers = ""
                     }
                     else if indexPath.row == 2
                     {
-                       orderBy_splOffers = ""
+                        orderBy_splOffers = ""
                     }
                     else if indexPath.row == 3
                     {
-                      search_combo = ""
+                        search_combo = ""
                     }
                     else
                     {
-                       search_halal = ""
+                        search_halal = ""
                     }
                     
                 }
                 else
                 {
                     categoryIDArray.add((commonSearchArray[indexPath.row - 1]))
-
+                    
                     if indexPath.row == 1
                     {
                         orderBy_topOffers = "1"
@@ -1306,7 +1317,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 print("orderBy_splOffers : ",orderBy_splOffers)
                 print("search_combo : ",search_combo)
                 print("search_halal : ",search_halal)
-
+                
                 
                 if selectedIndexTableSec0.contains(indexPath.row)
                     
@@ -1321,10 +1332,10 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 let indexPath = IndexPath(item: indexPath.row, section: 0)
                 
                 UIView.performWithoutAnimation
-                    {
-                        firstTableView.reloadRows(at: [indexPath], with: .none)
-                        //filterTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
-                        //newOrdersTblView.reloadData()
+                {
+                    firstTableView.reloadRows(at: [indexPath], with: .none)
+                    //filterTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
+                    //newOrdersTblView.reloadData()
                 }
                 
             }
@@ -1358,11 +1369,11 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 let indexPath = IndexPath(item: indexPath.row, section: 1)
                 
                 UIView.performWithoutAnimation
-                    {
-                        firstTableView.reloadRows(at: [indexPath], with: .none)
-                        //filterTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
-                        //newOrdersTblView.reloadData()
-                        
+                {
+                    firstTableView.reloadRows(at: [indexPath], with: .none)
+                    //filterTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
+                    //newOrdersTblView.reloadData()
+                    
                 }
                 
             }
@@ -1386,22 +1397,22 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                 else
                 {
                     vegNonVegIDArray.removeAllObjects()
-//                    vegNonVegIDArray.add("1")
-//                    vegNonVegIDArray.add("0")
+                    //                    vegNonVegIDArray.add("1")
+                    //                    vegNonVegIDArray.add("0")
                 }
                 
                 print("vegNonVegIDArray : ",vegNonVegIDArray)
                 
                 UIView.performWithoutAnimation
-                    {
-                        firstTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
-                        //newOrdersTblView.reloadData()
+                {
+                    firstTableView.reloadSections(IndexSet(integer: indexPathRow), with: .automatic)
+                    //newOrdersTblView.reloadData()
                 }
                 
             }
             
         }
-
+        
     }
     
     @objc func addOneBtnTapped(_ sender: UIButton)
@@ -1468,7 +1479,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
         
         
-      //  nextViewController.restaurant_id = ((storeDict.object(forKey: "restaurant_id")as! NSNumber).stringValue)
+        //  nextViewController.restaurant_id = ((storeDict.object(forKey: "restaurant_id")as! NSNumber).stringValue)
         if isfromMyReviewPage
         {
             self.revealViewController().pushFrontViewController(nextViewController, animated: true)
@@ -1486,7 +1497,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             AppRouter.shared.presentLogin(in: self)
             return
         }
-       let resultdata = NSMutableDictionary()
+        let resultdata = NSMutableDictionary()
         let index = sender.view?.tag
         resultdata.addEntries(from: (itemsArray.object(at: index!)as! NSDictionary) as! [AnyHashable : Any])
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -1511,7 +1522,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
         else
         {
-        self.present(nextViewController, animated:true, completion:nil)
+            self.present(nextViewController, animated:true, completion:nil)
         }
     }
     
@@ -1541,7 +1552,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         {
             nextViewController.restaurant_id = (storeDict.object(forKey: "restaurant_info") as! NSDictionary).value(forKey: "restaurant_id") as! String
         }
-
+        
         
         //nextViewController.restaurant_id = (storeDict.object(forKey: "restaurant_id")as! String)
         if isfromMyReviewPage
@@ -1552,8 +1563,8 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         {
             self.present(nextViewController, animated:true, completion:nil)
         }
-
-       // self.present(nextViewController, animated:true, completion:nil)
+        
+        // self.present(nextViewController, animated:true, completion:nil)
     }
     
     //MARK:- BottomPopUpDelegate
@@ -1594,7 +1605,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         print("bottomPopupDismissInteractionPercentChanged fromValue: \(oldValue) to: \(newValue)")
     }
     
-
+    
 }
 
 
