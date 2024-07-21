@@ -543,13 +543,13 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     func LoadHeaderTxt()
     {
         /*firstCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].categoryName.uppercased()
-        firstCategoryNameLbl.isHidden = true
-        if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 2 {
-            secondCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].categoryName.uppercased()
-        }
-        if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 3 {
-            thirdCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].categoryName.uppercased()
-        }*/
+         firstCategoryNameLbl.isHidden = true
+         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 2 {
+         secondCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].categoryName.uppercased()
+         }
+         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 3 {
+         thirdCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].categoryName.uppercased()
+         }*/
     }
     
     //MARK:- UITableView Delegate & DataSource Methods
@@ -658,7 +658,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     if allCats == false && cat_id != cat_selected {
                         continue
                     }
-                        
+                    
                     let ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].restaurantDetails.count
                     _count = _count + ard
                 }
@@ -677,11 +677,11 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 }
             }else {
                 /*if Singleton.sharedInstance.resturantHomeModel.data.category_list.count >= 3{
-                    return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails.count
-                }
-                else{
-                    return 0
-                }*/
+                 return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails.count
+                 }
+                 else{
+                 return 0
+                 }*/
                 return 0
             }
         }else{
@@ -701,7 +701,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             cell.resturantImg.layer.borderWidth = 0.5
             cell.resturantImg.layer.borderColor = UIColor.lightGray.cgColor
             
-            if Singleton.sharedInstance.resturantHomeModel != nil{
+            if Singleton.sharedInstance.resturantHomeModel != nil {
                 let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantLogo)
                 cell.resturantImg.kf.setImage(with:rest_img!)
                 //cell.ImgBGView.backgroundColor = BlackTranspertantColor
@@ -781,7 +781,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 print(indexPath.row)
                 
                 let ard = allRestaurantDetails[indexPath.row]
-                    
+                
                 let food_img = ard.restaurantImage.replacingOccurrences(of: " ", with: "%20")
                 if let food_img = URL(string: food_img) {
                     cell.foodImg.kf.setImage(with: food_img)
@@ -808,62 +808,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     cell.ratingValueLbl.isHidden = false
                     cell.ratingValueLbl.text = String(format: "%d", ard.restaurantRating)
                 }
-                
-                /*for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[indexPath.row].restaurantDetails.count {
-                    let ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[indexPath.row].restaurantDetails[index]
-                        
-                    let food_img = ard.restaurantImage.replacingOccurrences(of: " ", with: "%20")
-                    if let food_img = URL(string: food_img) {
-                        cell.foodImg.kf.setImage(with: food_img)
-                    } else {
-                        cell.foodImg.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
-                        cell.foodImg.image = UIImage.init(named: "2019-11-6")
-                    }
-                    
-                    cell.food_titleLbl.text = ard.restaurantName
-                    cell.lblDeliverTime.text = ard.deliveryTime
-                    
-                    let rating = ard.restaurantRating
-                    if (rating == 0) {
-                        cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
-                    } else {
-                        cell.lblRestaurantRating.text = "\(rating)"
-                    }
-                    
-                    if ard.restaurantRating == 0{
-                        cell.ratingStar.isHidden = false
-                        cell.ratingValueLbl.isHidden = true
-                    }else{
-                        cell.ratingStar.isHidden = true
-                        cell.ratingValueLbl.isHidden = false
-                        cell.ratingValueLbl.text = String(format: "%d", ard.restaurantRating)
-                    }
-                }*/
-                
-                
-                /*let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantImage)
-                cell.foodImg.kf.setImage(with: food_img)
-                cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantName
-                cell.lblDeliverTime.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].deliveryTime
-                let rating = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating
-                if (rating == 0) {
-                    cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
-                } else {
-                    cell.lblRestaurantRating.text = "\(rating)"
-                }*/
-                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating)
-                //cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].todayWkingTime
-                //cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantDesc
-                
-                /*if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating == 0{
-                    cell.ratingStar.isHidden = false
-                    cell.ratingValueLbl.isHidden = true
-                }else{
-                    cell.ratingStar.isHidden = true
-                    cell.ratingValueLbl.isHidden = false
-                    cell.ratingValueLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantRating)
-                }*/
-                
                 
             }
             // code shadow effects
@@ -966,8 +910,24 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantId)
         }else if collectionView == food_collectionView{ //segundo grid el que es vertical
-            storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantName
-            rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails[indexPath.row].restaurantId)
+            if cat_selected == 0 { // All categories selected, so we need to unwrap categorized array to a single one. The trick done in cellForItem must be improved
+                let allRestaurantsDetails = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.flatMap({
+                    $0.compactMap(\.restaurantDetails)
+                })?.flatMap({ $0 })
+                guard let restaurant = allRestaurantsDetails?[indexPath.row] else {
+                    return
+                }
+                storeName = restaurant.restaurantName
+                rest_id = String(restaurant.restaurantId)
+            } else {
+                guard let categoryRestaurantDetails = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.first (where: { det in
+                    det.categoryId == cat_selected
+                }) else {
+                    return
+                }
+                storeName = categoryRestaurantDetails.restaurantDetails[indexPath.row].restaurantName
+                rest_id = String(categoryRestaurantDetails.restaurantDetails[indexPath.row].restaurantId)
+            }
         }else if collectionView == food_two_collectionView{
             storeName = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantName
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantId)
@@ -976,7 +936,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             rest_id = String(Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantId)
         }else if collectionView == categories_collectionView{
             storeName = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryName
-            var cat_id_selected = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryId
+            let cat_id_selected = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryId
             
             cat_selected = cat_id_selected!
             
@@ -991,14 +951,10 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         }
         
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        if #available(iOS 11.0, *) {
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "RestaurantInfoViewController") as! RestaurantInfoViewController
-            nextViewController.rest_id = rest_id
-            nextViewController.storeName = storeName
-            self.present(nextViewController, animated:true, completion:nil)
-        } else {
-            // Fallback on earlier versions
-        }
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "RestaurantInfoViewController") as! RestaurantInfoViewController
+        nextViewController.rest_id = rest_id
+        nextViewController.storeName = storeName
+        self.present(nextViewController, animated:true, completion:nil)
         
     }
     

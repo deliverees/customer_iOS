@@ -9,7 +9,7 @@ import Foundation
 class Datas : NSObject, NSCoding{
 
     var allRestaurant : [AllRestaurant]!
-    var allRestaurantDetails : [AllRestaurantDetail]!
+    var allRestaurantDetails : [AllRestaurantDetail]! // They come based on category
     var featuredRestaurant : [FeaturedRestaurant]!
     var category_list : [AllCategoriesDetail]!
 
