@@ -16,7 +16,7 @@ class BaseParsing: NSObject {
     var blockResponse = Bool()
     
     // POST METHOD
-    public func ParsingFunctionCall(subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func ParsingFunctionCall(subURl: NSString, params: Parameters!, encoding: ParameterEncoding = JSONEncoding.default, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL+(subURl as String))
         let prunedParameters = prunedParameters(params: params)
@@ -24,7 +24,7 @@ class BaseParsing: NSObject {
         print("PARAMETER : \(params!)")
         print("Pruned PARAMETERs : \(prunedParameters!)")
         //webservice call
-        Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: ["Content-Type": "application/json"]).responseJSON { response in
+        Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: ["Content-Type": "application/json"]).responseJSON { response in
             print(response.request?.cURL(pretty: true) ?? "")
             //sucesss block
             if let JSON = response.result.value as? NSDictionary {
@@ -53,7 +53,7 @@ class BaseParsing: NSObject {
         }
     }
     
-    public func ParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func ParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, encoding: ParameterEncoding = JSONEncoding.default, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL_CUSTOMER+(subURl as String))
         let prunedParameters = prunedParameters(params: params)
@@ -70,7 +70,7 @@ class BaseParsing: NSObject {
             let postheaders : HTTPHeaders = ["Content-Type":"application/json"]
             print(postheaders)
             let url = URL(string: BASEURL_CUSTOMER+("v1_"+(subURl as String)))
-            Alamofire.request(url!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: postheaders).responseJSON { response in
+            Alamofire.request(url!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
                 print(response.request?.cURL(pretty: true) ?? "")
                 //sucesss block
                 switch response.result {
@@ -96,7 +96,7 @@ class BaseParsing: NSObject {
                                              "Content-Type": "application/json"]
             print(postheaders)
             
-            Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: JSONEncoding.default, headers: postheaders).responseJSON { response in
+            Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
                 //sucesss block
                 print(response.request?.cURL(pretty: true) ?? "")
                 switch response.result {
@@ -118,7 +118,7 @@ class BaseParsing: NSObject {
         }
     }
     
-    public func RawParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func RawParsingFunctionCallWithToken(token: NSString,subURl: NSString, params: Parameters!, encoding: ParameterEncoding = JSONEncoding.default, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let finalURL = URL(string: BASEURL_CUSTOMER+(subURl as String))
         let prunedParameters = prunedParameters(params: params)
@@ -134,7 +134,7 @@ class BaseParsing: NSObject {
         print(postheaders)
         
         
-        Alamofire.request(finalURL!, method: .post, parameters: prunedParameters, encoding: URLEncoding.default, headers: postheaders).responseJSON{ response in
+        Alamofire.request(finalURL!, method: .post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON{ response in
             print(response.request?.cURL(pretty: true) ?? "")
             switch(response.result) {
             case .success(_):
@@ -163,6 +163,9 @@ class BaseParsing: NSObject {
     private func prunedParameters(params: Parameters?) -> Parameters? {
         params?.compactMapValues({ value in
             if (value as? String)?.isEmpty ?? false {
+                return nil
+            }
+            if (value as? [Any])?.isEmpty ?? false {
                 return nil
             }
             return value

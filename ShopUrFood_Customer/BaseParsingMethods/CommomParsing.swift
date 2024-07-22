@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class CommomParsing: BaseParsing {
     var blockStatus = Bool()
@@ -214,11 +215,9 @@ class CommomParsing: BaseParsing {
             })
         } else {
             self.ParsingFunctionCall(subURl: RESTURANT_HOME_V1 as NSString,
-                                                params: (requestDict as! Parameters),
-                                                onSuccess: success, onFailure: failure)
-//            self.ParsingFunctionCallQueryParams(subURl: RESTURANT_HOME_V1 as NSString,
-//                                                params: (requestDict as! Parameters),
-//                                                onSuccess: success, onFailure: failure)
+                                     params: (requestDict as! Parameters),
+                                     encoding: JSONEncoding.default,
+                                     onSuccess: success, onFailure: failure)
         }
     }
     
@@ -296,18 +295,19 @@ class CommomParsing: BaseParsing {
         
         //make base method call
         if let tokenStr = login_session.object(forKey: "user_token") as? String {
-            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTAURANT_DETAILS_API as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTAURANT_DETAILS_API as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
                 success(response)
             }, onFailure: {errorResponse in
                 failure(errorResponse)
             })
         } else {
             self.ParsingFunctionCall(subURl: RESTAURANT_DETAILS_API_V1 as NSString,
-                                                params: (requestDict as! Parameters),
-                                                onSuccess: success, onFailure: failure)
-//            self.ParsingFunctionCallQueryParams(subURl: RESTAURANT_DETAILS_API_V1 as NSString,
-//                                                params: (requestDict as! Parameters),
-//                                                onSuccess: success, onFailure: failure)
+                                     params: (requestDict as! Parameters),
+                                     encoding: JSONEncoding.default,
+                                     onSuccess: success, onFailure: failure)
+            //            self.ParsingFunctionCallQueryParams(subURl: RESTAURANT_DETAILS_API_V1 as NSString,
+            //                                                params: (requestDict as! Parameters),
+            //                                                onSuccess: success, onFailure: failure)
         }
     }
     
@@ -339,7 +339,7 @@ class CommomParsing: BaseParsing {
         self.blockResponse = self.blockStatus
         
         //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
             success(response)
         }, onFailure: {errorResponse in
             failure(errorResponse)

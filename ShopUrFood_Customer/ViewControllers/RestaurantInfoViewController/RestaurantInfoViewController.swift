@@ -463,19 +463,13 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
     //MARK:- first manually load first index of category and subcategory
     func getRestaurantItems()  {
         self.showLoadingIndicator(senderVC: self)
+        allcategoryItemsStr = "1"
         if isLoadForFirstTime
         {
             isLoadForFirstTime = false
-            allcategoryItemsStr = "1"
             let Parse = CommomParsing()
             
             Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: "", item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: self.initialMorePreferTimeIDArray, page_no: 1, initial_loading: "", onSuccess:
-                                        
-                                        
-                                        //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
-                                    
-                                    // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                                    
                                     {
                 response in
                 print (response)
@@ -539,14 +533,7 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
             isLoadingMore = true
             let Parse = CommomParsing()
             
-            Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: sortByStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, page_no: pagingIndex, initial_loading: "no", onSuccess:
-                                        
-                                        
-                                        //Parse.restaurantDetails(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                                    
-                                    //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-                                    
-                                    {
+            Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: sortByStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, page_no: pagingIndex, initial_loading: "", onSuccess:{
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200{
@@ -555,10 +542,8 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
                     
                     let newItemsList = entries.object(forKey: "item_list") as! [Any]
                     
-                    guard !newItemsList.isEmpty else {
+                    if newItemsList.isEmpty {
                         self.itemLimitReached = true // TODO: Review this, this is a hack to avoid eternal reloading
-                        self.stopLoadingIndicator(senderVC: self)
-                        return
                     }
                     if pagingIndex > 1
                     {
@@ -601,65 +586,12 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
     }
     
-    //MARK:- first manually load first index of category and subcategory
-    /*  func getRestaurantItems()  {
-     self.showLoadingIndicator(senderVC: self)
-     if isLoadForFirstTime
-     {
-     isLoadForFirstTime = false
-     allcategoryItemsStr = "1"
-     let Parse = CommomParsing()
-     
-     Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", onSuccess:
-     
-     // Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: "",sub_category_id: "",sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-     
-     {
-     response in
-     print (response)
-     if response.object(forKey: "code") as! Int == 200{
-     self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-     self.itemsArray.removeAllObjects()
-     self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-     self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-     }else{
-     print(response.object(forKey: "message") as Any)
-     }
-     self.stopLoadingIndicator(senderVC: self)
-     }, onFailure: {errorResponse in})
-     }
-     else
-     {
-     //allcategoryItemsStr = "0"
-     let Parse = CommomParsing()
-     
-     Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: "", page_no: 1, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-     
-     //  Parse.getCategoryBasedItems(lang: "en", restaurant_id: rest_id,main_category_id: main_category_id.stringValue,sub_category_id: sub_category_id.stringValue,sort_by: sortByStr,search_text: "",page_no: 1,all: allcategoryItemsStr,item_type: veg_NonVegItemsStr, onSuccess:
-     
-     {
-     response in
-     print (response)
-     if response.object(forKey: "code") as! Int == 200{
-     self.storeDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-     self.itemsArray.removeAllObjects()
-     self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_lists") as! NSArray) as! [Any])
-     self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
-     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-     self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-     }else{
-     print(response.object(forKey: "message") as Any)
-     }
-     self.stopLoadingIndicator(senderVC: self)
-     }, onFailure: {errorResponse in})
-     }
-     }*/
-    
     //MARK:-Dynamically Load Items depends on category & subcategory Selection
     func showItemsBasedOnCategory() {
-        
+        guard login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin(in: self)
+            return
+        }
         self.selAvailableTimeBool = false
         
         if allcategoryItemsStr == "1"

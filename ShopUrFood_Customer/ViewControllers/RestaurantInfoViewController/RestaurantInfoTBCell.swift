@@ -243,6 +243,10 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         }
         else
         {
+            guard login_session.isUserLogged() else {
+                delegate?.showItemsBasedOnCategory()
+                return
+            }
             OnceCategoryChanged = true
             pagingIndex = 1
            sameFirstcategoryIndexfromDidselect = 1
