@@ -668,7 +668,7 @@
                                                                     </constraints>
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pizza Hut" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K1K-ck-dkU">
-                                                                    <rect key="frame" x="72.5" y="90" width="233" height="45"/>
+                                                                    <rect key="frame" x="72.5" y="90" width="233" height="43"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="233" id="l30-Xf-ljl"/>
                                                                     </constraints>
@@ -679,13 +679,13 @@
                                                                     <size key="shadowOffset" width="2" height="2"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yn9-b7-Qas">
-                                                                    <rect key="frame" x="20" y="142.5" width="345" height="103.5"/>
+                                                                    <rect key="frame" x="20" y="140.5" width="345" height="105.5"/>
                                                                     <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="14"/>
                                                                     <color key="textColor" red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3JA-Rd-PV7">
-                                                                    <rect key="frame" x="22" y="139.5" width="190" height="0.0"/>
+                                                                    <rect key="frame" x="22" y="137.5" width="190" height="0.0"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="190" id="DKF-fX-pif"/>
                                                                     </constraints>
@@ -912,7 +912,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pizza Hut" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="69V-kA-h6a">
-                                                                    <rect key="frame" x="20" y="159" width="242" height="24.5"/>
+                                                                    <rect key="frame" x="20" y="159" width="242" height="23.5"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="242" id="L3E-Zs-DyT"/>
                                                                     </constraints>
@@ -921,7 +921,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Coimbatore, india.623709" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfW-Jf-g6a">
-                                                                    <rect key="frame" x="20" y="213" width="234" height="39.5"/>
+                                                                    <rect key="frame" x="20" y="211.5" width="234" height="41"/>
                                                                     <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="14"/>
                                                                     <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -1027,7 +1027,7 @@
                                                                     </constraints>
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pizza Hut" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spa-6Z-jnX">
-                                                                    <rect key="frame" x="20" y="159" width="233" height="24.5"/>
+                                                                    <rect key="frame" x="20" y="159" width="233" height="23.5"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="233" id="YFZ-Oa-LAW"/>
                                                                     </constraints>
@@ -1036,13 +1036,13 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Coimbatore, india.623709" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O0T-8E-fci">
-                                                                    <rect key="frame" x="20" y="213" width="231" height="44.5"/>
+                                                                    <rect key="frame" x="20" y="211.5" width="231" height="46"/>
                                                                     <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="14"/>
                                                                     <color key="textColor" red="0.15686274510000001" green="0.15686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Opens 11Am-11Pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tj9-a1-gfS">
-                                                                    <rect key="frame" x="18" y="188" width="190" height="17"/>
+                                                                    <rect key="frame" x="18" y="187" width="190" height="16.5"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="190" id="i4a-LM-Sza"/>
                                                                     </constraints>
@@ -1537,7 +1537,7 @@
                                 <rect key="frame" x="0.0" y="74" width="414" height="1477"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Restaurant found in your location. try new location" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAR-oq-wSH">
-                                        <rect key="frame" x="20" y="714.5" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="715" width="374" height="47"/>
                                         <fontDescription key="fontDescription" name="TruenoLt" family="Trueno" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -19836,10 +19836,10 @@
     </scenes>
     <designables>
         <designable name="ZAT-Nf-Zkf">
-            <size key="intrinsicContentSize" width="740.5" height="16"/>
+            <size key="intrinsicContentSize" width="668" height="15.5"/>
         </designable>
         <designable name="dkW-Kl-HTK">
-            <size key="intrinsicContentSize" width="664.5" height="16"/>
+            <size key="intrinsicContentSize" width="592" height="15.5"/>
         </designable>
     </designables>
     <resources>

@@ -61,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        playsoundifneeded()
+//        playsoundifneeded()
         UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -2)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .selected)
@@ -100,7 +100,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
             self.ConnectToFCM()
         }
         
+        #if DEBUG
         Fabric.sharedSDK().debug = true
+        #endif
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
                                                name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
         
@@ -108,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         
         self.languageUpdate()
         self.ConnectToFCM()
-        AppRouter.shared.initialize(in: &window)
+        AppRouter.shared.initialize()
  
         
         return true

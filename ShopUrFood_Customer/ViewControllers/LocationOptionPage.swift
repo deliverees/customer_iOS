@@ -63,6 +63,11 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        PermissionsManager.shared.requestAuthorizationAndNotificationsPermissions()
+    }
+    
 //    @IBAction func currentLocBtnAction(_ sender: Any) {
 //        // Ask for Authorisation from the User.
 //        self.locManager.requestAlwaysAuthorization()
@@ -206,20 +211,19 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if allowLocation{
             allowLocation = false
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-       
-        let lat = String(locValue.latitude)
-        let longt = String(locValue.longitude)
-        
-        login_session.setValue(lat, forKey: "user_latitude")
-        login_session.setValue(longt, forKey: "user_longitude")
-        self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: longt)
-        login_session.synchronize()
-        self.locManager.stopUpdatingLocation()
-        print("locations = \(lat) \(longt)")
+            guard let locValue: CLLocationCoordinate2D = locations.last?.coordinate else { return }
+            
+            let lat = String(locValue.latitude)
+            let longt = String(locValue.longitude)
+            
+            login_session.setValue(lat, forKey: "user_latitude")
+            login_session.setValue(longt, forKey: "user_longitude")
+            self.locManager.stopUpdatingLocation()
+            self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: longt)
+            print("locations = \(lat) \(longt)")
         }
-
-       
+        
+        
     }
     
     
@@ -267,11 +271,10 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
                     }
                     
                     login_session.setValue(self.addressString, forKey: "user_address")
-                    self.saveShippingAddress()
-                    let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                    var window: UIWindow?
-                    AppRouter.shared.initialize(in: &window)
-                    appDelegate?.window = window
+                    DispatchQueue.main.async {
+                        self.saveShippingAddress()
+                        AppRouter.shared.initialize()
+                    }
                 }
         })
     }

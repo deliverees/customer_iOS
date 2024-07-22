@@ -14,23 +14,25 @@ final class AppRouter {
     
     private var root: UIViewController?
     
-    func initialize(in window: inout UIWindow?) {
+    func initialize() {
+        var window = UIWindow()
         if login_session.object(forKey: "user_longitude") != nil {
             window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainViewController = storyboard.instantiateViewController(withIdentifier: "RevealRootView") as! SWRevealViewController
             tabBarSelectedIndex = 2
-            window?.rootViewController = mainViewController
-            window?.makeKeyAndVisible()
+            window.rootViewController = mainViewController
+            window.makeKeyAndVisible()
             self.root = mainViewController
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
+            window.rootViewController = initialViewController
+            window.makeKeyAndVisible()
             self.root = initialViewController
         }
+        (UIApplication.shared.delegate as? AppDelegate)?.window = window
     }
     
     func presentLogin(in viewController: UIViewController? = nil) {

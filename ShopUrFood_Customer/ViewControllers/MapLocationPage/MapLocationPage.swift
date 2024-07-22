@@ -222,18 +222,20 @@
             switch response.result {
             case .success:
 
-                let responseJson = response.result.value! as! NSDictionary
+                guard let responseJson = response.result.value as? NSDictionary else {
+                    return
+                }
 
                 if let results = responseJson.object(forKey: "results")! as? [NSDictionary] {
                     if results.count > 0 {
-                        if let addressComponents = results[0]["address_components"]! as? [NSDictionary] {
-                            let addressStr = results[0]["formatted_address"] as! String
+                        if let addressComponents = results[0]["address_components"]! as? [NSDictionary],
+                           let addressStr = results[0]["formatted_address"] as? String {
                             print(addressStr)
                             for component in addressComponents {
                                 if let temp = component.object(forKey: "types") as? [String] {
                                     if temp.count != 0 {
                                         if (temp[0] == "postal_code") {
-                                            self.passZipCode = component["long_name"] as! String
+                                            self.passZipCode = component["long_name"] as? String ?? .init()
                                             print(temp[0])
                                             print(self.passZipCode)
                                         }
@@ -298,7 +300,7 @@
         let lat = String(userLocation!.coordinate.latitude)
         let lon = String(userLocation!.coordinate.longitude)
         
-        self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon)
+        // self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon) // Temporary disabled
         
         var input = GInput()
         self.addressString = ""
@@ -327,6 +329,7 @@
     
     func saveShippingAddress()
     {
+        self.showLoadingIndicator(senderVC: self)
         if landMarkTxtField.text! == ""
         {
             self.showTokenExpiredPopUp(msgStr: LanguageDictonary.object(forKey: "locationpop") as! String)
@@ -337,9 +340,9 @@
             if globalCartCount != 0
             {
                 let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
-                let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as! String, preferredStyle: UIAlertController.Style.alert)
+                let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
                 
-                refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as! String, style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as? String, style: .default, handler: { (action: UIAlertAction!) in
                     
                     if self.passLat != "" {
                         if MapLocationPageFrom == "login"{
@@ -347,10 +350,10 @@
                             login_session.setValue(self.passLong, forKey: "user_longitude")
                             login_session.setValue(self.passAddress, forKey: "user_address")
                             login_session.synchronize()
-                            let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                            var window: UIWindow?
-                            AppRouter.shared.initialize(in: &window)
-                            appDelegate?.window = window
+                            DispatchQueue.main.async {
+                                var appDelegateWindow: UIWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window ?? UIWindow()
+                                AppRouter.shared.initialize()
+                            }
                         }else{
                             ActAsSelectedAddress = self.passAddress
                             ActAsSelectedLatitude = self.passLat
@@ -382,10 +385,9 @@
                         login_session.setValue(self.passLong, forKey: "user_longitude")
                         login_session.setValue(self.passAddress, forKey: "user_address")
                         login_session.synchronize()
-                        let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                        var window: UIWindow?
-                        AppRouter.shared.initialize(in: &window)
-                        appDelegate?.window = window
+                        DispatchQueue.main.async {
+                            AppRouter.shared.initialize()
+                        }
                     }else{
                         ActAsSelectedAddress = self.passAddress
                         ActAsSelectedLatitude = self.passLat
@@ -478,8 +480,8 @@
                     print(self.addressString)
                     self.addressLbl.text = self.addressString
                     self.passLat = pdblLatitude
-                    if pm.postalCode != nil{
-                        self.passZipCode = pm.postalCode!
+                    if let postalCode = pm.postalCode {
+                        self.passZipCode = postalCode
                     }
                     self.passLong = pdblLongitude
                     self.passAddress = self.addressString

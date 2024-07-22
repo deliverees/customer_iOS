@@ -334,7 +334,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
             var window: UIWindow?
-            AppRouter.shared.initialize(in: &window)
+            AppRouter.shared.initialize()
             (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
         }, onFailure: {errorResponse in
@@ -349,7 +349,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
             var window: UIWindow?
-            AppRouter.shared.initialize(in: &window)
+            AppRouter.shared.initialize()
             (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
         })
