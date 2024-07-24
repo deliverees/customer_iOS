@@ -21,13 +21,9 @@ class CustomTabBarController: UITabBarController,UITabBarControllerDelegate {
         tabBar.items?[4].title = LanguageDictonary.object(forKey: "wallet") as! String
         customTabBar = self.tabBar
       
+        //customTabBar.isHidden = true
         // Do any additional setup after loading the view.
     }
-    
-    
-    
-    
-    
     
     // UITabBarDelegate
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
@@ -39,5 +35,13 @@ class CustomTabBarController: UITabBarController,UITabBarControllerDelegate {
     // UITabBarControllerDelegate
     private func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         print("Selected view controller")
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        guard viewController.children.first is HomeViewController || login_session.isUserLogged() else {
+            AppRouter.shared.presentLogin()
+            return false
+        }
+        return true
     }
 }

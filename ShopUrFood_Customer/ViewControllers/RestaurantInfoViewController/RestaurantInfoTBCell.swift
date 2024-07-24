@@ -51,7 +51,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         categoryIndexforBGColor = 0
         self.categoryCollectionView.delegate = self
         self.categoryCollectionView.dataSource = self
-        searchView.layer.cornerRadius = 17.5
+        searchView.layer.cornerRadius = 2 //17.5
         searchView.clipsToBounds = true
         searchView.layer.borderWidth = 0.5
         searchView.layer.borderColor = AppDarkOrange.cgColor
@@ -194,7 +194,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         }else{
         cell.categoryNameLbl.text = ((StrmutableArray.object(at: indexPath.row-1)as! NSDictionary).object(forKey: "main_category_name")as! String)
         }
-        cell.categoryNameLbl.cornerRadius = 15.0
+        cell.categoryNameLbl.cornerRadius = 2 //15.0
         
         cell.categoryNameLbl.layer.borderWidth = 0.5
         if categoryIndexforBGColor == indexPath.row{
@@ -243,6 +243,10 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         }
         else
         {
+            guard login_session.isUserLogged() else {
+                delegate?.showItemsBasedOnCategory()
+                return
+            }
             OnceCategoryChanged = true
             pagingIndex = 1
            sameFirstcategoryIndexfromDidselect = 1

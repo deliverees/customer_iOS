@@ -208,8 +208,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         cartOrangelineView.layer.cornerRadius = 6
         cartOrangelineView.layer.masksToBounds = true
         
-        cartOKButton.layer.cornerRadius = 20.0
-        skipBtn.layer.cornerRadius = 20.0
+        cartOKButton.layer.cornerRadius = 2 //20.0
+        skipBtn.layer.cornerRadius = 2 //20.0
         
     }
     
@@ -638,7 +638,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 self.couponTableView.reloadData()
                 }
                 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "paypal") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "paypal") as? NSNumber)?.stringValue == "1"
                 {
                     self.adminManagepaypalFlag = true
 
@@ -648,7 +648,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
 
                 }
 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "stripe") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "stripe") as? NSNumber)?.stringValue == "1"
                 {
                    self.adminManageStripeFlag = true
                 }else
@@ -657,7 +657,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
 
                 }
                 
-                if ((self.paymentResultDict.object(forKey: "payment_methods") as! NSDictionary).value(forKey: "cod") as! NSNumber).stringValue == "1"
+                if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "cod") as? NSNumber)?.stringValue == "1"
                 {
                     self.adminManageCODFlag = true
                 }else
@@ -964,9 +964,9 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             }
             
         }
-        else if indexPath.section == 2
+        else if indexPath.section == 2 // Terms & Conditions Cell
         {
-            return 66
+            return UITableView.automaticDimension
         }
         else if indexPath.section == 3
         {

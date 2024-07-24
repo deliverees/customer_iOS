@@ -19,4 +19,6 @@ class FoodCollectionCell: UICollectionViewCell {
     @IBOutlet weak var food_titleLbl: UILabel!
     @IBOutlet weak var foodImg: UIImageView!
     @IBOutlet weak var baseView: UIView!
+    @IBOutlet weak var lblDeliverTime: UILabel!
+    @IBOutlet weak var lblRestaurantRating: UILabel!
 }

@@ -17,13 +17,12 @@ import CocoaMQTT
 class Singleton  {
     static var sharedInstance = Singleton()
     var resturantHomeModel : ResturantHome!
+    var categoriesHomeModel : CategoriesHomeModel!
     var CustomerProfileModel : CustomerProfile!
     var RestaurantDetailsModel : Restaurant_Details!
     var ItemDetailModel : itemDetailModel!
     var MyCartModel : MyCartModel!
     var MyOrdersModel : MyOrderModel!
-    
-    
 }
 
 // common variables
@@ -96,47 +95,35 @@ let login_session = UserDefaults.standard
 
 //  Base urlhttp
 
-//let BASEURL = "http://mobileappshopurfood2.1.mytaxisoft.com/api/"
-//let BASEURL_CUSTOMER = "http://mobileappshopurfood2.1.mytaxisoft.com/api/customer/"
-
-//let BASEURL = "http://suf-app.pofi5.in/api/"
-//let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"
-
-
 
 // V2.1 QA Testing URL
+let BASEURL = "https://delivereesapp.com/api/"
+//let BASEURL = "https://develop.delivereesapp.es/api/"
+let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
+// let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
 
-//let BASEURL = "http://192.168.0.76/victor_suf/api/"
-//let BASEURL_CUSTOMER = "http://192.168.0.76/victor_suf/api/customer/"
-
-//let BASEURL = "http://pofi5.com/victor_suf/api/"
-//let BASEURL_CUSTOMER = "http://pofi5.com/victor_suf/api/customer/"
-
-let BASEURL = "http://demo.delivereesapp.com/api/"
-let BASEURL_CUSTOMER = "http://demo.delivereesapp.com/api/customer/"
-//// V2.1 QA Dev URL
-//let BASEURL = "http://suf-app.pofi5.in/api/"
-//let BASEURL_CUSTOMER = "http://suf-app.pofi5.in/api/customer/"
-
-//let BASEURL = "https://demo.shopurfood.com/api/"
-//let BASEURL_CUSTOMER = "https://demo.shopurfood.com/api/customer/"
 
 
 //Customer Login Api
 let USER_LOGIN = "user_login"
 let FB_LOGIN = "facebook_login"
 let GOOGLE_LOGIN = "google_login"
+let APPLE_LOGIN = "apple_login"
 let FORGET_PASSWORD = "customer_forgot_password"
 let PROFILE = "customer_my_account"
 let REGISTER = "registration"
 
 //Home Page API
 let RESTURANT_HOME = "restaurant_home_page"
+let RESTURANT_HOME_V1 = "v1_restaurant_home_page"
 let RESTAURANT_DETAILS_API = "restaurant_details"
+let RESTAURANT_DETAILS_API_V1 = "v1_restaurant_details"
 let CATEGORY_BASE_ITEM = "category_based_items"
 let ITEM_DETAILS = "item_details"
+let ITEM_DETAILS_V1 = "v1_item_details"
 let SAVE_SHIPPING_ADDRESS = "save_shipping_address"
 let ALL_RESTAURANT_LIST = "all_restaurant_list"
+let ALL_RESTAURANT_LIST_V1 = "v1_all_restaurant_list"
 let ADD_TO_CART = "add_to_cart"
 let MY_CART = "my_cart"
 let REMOVE_FROM_CART = "remove_from_cart"
@@ -193,3 +180,5 @@ let USER_LOGOUT = "customer_logout"
 let TruenoBold14 = UIFont(name: "Trueno-Bold", size: 14.0)
 var globalmqtt: CocoaMQTT!
 
+// API Keys
+let googleMapsApiKey = "AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I"

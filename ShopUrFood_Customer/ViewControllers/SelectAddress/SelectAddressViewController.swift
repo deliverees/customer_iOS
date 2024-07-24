@@ -69,8 +69,8 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         
         baseContentView.layer.cornerRadius = 5.0
         baseContentView = self.setCornorShadowEffects(sender: baseContentView)
-        continueBtn.layer.cornerRadius = 20.0
-        skipAndContinueBtn.layer.cornerRadius = 20.0
+        continueBtn.layer.cornerRadius = 2 //20.0
+        skipAndContinueBtn.layer.cornerRadius = 2 //20.0
         self.getData()
         sameShippingFlag = true
         restaurantNameLbl.text = "  " + storeName
@@ -91,19 +91,12 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
             if response.object(forKey: "code") as! Int == 200{
                 self.resultDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
                 self.selfPickupStatus = (self.resultDict.object(forKey: "self_pickup_status")as! NSNumber).stringValue
-                if self.selfPickupStatus == "0"{
-                    self.pickUpYesBtn.isHidden = true
-                    self.pickUpNoBtn.isHidden = true
-                    self.pickUpYesImageView.isHidden = true
-                    self.pickUpNoImageView.isHidden = true
-                    self.pickUpNotAvailableLbl.isHidden = false
-                }else{
-                    self.pickUpYesBtn.isHidden = false
-                    self.pickUpNoBtn.isHidden = false
-                    self.pickUpYesImageView.isHidden = false
-                    self.pickUpNoImageView.isHidden = false
-                    self.pickUpNotAvailableLbl.isHidden = true
-                }
+                
+                self.pickUpYesBtn.isHidden = false
+                self.pickUpNoBtn.isHidden = false
+                self.pickUpYesImageView.isHidden = false
+                self.pickUpNoImageView.isHidden = false
+                self.pickUpNotAvailableLbl.isHidden = true
                 self.setData()
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)

@@ -409,8 +409,14 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
             cell?.titleLbl.text  = ((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_name")as! String)
             cell?.status_titleLbl.text = LanguageDictonary.value(forKey: "status") as? String
             cell?.addStoreReviewBtn.setTitle(LanguageDictonary.value(forKey: "Addreview") as? String, for: .normal)
-            cell?.trackBtn.layer.cornerRadius = 15.0
+            
             cell?.trackBtn.clipsToBounds = true
+            
+            cell?.trackBtn.layer.borderWidth = 2
+            cell?.trackBtn.layer.borderColor = UIColor.red.cgColor
+            cell?.trackBtn.setTitleColor(UIColor.red, for: .normal)
+            cell?.trackBtn.layer.backgroundColor = UIColor.white.cgColor
+            
             if showIndex == 1 {
                 cell?.trackBtn.isHidden = true
                 cell?.infoBtn.isHidden = true

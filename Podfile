@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '13.0'
 
 target 'ShopUrFood_Customer' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -16,14 +16,15 @@ target 'ShopUrFood_Customer' do
     inherit! :search_paths
     # Pods for testing
   end
+pod 'Bolts'
 pod 'RAMAnimatedTabBarController'
 pod 'Toast-Swift', '~> 4.0.0'
 pod 'NVActivityIndicatorView'
 pod 'Alamofire', '~> 4.0.0'
 pod 'FacebookCore'
 pod 'FacebookLogin'
-pod 'FBSDKCoreKit', '~> 4.38.0'
-pod 'FBSDKLoginKit', '~> 4.38.0'
+pod 'FBSDKLoginKit'
+pod 'FBSDKCoreKit'
 pod 'GoogleSignIn', '~> 4.4.0'
 pod 'JonAlert', :git => 'https://github.com/jonSurrey/JonAlert.git', :branch => 'master'
 pod 'GoogleMaps'
@@ -32,10 +33,6 @@ pod 'GoogleUtilities'
 pod 'Kingfisher'
 pod 'SWRevealViewController'
 pod 'DropDown', :git => 'https://github.com/AssistoLab/DropDown.git', :branch => 'master'
-pod 'Firebase'
-pod 'FirebaseCore'
-pod 'FirebaseMessaging'
-pod 'FirebaseAnalytics'
 pod 'DateTimePicker'
 pod 'BottomPopup'
 pod 'IQKeyboardManager'
@@ -46,7 +43,7 @@ pod 'MarqueeLabel/Swift'
 pod 'AFNetworking'
 pod 'ListPlaceholder'
 pod 'SCLAlertView'
-pod 'PayPal-iOS-SDK'
+pod 'PayPal-iOS-SDK', :git => 'https://github.com/paypal/PayPal-iOS-SDK.git' #:path => 'PayPal-iOS-SDK_deprecated'
 pod 'CCValidator'
 pod 'MIBlurPopup'
 pod 'CocoaMQTT'
@@ -57,8 +54,22 @@ pod 'AMPopTip'
 pod 'BetterSegmentedControl', '~> 1.0'
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'CountdownLabel'
-pod 'lottie-ios'
-pod 'CardIO', :git => 'https://github.com/card-io/card.io-iOS-SDK.git', :branch => 'master'
+pod 'Firebase/Auth', '9.6.0'
+pod 'Firebase/Core', '9.6.0'
+pod 'Firebase/Functions', '9.6.0'
+pod 'Firebase/Messaging', '9.6.0'
+
+post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+  
+  installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "13.0"
+        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      end
+  end
+end
 
 end

@@ -69,7 +69,7 @@ class OrderHistoryPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         orderHistoryOrangelineView.layer.cornerRadius = 6
         orderHistoryOrangelineView.layer.masksToBounds = true
         
-        orderHistoryOKButton.layer.cornerRadius = 20.0
+        orderHistoryOKButton.layer.cornerRadius = 2 //20.0
 
     }
     
@@ -87,7 +87,7 @@ class OrderHistoryPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
     
     @IBAction func BtnAction(_ sender: Any) {
         //let tabBarController = self.storyboard?.instantiateViewController(withIdentifier: "CustomTabBarController") as! UITabBarController
-        actAsBaseTabbar.selectedIndex = tabBarSelectedIndex
+        actAsBaseTabbar.selectedIndex = 2 //tabBarSelectedIndex
         self.revealViewController().pushFrontViewController(actAsBaseTabbar, animated: true)
     }
     
@@ -173,7 +173,12 @@ class OrderHistoryPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         cell?.viewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
         cell?.reOrderBtn.setTitle(LanguageDictonary.value(forKey: "repeatorder") as? String, for: .normal)
         
-        cell?.reOrderBtn.layer.cornerRadius = 16.0
+        cell?.trackBtn.layer.borderWidth = 2
+        cell?.trackBtn.layer.borderColor = UIColor.red.cgColor
+        cell?.trackBtn.setTitleColor(UIColor.red, for: .normal)
+        cell?.trackBtn.layer.backgroundColor = UIColor.white.cgColor
+        
+        cell?.reOrderBtn.layer.cornerRadius = 2 //16.0
         cell?.reOrderBtn.layer.borderWidth = 0.2
         cell?.reOrderBtn.layer.borderColor = AppDarkOrange.cgColor
         cell?.baseView.layer.borderWidth = 0.2

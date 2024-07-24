@@ -104,8 +104,8 @@ class RestaurantTwoFoodCell: UITableViewCell {
         foodImg.layer.cornerRadius = 5.0
         foodImg.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         
-        addOneBtn.layer.cornerRadius = 11.0
-        firstAddBtn.layer.cornerRadius = 11.0
+        addOneBtn.layer.cornerRadius = 2 //11.0
+        firstAddBtn.layer.cornerRadius = 2 //11.0
         
         view1.layer.masksToBounds = true
         let rectShape1 = CAShapeLayer()

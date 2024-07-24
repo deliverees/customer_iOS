@@ -68,7 +68,7 @@ class AddressViewController: BaseViewController,UITextFieldDelegate,UITextViewDe
         self.hideAllLines()
         self.getData()
         self.baseContentView = self.setCornorShadowEffects(sender: self.baseContentView)
-        saveBtn.layer.cornerRadius = 20.0
+        saveBtn.layer.cornerRadius = 2 //20.0
         saveBtn.clipsToBounds = true
         baseContentView.layer.cornerRadius = 10.0
         ActAsSelectedAddress = ""

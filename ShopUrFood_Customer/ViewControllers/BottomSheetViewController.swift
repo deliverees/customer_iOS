@@ -175,10 +175,11 @@ class BottomSheetViewController: BaseViewController {
     func mqttSetting() {
         let clientID = "\(iPhoneUDIDString)-" + String(ProcessInfo().processIdentifier)
         mqtt = CocoaMQTT(clientID: clientID, host: defaultHost, port: 1883)
-        mqtt!.keepAlive = 60
-        mqtt.connect()
-        globalmqtt = mqtt
-        mqtt!.delegate = self
+        mqtt?.keepAlive = 60
+        mqtt?.delegate = self
+        if mqtt.connect() {
+            globalmqtt = mqtt
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -412,6 +413,14 @@ class BottomSheetViewController: BaseViewController {
                 print(self.orderStatusArray)
                 
                 self.tableView.reloadData()
+                self.bottomSheetDelegate?.sendLatLang(deliverylatitude: self.deliveryBoyLatitude,
+                                                      deliverylongitude: self.deliveryBoyLongitude,
+                                                      storelatitude: self.restaurantLatitude,
+                                                      storelongitude: self.restaurantLongitude,
+                                                      customerlatitude: self.customerLatitude,
+                                                      customerlongitude: self.customerLongitude,
+                                                      customerAddressString: self.customerAddressString
+                                                      ?? self.customerAddress1String)
                 
                 if self.orderStatusTypeString == "DELIVERED" {
                     self.mqtt.disconnect()

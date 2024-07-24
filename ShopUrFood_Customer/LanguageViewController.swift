@@ -27,7 +27,7 @@ class LanguageViewController: UIViewController {
         self.submitBut.setTitle(LanguageDictonary.object(forKey: "submit") as? String, for: .normal)
         
           modalPresentationCapturesStatusBarAppearance = true
-        self.closeBut.layer.cornerRadius = 20
+        self.closeBut.layer.cornerRadius = 2 //20
         self.closeBut.layer.masksToBounds = true
         self.submitBut.layer.cornerRadius = 5
          self.submitBut.layer.masksToBounds = true
@@ -54,8 +54,7 @@ class LanguageViewController: UIViewController {
     @IBAction func submitAct(_ sender: UIButton) {
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.languageUpdate()
-       
-        appDelegate?.checkRootView()
+        AppRouter.shared.initialize()
     }
     @IBAction func english_Act(_ sender: UIButton) {
         self.spanishImg.image = UIImage(named: "unSelectRadio")

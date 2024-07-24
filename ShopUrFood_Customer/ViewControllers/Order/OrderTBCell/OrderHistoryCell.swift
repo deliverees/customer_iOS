@@ -25,7 +25,7 @@ class OrderHistoryCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        trackBtn.layer.cornerRadius = 14.0
+        trackBtn.layer.cornerRadius = 2 //14.0
         trackBtn.clipsToBounds = true
         // Initialization code
     }

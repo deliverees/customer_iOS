@@ -20,6 +20,7 @@ class FeaturedRestaurant : NSObject, NSCoding{
         restaurantId = dictionary["restaurant_id"] as? Int
         restaurantLogo = dictionary["restaurant_logo"] as? String
         restaurantName = dictionary["restaurant_name"] as? String
+        restaurantName = dictionary["restaurant_name"] as? String
     }
 
     /**

@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  ShopUrFood_Customer
@@ -39,45 +40,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
             delegateTimer?.invalidate()
         }
     }
+    
+    private func playsoundifneeded() {
+        DispatchQueue.main.async {
+            if let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff") {
+                do
+                {
+                    self.player = try AVAudioPlayer(contentsOf: soundURL)
+                }
+                catch
+                {
+                    print("No sound found by URL")
+                }
+                if self.player.isPlaying
+                {
+                    self.playerStop()
+                }
+            }
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        
-      
-        
-        let soundURL = Bundle.main.url(forResource: "marimba_arpegio", withExtension: "aiff")
-        do
-        {
-            self.player = try AVAudioPlayer(contentsOf: soundURL!)
-        }
-        catch
-        {
-            print("No sound found by URL")
-        }
-        if self.player.isPlaying
-        {
-            self.playerStop()
-           
-            
-        }
-        
-        
-        // Init FaceBook login
-        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-        //Init Google
-        GIDSignIn.sharedInstance().clientID = GOOGLE_CLIENT_ID
-        //GMSServices.provideAPIKey("AIzaSyDnQ9-Asl8DIP8HL9RwFhGhPuD7BqVN73Y")
-        //GMSPlacesClient.provideAPIKey("AIzaSyCaHVuFqUzjP2ZPokJNg8HuLak_BkHIS7Q")
-//        GMSServices.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
-//        GMSPlacesClient.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
-        
-        GMSServices.provideAPIKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
-        GMSPlacesClient.provideAPIKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
-        GoogleApi.shared.initialiseWithKey("AIzaSyBg5e4lx9fS1voiwnPjJ8YkjISFt7-sbfU")
-
-        
-        IQKeyboardManager.shared().isEnabled = true
-        
+//        playsoundifneeded()
         UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -2)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "TruenoRg", size: 17)!], for: .selected)
@@ -87,62 +71,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.gray], for: .selected)
         
+        // Init FaceBook login
+        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+        //Init Google
+        GIDSignIn.sharedInstance().clientID = GOOGLE_CLIENT_ID
+        //GMSServices.provideAPIKey("AIzaSyDnQ9-Asl8DIP8HL9RwFhGhPuD7BqVN73Y")
+        //GMSPlacesClient.provideAPIKey("AIzaSyCaHVuFqUzjP2ZPokJNg8HuLak_BkHIS7Q")
+//        GMSServices.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
+//        GMSPlacesClient.provideAPIKey("AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI")
+    
+        // This API Key is provided in GoogleService-Info.plist, API_KEY, improve this
+        GMSServices.provideAPIKey(googleMapsApiKey)
+        GMSPlacesClient.provideAPIKey(googleMapsApiKey)
+        GoogleApi.shared.initialiseWithKey(googleMapsApiKey)
         // Init Paypal
-        PayPalMobile .initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
-        //application.shared.applicationIconBadgeNumber = 0
-        application.applicationIconBadgeNumber = 0 
+        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentSandbox: "AVomx52Gh-UDWy2BSntGqIVSwi5dnc9t6vCdMRyohM_C2Llk6xep2L22sRm9nLAVt-zG5i9zwF8NC1ft"])
+        UNUserNotificationCenter.current().delegate = self
+        IQKeyboardManager.shared().isEnabled = true
         
         // [START register_for_notifications]
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-            UIApplication.shared.registerForRemoteNotifications()
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
-            UIApplication.shared.registerForRemoteNotifications()
-        }
         
-        
-        
-        application.registerForRemoteNotifications()
-        
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert], completionHandler: {(granted, error) in
-            if (granted) {
-                UIApplication.shared.registerForRemoteNotifications()
-            } else{
-                print("Notification permissions not granted")
-            }
-        })
-        
-        
-         FirebaseApp.configure()
-        
+        FirebaseApp.configure()
         Messaging.messaging().delegate = self
-          //Messaging.messaging().shouldEstablishDirectChannel = true
-       
+        //Messaging.messaging().shouldEstablishDirectChannel = true
+        
         if let token = Messaging.messaging().fcmToken {
             print("FCM token: \(token )")
             self.ConnectToFCM()
         }
-          self.languageUpdate()
-        self.ConnectToFCM()
-        self.checkRootView()
-      
+        
+        #if DEBUG
         Fabric.sharedSDK().debug = true
+        #endif
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
                                                name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
         
         application.applicationIconBadgeNumber = 0
+        
+        self.languageUpdate()
+        self.ConnectToFCM()
+        AppRouter.shared.initialize()
+ 
+        
         return true
     }
+    
     @objc func tokenRefreshNotificaiton(_ notification: Foundation.Notification) {
         /*InstanceID.instanceID().instanceID { (result, error) in
             if let error = error {
@@ -296,44 +269,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         login_session.persistentDomain(forName: domain)
         login_session.synchronize()
         print(login_session)
-        for key in login_session.dictionaryRepresentation().keys{
-            login_session.removeObject(forKey: key.description)
+        for key in login_session.dictionaryRepresentation().keys {
+            login_session.removeObject(forKey: key)
         }
         login_session.synchronize()
-        self.checkRootView()
-    }
-   
-    
-    func checkRootView()
-    {
-        if login_session.object(forKey: "user_id") == nil{
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
-        }else{
-            if login_session.object(forKey: "user_longitude") != nil{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainViewController = storyboard.instantiateViewController(withIdentifier: "RevealRootView") as! SWRevealViewController
-                tabBarSelectedIndex = 2
-                self.window?.rootViewController = mainViewController
-                self.window?.makeKeyAndVisible()
-            }else{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
-                self.window?.rootViewController = initialViewController
-                self.window?.makeKeyAndVisible()
-            }
-        }
+        AppRouter.shared.presentLogin()
     }
     
-    
-   
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        if (FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
+        if (ApplicationDelegate.shared.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
         {
             return true
         }else if(GIDSignIn.sharedInstance().handle(url as URL?,
@@ -345,7 +289,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
   
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool
     {
-        return FBSDKApplicationDelegate.sharedInstance().application(app, open: url, sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplication.OpenURLOptionsKey.annotation])
+        return ApplicationDelegate.shared.application(app, open: url, sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplication.OpenURLOptionsKey.annotation])
     }
     
 
@@ -394,16 +338,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
     func application(received remoteMessage: MessagingRemoteMessage) {
         print("remoteMessage: \(remoteMessage)")
         print("remoteMessage: \(remoteMessage.appData)")
-    }
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    } */
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(fcmToken)")
         print(fcmToken)
-        let dataDict:[String: String] = ["token": fcmToken]
+        let dataDict:[String: String] = ["token": fcmToken ?? ""]
         print(dataDict)
         //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }*/
+        if let fcmToken {
+            UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+        }
+    }
     //MARK: UNUserNotificationCenterDelegate Method
     //Called when a notification is delivered to a foreground app.
     @available(iOS 10.0, *)

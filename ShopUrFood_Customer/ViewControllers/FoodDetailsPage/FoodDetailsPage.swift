@@ -124,7 +124,7 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        newCartBtn.layer.cornerRadius = 22.5
+        newCartBtn.layer.cornerRadius = 2  //22.5
         newCartBtn.clipsToBounds = true
         
         // Do any additional setup after loading the view.
@@ -1024,6 +1024,16 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RelatedItemsCollectionCell", for: indexPath) as! RelatedItemsCollectionCell
             
             cell.addBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+            cell.addBtn.layer.borderWidth = 2
+            cell.addBtn.layer.borderColor = UIColor.red.cgColor
+            cell.addBtn.layer.backgroundColor = UIColor.white.cgColor
+            cell.addBtn.setTitleColor(UIColor.red, for: .normal)
+            
+            let image3 = UIImage(named: "add")
+            
+            cell.addBtn.setImage(image3, for: .normal)
+            cell.addBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
             let ImgUrl = URL(string:Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemImage)
             cell.foodImg.kf.setImage(with: ImgUrl)
             if Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemType == "Veg"{
@@ -1036,7 +1046,7 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             let itemPrice = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemOriginalPrice as String
             cell.priceLbl.text = "\(currency)\(itemPrice)"
             cell.descpLbl.text = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemtDesc as String
-            cell.addBtn.layer.cornerRadius = 10.0
+            //cell.addBtn.layer.cornerRadius = 10.0
             cell.foodNameLbl.text = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemName as String
             if Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemIsFavourite == "Favourite" {
                 cell.likeBtn.setImage(UIImage.init(imageLiteralResourceName: "liked_heart"), for: .normal)
@@ -1045,7 +1055,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             }
             cell.likeBtn.tag = indexPath.row
             cell.likeBtn.addTarget(self, action: #selector(RelatedProductlikeBtnTapped), for: .touchUpInside)
-            
             
             if Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemAvailablity == "Out of stock"
             {

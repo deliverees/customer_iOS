@@ -30,7 +30,7 @@ class CartTotalCell: UITableViewCell {
         totalView.layer.borderWidth = 0.2
         totalView.layer.cornerRadius = 5.0
         totalView.layer.borderColor = AppLightOrange.cgColor
-        checkOutBtn.layer.cornerRadius = 20.0
+        checkOutBtn.layer.cornerRadius = 2 //20.0
         checkOutBtn.clipsToBounds = true
     }
 

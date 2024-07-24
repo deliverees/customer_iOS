@@ -28,7 +28,7 @@ class ReferFriendsPageViewController: BaseViewController {
         emailTxt.layer.borderWidth = 0.5
         emailTxt.layer.borderColor = UIColor.lightGray.cgColor
         emailTxt.clipsToBounds = true
-        submitBtn.layer.cornerRadius = 25.0
+        //submitBtn.layer.cornerRadius = 25.0
         emailTxt.clipsToBounds = true
         baseContentView.layer.cornerRadius = 5.0
         baseContentView = self.setCornorShadowEffects(sender: self.baseContentView)

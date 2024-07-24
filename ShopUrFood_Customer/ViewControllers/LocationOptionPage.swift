@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Lottie
 
 class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
 
@@ -26,12 +27,17 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     var resultDict1 = NSMutableDictionary()
     var ComingType = String()
 
+   
+    @IBOutlet weak var animationView: UIView!
+    
+    private var tempView: LottieAnimationView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        baseView.layer.cornerRadius = 10.0
+        baseView.layer.cornerRadius = 2.0
         baseView.addShadow()
         //currentLocBtn.layer.cornerRadius = 25.0
-        manualLocBtn.layer.cornerRadius = 25.0
+        //manualLocBtn.layer.cornerRadius = 25.0
         manualLocBtn.clipsToBounds = true
         let Text = (LanguageDictonary.object(forKey: "setdeliverylocation") as! String).uppercased()
         self.manualLocBtn.setTitle(Text, for: .normal)
@@ -44,8 +50,22 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
             self.baCKBTN.isHidden = false
         }
         
+        // 1. Set animation content mode
+        
+        tempView = .init(name: "anim_location")
+          
+        //tempView!.frame = view.bounds
+        tempView!.frame = CGRect(x:0, y:0, width: 200, height: 200)
+        animationView.addSubview(tempView!)
+        
+        tempView?.play()
         // Do any additional setup after loading the view.
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        PermissionsManager.shared.requestAuthorizationAndNotificationsPermissions()
     }
     
 //    @IBAction func currentLocBtnAction(_ sender: Any) {
@@ -146,7 +166,12 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
                 
             }
             self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+        }, onFailure: {errorResponse in
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+            MapLocationPageFrom = "login"
+            self.present(nextViewController, animated:true, completion:nil)
+        })
     }
     
     
@@ -186,20 +211,19 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if allowLocation{
             allowLocation = false
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-       
-        let lat = String(locValue.latitude)
-        let longt = String(locValue.longitude)
-        
-        login_session.setValue(lat, forKey: "user_latitude")
-        login_session.setValue(longt, forKey: "user_longitude")
-        self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: longt)
-        login_session.synchronize()
-        self.locManager.stopUpdatingLocation()
-        print("locations = \(lat) \(longt)")
+            guard let locValue: CLLocationCoordinate2D = locations.last?.coordinate else { return }
+            
+            let lat = String(locValue.latitude)
+            let longt = String(locValue.longitude)
+            
+            login_session.setValue(lat, forKey: "user_latitude")
+            login_session.setValue(longt, forKey: "user_longitude")
+            self.locManager.stopUpdatingLocation()
+            self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: longt)
+            print("locations = \(lat) \(longt)")
         }
-
-       
+        
+        
     }
     
     
@@ -247,9 +271,10 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
                     }
                     
                     login_session.setValue(self.addressString, forKey: "user_address")
-                    self.saveShippingAddress()
-                    let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
-                    appDelegate?.checkRootView()
+                    DispatchQueue.main.async {
+                        self.saveShippingAddress()
+                        AppRouter.shared.initialize()
+                    }
                 }
         })
     }

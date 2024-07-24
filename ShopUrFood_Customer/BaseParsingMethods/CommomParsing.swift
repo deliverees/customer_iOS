@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import Alamofire
 
 class CommomParsing: BaseParsing {
     var blockStatus = Bool()
-
+    
     
     //Login
     public func NormalEmailLoginParse(lang:String,login_id:String,cus_password:String,ios_fcm_id:String,type:String,ios_device_id:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
@@ -22,7 +23,7 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(ios_fcm_id, forKey: "ios_fcm_id")
         requestDict.setValue(ios_device_id, forKey: "ios_device_id")
         requestDict.setValue(type, forKey: "type")
-
+        
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -86,14 +87,36 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(ios_fcm_id, forKey: "ios_fcm_id")
         requestDict.setValue(type, forKey: "type")
         requestDict.setValue(ios_device_id, forKey: "ios_device_id")
-
-
-
+        
+        
+        
         
         self.blockResponse = self.blockStatus
         
         //make base method call
         self.ParsingFunctionCall(subURl:FB_LOGIN as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+            success(response)
+        }, onFailure: {errorResponse in
+            failure(errorResponse)
+        })
+    }
+    
+    //Apple Login
+    public func AppleLogin(lang:String,apple_id:String,email:String,name:String,type:String,ios_fcm_id:String,ios_device_id:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    {
+        let requestDict = NSMutableDictionary.init()
+        requestDict.setValue(lang, forKey: "lang")
+        requestDict.setValue(apple_id, forKey: "apple_id")
+        requestDict.setValue(email, forKey: "email")
+        requestDict.setValue(name, forKey: "name")
+        requestDict.setValue(ios_fcm_id, forKey: "ios_fcm_id")
+        requestDict.setValue(type, forKey: "type")
+        requestDict.setValue(ios_device_id, forKey: "ios_device_id")
+        
+        self.blockResponse = self.blockStatus
+        
+        //make base method call
+        self.ParsingFunctionCall(subURl:APPLE_LOGIN as NSString, params: (requestDict as! Parameters), onSuccess: {response in
             success(response)
         }, onFailure: {errorResponse in
             failure(errorResponse)
@@ -182,15 +205,20 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(user_latitude, forKey: "user_latitude")
         requestDict.setValue(user_longitude, forKey: "user_longitude")
-        let tokenStr = login_session.object(forKey: "user_token") as! String
         self.blockResponse = self.blockStatus
-        
-        //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTURANT_HOME as NSString, params: (requestDict as! Parameters), onSuccess: {response in
-            success(response)
-        }, onFailure: {errorResponse in
-            failure(errorResponse)
-        })
+        if let tokenStr = login_session.object(forKey: "user_token") as? String {
+            //make base method call
+            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTURANT_HOME as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+                success(response)
+            }, onFailure: {errorResponse in
+                failure(errorResponse)
+            })
+        } else {
+            self.ParsingFunctionCall(subURl: RESTURANT_HOME_V1 as NSString,
+                                     params: (requestDict as! Parameters),
+                                     encoding: JSONEncoding.default,
+                                     onSuccess: success, onFailure: failure)
+        }
     }
     
     //customer profile Details
@@ -198,7 +226,10 @@ class CommomParsing: BaseParsing {
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -222,10 +253,13 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(cus_lat, forKey: "cus_lat")
         requestDict.setValue(cus_long, forKey: "cus_long")
         requestDict.setValue(cus_image, forKey: "cus_image")
-
-
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -257,15 +291,24 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(page_no, forKey: "page_no")
         requestDict.setValue(initial_loading, forKey: "initial_loading")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
         self.blockResponse = self.blockStatus
         
         //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTAURANT_DETAILS_API as NSString, params: (requestDict as! Parameters), onSuccess: {response in
-            success(response)
-        }, onFailure: {errorResponse in
-            failure(errorResponse)
-        })
+        if let tokenStr = login_session.object(forKey: "user_token") as? String {
+            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:RESTAURANT_DETAILS_API as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
+                success(response)
+            }, onFailure: {errorResponse in
+                failure(errorResponse)
+            })
+        } else {
+            self.ParsingFunctionCall(subURl: RESTAURANT_DETAILS_API_V1 as NSString,
+                                     params: (requestDict as! Parameters),
+                                     encoding: JSONEncoding.default,
+                                     onSuccess: success, onFailure: failure)
+            //            self.ParsingFunctionCallQueryParams(subURl: RESTAURANT_DETAILS_API_V1 as NSString,
+            //                                                params: (requestDict as! Parameters),
+            //                                                onSuccess: success, onFailure: failure)
+        }
     }
     
     //Get Category based items
@@ -286,14 +329,17 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(orderBy_spl_offer, forKey: "orderBy_spl_offer")
         requestDict.setValue(orderBy_top_offers, forKey: "orderBy_top_offers")
         requestDict.setValue(available_time, forKey: "available_time")
-
+        
         print("getCategoryBasedItems : ",requestDict)
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
             success(response)
         }, onFailure: {errorResponse in
             failure(errorResponse)
@@ -309,7 +355,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(item_id, forKey: "item_id")
         requestDict.setValue(review_page_no, forKey: "review_page_no")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -331,8 +380,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(location, forKey: "location")
         requestDict.setValue(zipcode, forKey: "zipcode")
         requestDict.setValue(address, forKey: "address")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -359,8 +411,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(restaurant_type, forKey: "restaurant_type")
         requestDict.setValue(prefer_time, forKey: "prefer_time")
         requestDict.setValue(search_key, forKey: "search_key")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -374,7 +429,7 @@ class CommomParsing: BaseParsing {
     //Get Item Add To Cart
     public func itemAddToCart(lang:String,item_id:String,st_id:String,quantity:String,choices_id:[Int],special_notes:String,force_update:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
-       
+        
         let emptyChoiceArray = NSMutableArray()
         
         let requestDict = NSMutableDictionary.init()
@@ -383,15 +438,18 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(st_id, forKey: "st_id")
         requestDict.setValue(quantity, forKey: "quantity")
         if choices_id.count == 0 {
-             requestDict.setValue([0], forKey: "choices_id")
+            requestDict.setValue([0], forKey: "choices_id")
         }else{
-             requestDict.setValue(choices_id, forKey: "choices_id")
+            requestDict.setValue(choices_id, forKey: "choices_id")
         }
-       
+        
         requestDict.setValue(special_notes, forKey: "special_notes")
         requestDict.setValue(force_update, forKey: "force_update")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -408,7 +466,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -426,9 +487,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
         requestDict.setValue(quantity, forKey: "quantity")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -447,10 +511,13 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(cart_id, forKey: "cart_id")
         requestDict.setValue(product_id, forKey: "product_id")
         requestDict.setValue(choice_id, forKey: "choice_id")
-
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -469,9 +536,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(page_no, forKey: "page_no")
         requestDict.setValue(order_id, forKey: "order_id")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -489,9 +559,12 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -508,7 +581,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:REMOVE_FROM_CART as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -532,7 +608,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         print("useWalletMethod : ",requestDict)
@@ -557,11 +636,14 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         print("useofferMethod ---> ",requestDict)
-
+        
         
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:USE_OFFER as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -580,7 +662,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(st_id, forKey: "st_id")
         requestDict.setValue(choices_id, forKey: "choices_id")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         print("checkExistCart ---> ",requestDict)
@@ -616,7 +701,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:PAYMENT_METHODS as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -646,9 +734,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(use_coupon, forKey: "use_coupon")
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:COD_CHECKOUT as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -677,9 +768,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(use_coupon, forKey: "use_coupon")
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:WALLET_CHECKOUT as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -713,9 +807,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(use_coupon, forKey: "use_coupon")
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:STRIPE_CHECKOUT as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -747,7 +844,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:PAYPAL_CHECKOUT as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -764,8 +864,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(order_num, forKey: "order_num")
         requestDict.setValue(page_no, forKey: "page_no")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:MY_ORDERS as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -785,7 +888,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(orderId, forKey: "orderId")
         requestDict.setValue(reason, forKey: "reason")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CANCEL_ORDER as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -802,7 +908,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(order_id, forKey: "order_id")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CUSTOMER_INVOICE as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -817,9 +926,12 @@ class CommomParsing: BaseParsing {
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
-    
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CUSTOMER_PROFILE as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -836,7 +948,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(page_no, forKey: "page_no")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:MY_WISHLIST as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -852,10 +967,13 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(page_no, forKey: "page_no")
-
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:MY_WALLET as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -874,7 +992,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(search_key, forKey: "search_key")
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:HOME_SEARCH as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -893,7 +1014,10 @@ class CommomParsing: BaseParsing {
         
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:USED_WALLET as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -912,7 +1036,10 @@ class CommomParsing: BaseParsing {
         
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:TOTAL_REWARDS_WALLET as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -928,7 +1055,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(page_no, forKey: "page_no")
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:MY_OFFERS as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -944,7 +1074,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(store_id, forKey: "store_id")
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:REMOVE_PREORDER_DATE as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -961,8 +1094,11 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(product_id, forKey: "product_id")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:ADD_WISHLIST as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -979,8 +1115,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(store_id, forKey: "store_id")
         requestDict.setValue(pre_order_date, forKey: "pre_order_date")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:ADD_PREORDER as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -996,7 +1135,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         //make base method call
         self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CUSTOMER_ADDRESS as NSString, params: (requestDict as! Parameters), onSuccess: {response in
@@ -1013,7 +1155,10 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1040,8 +1185,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(netBanking_branch, forKey: "netBanking_branch")
         requestDict.setValue(netBanking_accNo, forKey: "netBanking_accNo")
         requestDict.setValue(netBanking_ifsc, forKey: "netBanking_ifsc")
-                
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1061,7 +1209,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(old_password, forKey: "old_password")
         requestDict.setValue(new_password, forKey: "new_password")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1071,16 +1222,19 @@ class CommomParsing: BaseParsing {
             failure(errorResponse)
         })
     }
-
+    
     
     //Get Terms and Conditions
     public func termsAndConditions(lang:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
-       
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1099,7 +1253,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1126,9 +1283,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(sh_longitude, forKey: "sh_longitude")
         requestDict.setValue(sh_zipcode, forKey: "sh_zipcode")
         requestDict.setValue(sh_location1, forKey: "sh_location1")
-
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1158,7 +1318,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(search_key, forKey: "search_key")
         
         print("getCategoryBasedRestaurants params : ",requestDict)
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1177,7 +1340,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(page_no, forKey: "page_no")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1196,7 +1362,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(referral_email, forKey: "referral_email")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1215,7 +1384,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(order_id, forKey: "order_id")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1235,7 +1407,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(order_id, forKey: "order_id")
         requestDict.setValue(store_id, forKey: "store_id")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1255,8 +1430,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(product_id, forKey: "product_id")
         requestDict.setValue(review_rating, forKey: "review_rating")
         requestDict.setValue(review_comments, forKey: "review_comments")
-
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1276,7 +1454,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(review_rating, forKey: "review_rating")
         requestDict.setValue(review_comments, forKey: "review_comments")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1294,9 +1475,12 @@ class CommomParsing: BaseParsing {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(order_id, forKey: "order_id")
-       
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1307,8 +1491,8 @@ class CommomParsing: BaseParsing {
         })
     }
     
-   
-
+    
+    
     //Get Refund Details
     public func updateProfileWithOTP(lang:String,cus_name:String,cus_email:String,cus_phone1:String,cus_phone2:String,cus_address:String,cus_lat:String,cus_long:String,cus_image:String,otp:String,current_otp:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
@@ -1324,10 +1508,13 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(cus_image, forKey: "cus_image")
         requestDict.setValue(otp, forKey: "otp")
         requestDict.setValue(current_otp, forKey: "current_otp")
-
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1352,7 +1539,10 @@ class CommomParsing: BaseParsing {
         
         
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1369,9 +1559,12 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(token, forKey: "token")
         requestDict.setValue(ios_device_id, forKey: "ios_device_id")
-         requestDict.setValue(ios_device_id, forKey: "type")
+        requestDict.setValue(ios_device_id, forKey: "type")
         
-        let tokenStr = login_session.object(forKey: "user_token") as! String
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
         self.blockResponse = self.blockStatus
         
         //make base method call
@@ -1383,5 +1576,5 @@ class CommomParsing: BaseParsing {
     }
     
     
-
+    
 }

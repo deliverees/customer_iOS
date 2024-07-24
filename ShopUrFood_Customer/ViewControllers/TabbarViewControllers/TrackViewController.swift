@@ -66,7 +66,7 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
         orderHistoryOrangelineView.layer.cornerRadius = 6
         orderHistoryOrangelineView.layer.masksToBounds = true
         
-        orderHistoryOKButton.layer.cornerRadius = 20.0
+        orderHistoryOKButton.layer.cornerRadius = 2 //20.0
 
 
     }
@@ -124,8 +124,7 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
             firstTimeCalled = false
         emptyView.isHidden = false
         let tempView = LottieAnimationView(name: "EmptyCart")
-        tempView.frame = CGRect(x:0, y:0, width: 300, height: 300
-        )
+        tempView.frame = CGRect(x:0, y:0, width: 300, height: 300)
         animationView.addSubview(tempView)
         
         tempView.play()
@@ -175,7 +174,7 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
         let amount = ((resultsArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "orderAmount")as! String)
         cell?.TotalAmtValueLbl.text = "\(currency)\(amount)"
         AmountStringToShowForCustomer = "\(currency)\(amount)"
-        cell?.reOrderBtn.layer.cornerRadius = 16.0
+        cell?.reOrderBtn.layer.cornerRadius = 2 //16.0
         cell?.reOrderBtn.layer.borderWidth = 0.2
         cell?.reOrderBtn.layer.borderColor = AppDarkOrange.cgColor
         
@@ -187,6 +186,10 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
         cell?.viewAllBtn.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
         cell?.reOrderBtn.setTitle(LanguageDictonary.value(forKey: "repeatorder") as? String, for: .normal)
         
+        cell?.trackBtn.layer.borderWidth = 2
+        cell?.trackBtn.layer.borderColor = UIColor.red.cgColor
+        cell?.trackBtn.setTitleColor(UIColor.red, for: .normal)
+        cell?.trackBtn.layer.backgroundColor = UIColor.white.cgColor
         
         cell?.reOrderBtn.tag = indexPath.row
         cell?.reOrderBtn.addTarget(self, action: #selector(repeatOrderBtnTapped), for: .touchUpInside)

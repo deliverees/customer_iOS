@@ -24,10 +24,12 @@ class ForgetPasswordPage: BaseViewController,UITextFieldDelegate {
         self.goBtn.setTitle(LanguageDictonary.object(forKey: "go") as! String, for: .normal)
         forgetPasswordView.layer.cornerRadius = 8.0
         forgetPasswordView = self.setCornorShadowEffects(sender: forgetPasswordView)
-        goBtn.layer.cornerRadius = 25.0
+        //goBtn.layer.cornerRadius = 25.0
         // Do any additional setup after loading the view.
         emailText.delegate = self
           //self.logoImg.image = UIImage(named: "app_logo")
+        
+        emailText.setPadding(left: 30, right: 0, imageName: "ic_user_email")
        
     }
     
