@@ -8,18 +8,21 @@
 
 import UIKit
 
-class WrokingHoursViewController: BaseViewController,UITableViewDelegate,UITableViewDataSource {
+class WrokingHoursViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var navigationTitleLbl: UILabel!
     
     @IBOutlet weak var hoursTable: UITableView!
     @IBOutlet weak var baseContentView: UIView!
-    var workingHoursArray = NSMutableArray()
+    var workingHours: WorkingHours?
     override func viewDidLoad() {
         super.viewDidLoad()
+        assert(workingHours != nil)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "workinghours") as? String
         baseContentView.layer.cornerRadius = 5.0
         baseContentView = self.setCornorShadowEffects(sender: baseContentView)
         hoursTable.layer.cornerRadius = 5.0
+        hoursTable.rowHeight = UITableView.automaticDimension
+        hoursTable.estimatedRowHeight = 80
         // Do any additional setup after loading the view.
     }
     
@@ -27,40 +30,26 @@ class WrokingHoursViewController: BaseViewController,UITableViewDelegate,UITable
         self.dismiss(animated: true, completion: nil)
     }
     
-    //MARK:- Tableview Delegate & DataSource Methods
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
+    // MARK: - TableView Delegate and DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return workingHoursArray.count
+        return workingHours?.schedule.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "WorkingHoursTableViewCell") as? WorkingHoursTableViewCell
-        cell?.selectionStyle = .none
-        let dataDict = NSMutableDictionary()
-        dataDict.addEntries(from: (workingHoursArray.object(at: indexPath.row)as! NSDictionary) as! [AnyHashable : Any])
-        let dayString = dataDict.object(forKey: "working_date")as! String
-        let first3 = String(dayString.prefix(3))
-        cell?.dayLbl.text = first3
-        let openTime = dataDict.object(forKey: "working_from_time")as! String
-        let closeTime = dataDict.object(forKey: "working_end_time")as! String
-        cell?.openTimeValueLbl.text = ": \(openTime)"
-        cell?.closeTimeValueLbl.text = ": \(closeTime)"
-        let statusStr = dataDict.object(forKey: "available_status")as! String
-        if statusStr == "Available"{
-            cell?.closeView.backgroundColor = UIColor.clear
-        }else{
-            cell?.closeView.backgroundColor = WhiteTranspertantColor
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WorkingHoursTableViewCell") as? WorkingHoursTableViewCell else {
+            assert(false, "Did you forget to register this kind of Cell?")
+            return .init()
         }
-        cell?.statusLbl.text = statusStr
-        cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
-
-        return cell!
+        cell.selectionStyle = .none
+        guard let workingHours else {
+            assert(false, "Not initialized correctly working hours")
+            return .init()
+        }
+        
+        let cellData = workingHours.schedule[indexPath.row]
+        cell.setup(data: cellData)
+        
+        return cell
     }
-    
-    
-
 }

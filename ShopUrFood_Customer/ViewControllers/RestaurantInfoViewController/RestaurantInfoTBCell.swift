@@ -57,7 +57,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         searchView.layer.borderColor = AppDarkOrange.cgColor
         dishNameTxt.delegate = self
         OnceCategoryChanged = true
-        self.minimumOrderLbl.text = LanguageDictonary.object(forKey: "minimumorder") as! String
+        self.minimumOrderLbl.text = Localization.value(for: "minimumorder")
         // Initialization code
     }
     func getCategoryData(result:NSMutableDictionary){

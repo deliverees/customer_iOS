@@ -1524,11 +1524,14 @@ class RestaurantInfoViewController: BaseViewController,UITableViewDelegate,UITab
         }
         if showWorkingHoursView == "true"{
             showWorkingHoursView = "false"
-            let tempArray = self.responseDict.object(forKey: "working_hours")as! NSArray
-            let mutableTemp = tempArray.mutableCopy() as! NSMutableArray
+            guard let tempArray = self.responseDict.object(forKey: "working_hours") as? NSArray else {
+                self.showToastAlert(senderVC: self, messageStr: "No existen datos")
+                return
+            }
+            let workingHours = WorkingHours(from: tempArray)
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "WrokingHoursViewController") as! WrokingHoursViewController
-            nextViewController.workingHoursArray = mutableTemp
+            nextViewController.workingHours = workingHours
             self.present(nextViewController, animated:true, completion:nil)
         }
     }

@@ -270,20 +270,20 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
         }else if indexPath.row == 8 {
             /*if login_session.object(forKey: "user_longitude") != nil{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainViewController = storyboard.instantiateViewController(withIdentifier: "WalletViewController") as! WalletViewController
-                tabBarSelectedIndex = 4
-                mainViewController.isfromSideBarOrNotifyPage = true
-                self.window?.rootViewController = mainViewController
-                self.window?.makeKeyAndVisible()
-            }else{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "SelectLocationPage")
-                self.window?.rootViewController = initialViewController
-                self.window?.makeKeyAndVisible()
-            }*/
+             self.window = UIWindow(frame: UIScreen.main.bounds)
+             let storyboard = UIStoryboard(name: "Main", bundle: nil)
+             let mainViewController = storyboard.instantiateViewController(withIdentifier: "WalletViewController") as! WalletViewController
+             tabBarSelectedIndex = 4
+             mainViewController.isfromSideBarOrNotifyPage = true
+             self.window?.rootViewController = mainViewController
+             self.window?.makeKeyAndVisible()
+             }else{
+             self.window = UIWindow(frame: UIScreen.main.bounds)
+             let storyboard = UIStoryboard(name: "Main", bundle: nil)
+             let initialViewController = storyboard.instantiateViewController(withIdentifier: "SelectLocationPage")
+             self.window?.rootViewController = initialViewController
+             self.window?.makeKeyAndVisible()
+             }*/
             if login_session.isUserLogged() {
                 self.logOut()
             } else {
@@ -292,19 +292,19 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         }
         else if indexPath.row == 8 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ReferFriendsPageViewController") as! ReferFriendsPageViewController
-            NotificationVC.navigationType = "sidebar"
-            let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
-            self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
+             NotificationVC.navigationType = "sidebar"
+             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
+             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
         }else if indexPath.row == 9 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "HelpPageViewController") as! HelpPageViewController
-            NotificationVC.navigaionType = "sidebar"
-            let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
-            self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
+             NotificationVC.navigaionType = "sidebar"
+             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
+             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
         }else if indexPath.row == 10 {
             
             /*let nav = self.storyboard?.instantiateViewController(withIdentifier: "LanguageViewController") as? LanguageViewController
-            nav?.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-            self.present(nav!, animated: true, completion: nil)*/
+             nav?.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+             self.present(nav!, animated: true, completion: nil)*/
             
         }else if indexPath.row == 11 {
             //self.logOut()
@@ -333,9 +333,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
-            var window: UIWindow?
             AppRouter.shared.initialize()
-            (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
         }, onFailure: {errorResponse in
             // Logout not successful but we must remove user session
@@ -348,9 +346,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
-            var window: UIWindow?
             AppRouter.shared.initialize()
-            (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
         })
         

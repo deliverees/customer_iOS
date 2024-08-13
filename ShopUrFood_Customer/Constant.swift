@@ -99,8 +99,7 @@ let login_session = UserDefaults.standard
 // V2.1 QA Testing URL
 let BASEURL = "https://delivereesapp.com/api/"
 //let BASEURL = "https://develop.delivereesapp.es/api/"
-let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
-// let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
+let BASEURL_CUSTOMER = "\(BASEURL)customer/"
 
 
 
