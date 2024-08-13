@@ -99,8 +99,7 @@ let login_session = UserDefaults.standard
 // V2.1 QA Testing URL
 let BASEURL = "https://delivereesapp.com/api/"
 //let BASEURL = "https://develop.delivereesapp.es/api/"
-let BASEURL_CUSTOMER = "https://delivereesapp.com/api/customer/"
-// let BASEURL_CUSTOMER = "https://develop.delivereesapp.es/api/customer/"
+let BASEURL_CUSTOMER = "\(BASEURL)customer/"
 
 
 
@@ -182,3 +181,8 @@ var globalmqtt: CocoaMQTT!
 
 // API Keys
 let googleMapsApiKey = "AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I"
+
+var isRunningTests: Bool {
+    ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    || ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil
+}

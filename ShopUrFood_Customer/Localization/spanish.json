@@ -254,7 +254,7 @@
     "cardexpired":"Ingrese el mes y año de vencimiento",
     "pleaseentercvv":"Introduzca el número de CVV",
     "usevalidcarddetails":"¡Oopss! Por favor ingrese un número de tarjeta de credito válido",
-    "version":"Versión 1.2",
+    "version":"Versión ",
     "versionDesc":"Última Versión",
     "versionupdate":"ACTUALIZAR",
     "success":"ÉXCELENTE",
@@ -300,5 +300,7 @@
     "RestaurantReview":"Descripción del Partner",
     "notavailable":"No disponible",
     "No Restaurant found in your location. try new location":"No se ha encontrado ningún comercio en su ubicación. Pruebe una nueva ubicación",
-    "WehavesentaverificationemailValidateyouraccounttocontinue": "Hemos enviado un email de verificación. Valida tu cuenta para continuar"
+    "WehavesentaverificationemailValidateyouraccounttocontinue": "Hemos enviado un email de verificación. Valida tu cuenta para continuar",
+    "opening_from":"De",
+    "opening_to":"a"
 }

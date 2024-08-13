@@ -255,7 +255,7 @@
     "cardexpired":"Please enter the Card Expired date",
     "pleaseentercvv":"Please enter the CVV number",
     "usevalidcarddetails":"Use valid card details",
-    "version":"Version 1.2",
+    "version":"Version ",
     "versionDesc":"This is the latest version",
     "versionupdate":"UPDATE",
     "success":"Success",
@@ -301,5 +301,7 @@
     "RestaurantReview":"Shops Review",
     "notavailable":"Not Available" ,
     "No Restaurant found in your location. try new location":"No Restaurant found in your location. try new location",
-    "WehavesentaverificationemailValidateyouraccounttocontinue":"We have sent a verification email. Validate your account to continue"
+    "WehavesentaverificationemailValidateyouraccounttocontinue":"We have sent a verification email. Validate your account to continue",
+    "opening_from":"From",
+    "opening_to":"to"
 }
