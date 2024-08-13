@@ -181,3 +181,8 @@ var globalmqtt: CocoaMQTT!
 
 // API Keys
 let googleMapsApiKey = "AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I"
+
+var isRunningTests: Bool {
+    ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    || ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil
+}

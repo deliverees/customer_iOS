@@ -10,9 +10,9 @@ import Foundation
 
 struct Localization {
     static func value(for key: String) -> String {
-        #if UNIT_TESTS
-        return key
-        #endif
+        if isRunningTests {
+            return key
+        }
         if let val = LanguageDictonary.value(forKey: key) as? String {
             return val
         }

@@ -19,7 +19,7 @@ class AboutPageViewController: BaseViewController {
     @IBOutlet weak var baseContentView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.versionLbl.text = Localization.value(for: "version") + CFBundleGetVersionNumber(Bundle.main)
+        self.versionLbl.text = Localization.value(for: "version") + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
         self.versionDesc.text = LanguageDictonary.value(forKey: "versionDesc") as? String
         self.updateBtn.setTitle(LanguageDictonary.value(forKey: "versionupdate") as? String, for: .normal)
         self.titileLbl.text = LanguageDictonary.value(forKey: "about") as? String

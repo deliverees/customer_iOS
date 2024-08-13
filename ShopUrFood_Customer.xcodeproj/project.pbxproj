@@ -107,8 +107,6 @@
 		24346F78220972C000446252 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F77220972C000446252 /* ViewController.swift */; };
 		24346F7B220972C000446252 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24346F79220972C000446252 /* Main.storyboard */; };
 		24346F7D220972CC00446252 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24346F7C220972CC00446252 /* Assets.xcassets */; };
-		24346F8B220972CC00446252 /* ShopUrFood_CustomerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */; };
-		24346F96220972CC00446252 /* ShopUrFood_CustomerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F95220972CC00446252 /* ShopUrFood_CustomerUITests.swift */; };
 		24346FA4220973B500446252 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA3220973B500446252 /* Constant.swift */; };
 		24346FA62209743100446252 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA52209743100446252 /* Utility.swift */; };
 		24346FAA22098FC100446252 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA922098FC100446252 /* HomeViewController.swift */; };
@@ -232,20 +230,12 @@
 		D44E57E02C4A571600FA10B2 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */; };
 		D48955922C6A8F380082A2A7 /* WorkingHoursModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */; };
 		D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
-		D48955962C6B4E1D0082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
+		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
-		E1C089344BE94318655C6CA0 /* Pods_ShopUrFood_CustomerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		24346F87220972CC00446252 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 24346F6A220972C000446252 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 24346F71220972C000446252;
-			remoteInfo = ShopUrFood_Customer;
-		};
-		24346F92220972CC00446252 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 24346F6A220972C000446252 /* Project object */;
 			proxyType = 1;
@@ -360,9 +350,7 @@
 		24346F7C220972CC00446252 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		24346F81220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShopUrFood_CustomerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopUrFood_CustomerTests.swift; sourceTree = "<group>"; };
 		24346F8C220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShopUrFood_CustomerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		24346F95220972CC00446252 /* ShopUrFood_CustomerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopUrFood_CustomerUITests.swift; sourceTree = "<group>"; };
 		24346F97220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24346FA3220973B500446252 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -495,6 +483,7 @@
 		D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursModel.swift; sourceTree = "<group>"; };
 		D48955942C6B4DA20082A2A7 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -514,14 +503,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24346F8E220972CC00446252 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E1C089344BE94318655C6CA0 /* Pods_ShopUrFood_CustomerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -880,7 +861,6 @@
 			children = (
 				24346F72220972C000446252 /* ShopUrFood_Customer.app */,
 				24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */,
-				24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -919,7 +899,7 @@
 		24346F89220972CC00446252 /* ShopUrFood_CustomerTests */ = {
 			isa = PBXGroup;
 			children = (
-				24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */,
+				D495F03F2C6B5E7A009BC158 /* WorkingHoursTests */,
 				24346F8C220972CC00446252 /* Info.plist */,
 			);
 			path = ShopUrFood_CustomerTests;
@@ -1312,6 +1292,14 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		D495F03F2C6B5E7A009BC158 /* WorkingHoursTests */ = {
+			isa = PBXGroup;
+			children = (
+				D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */,
+			);
+			path = WorkingHoursTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1355,25 +1343,6 @@
 			productReference = 24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		24346F90220972CC00446252 /* ShopUrFood_CustomerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 24346FA0220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_CustomerUITests" */;
-			buildPhases = (
-				326AC2A4C0AEE5BF30378CAE /* [CP] Check Pods Manifest.lock */,
-				24346F8D220972CC00446252 /* Sources */,
-				24346F8E220972CC00446252 /* Frameworks */,
-				24346F8F220972CC00446252 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				24346F93220972CC00446252 /* PBXTargetDependency */,
-			);
-			name = ShopUrFood_CustomerUITests;
-			productName = ShopUrFood_CustomerUITests;
-			productReference = 24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1400,10 +1369,6 @@
 						CreatedOnToolsVersion = 10.1;
 						TestTargetID = 24346F71220972C000446252;
 					};
-					24346F90220972CC00446252 = {
-						CreatedOnToolsVersion = 10.1;
-						TestTargetID = 24346F71220972C000446252;
-					};
 				};
 			};
 			buildConfigurationList = 24346F6D220972C000446252 /* Build configuration list for PBXProject "ShopUrFood_Customer" */;
@@ -1421,7 +1386,6 @@
 			targets = (
 				24346F71220972C000446252 /* ShopUrFood_Customer */,
 				24346F85220972CC00446252 /* ShopUrFood_CustomerTests */,
-				24346F90220972CC00446252 /* ShopUrFood_CustomerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1478,13 +1442,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24346F8F220972CC00446252 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1526,28 +1483,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n\n";
-		};
-		326AC2A4C0AEE5BF30378CAE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ShopUrFood_CustomerUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 		631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1803,16 +1738,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D48955962C6B4E1D0082A2A7 /* Localization.swift in Sources */,
-				24346F8B220972CC00446252 /* ShopUrFood_CustomerTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24346F8D220972CC00446252 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				24346F96220972CC00446252 /* ShopUrFood_CustomerUITests.swift in Sources */,
+				D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1823,11 +1749,6 @@
 			isa = PBXTargetDependency;
 			target = 24346F71220972C000446252 /* ShopUrFood_Customer */;
 			targetProxy = 24346F87220972CC00446252 /* PBXContainerItemProxy */;
-		};
-		24346F93220972CC00446252 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 24346F71220972C000446252 /* ShopUrFood_Customer */;
-			targetProxy = 24346F92220972CC00446252 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2074,10 +1995,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VYF2Z948FZ;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"UNIT_TESTS=1",
 				);
 				INFOPLIST_FILE = ShopUrFood_CustomerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2087,10 +2008,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG UNIT_TESTS";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/ShopUrFood_Customer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShopUrFood_Customer";
 			};
 			name = Debug;
 		};
@@ -2112,49 +2033,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/ShopUrFood_Customer";
-			};
-			name = Release;
-		};
-		24346FA1220972CC00446252 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 54747E0CA11CA997AC0D4E00 /* Pods-ShopUrFood_CustomerUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VYF2Z948FZ;
-				INFOPLIST_FILE = ShopUrFood_CustomerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ShopUrFood_Customer;
-			};
-			name = Debug;
-		};
-		24346FA2220972CC00446252 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VYF2Z948FZ;
-				INFOPLIST_FILE = ShopUrFood_CustomerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ShopUrFood_Customer;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShopUrFood_Customer";
 			};
 			name = Release;
 		};
@@ -2184,15 +2063,6 @@
 			buildConfigurations = (
 				24346F9E220972CC00446252 /* Debug */,
 				24346F9F220972CC00446252 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		24346FA0220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_CustomerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				24346FA1220972CC00446252 /* Debug */,
-				24346FA2220972CC00446252 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

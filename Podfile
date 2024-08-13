@@ -11,11 +11,6 @@ target 'ShopUrFood_Customer' do
     inherit! :search_paths
     # Pods for testing
   end
-
-  target 'ShopUrFood_CustomerUITests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 pod 'Bolts'
 pod 'RAMAnimatedTabBarController'
 pod 'Toast-Swift', '~> 4.0.0'
@@ -43,7 +38,7 @@ pod 'MarqueeLabel/Swift'
 pod 'AFNetworking'
 pod 'ListPlaceholder'
 pod 'SCLAlertView'
-pod 'PayPal-iOS-SDK', :git => 'https://github.com/paypal/PayPal-iOS-SDK.git' #:path => 'PayPal-iOS-SDK_deprecated'
+pod 'PayPal-iOS-SDK', :git => 'https://github.com/paypal/PayPal-iOS-SDK.git'
 pod 'CCValidator'
 pod 'MIBlurPopup'
 pod 'CocoaMQTT'
