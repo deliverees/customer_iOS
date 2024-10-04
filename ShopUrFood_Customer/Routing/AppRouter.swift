@@ -50,4 +50,10 @@ final class AppRouter {
         root?.presentedViewController?.dismiss(animated: true)
         root?.navigationController?.popToRootViewController(animated: true)
     }
+    
+    func presentMapLocation(from vc: UIViewController) {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        vc.present(nextViewController, animated:true, completion:nil)
+    }
 }
