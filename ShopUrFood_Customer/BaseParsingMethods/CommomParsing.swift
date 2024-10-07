@@ -332,18 +332,21 @@ class CommomParsing: BaseParsing {
         
         print("getCategoryBasedItems : ",requestDict)
         
-        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
-            failure(NSError(domain: "anonymous", code: -1))
-            return
-        }
         self.blockResponse = self.blockStatus
         
-        //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
-            success(response)
-        }, onFailure: {errorResponse in
-            failure(errorResponse)
-        })
+        if let tokenStr = login_session.object(forKey: "user_token") as? String {
+            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
+                success(response)
+            }, onFailure: {errorResponse in
+                failure(errorResponse)
+            })
+        } else {
+            self.ParsingFunctionCall(subURl: CATEGORY_BASE_ITEM_V1 as NSString,
+                                     params: (requestDict as! Parameters),
+                                     encoding: URLEncoding.queryString,
+                                     onSuccess: success,
+                                     onFailure: failure)
+        }
     }
     
     
