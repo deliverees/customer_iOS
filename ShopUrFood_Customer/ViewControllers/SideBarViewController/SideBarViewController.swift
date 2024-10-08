@@ -30,7 +30,10 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         iPhoneUDIDString = UIDevice.current.identifierForVendor!.uuidString
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         let favStr = LanguageDictonary.object(forKey: "favourites") as! String
         let orderstr = LanguageDictonary.object(forKey: "orderhistory") as! String
         let yourAddStr = LanguageDictonary.object(forKey: "youraddress") as! String
@@ -46,20 +49,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         let deleteaccount = LanguageDictonary.object(forKey: "deleteaccount") as! String
         let settingsStr = LanguageDictonary.object(forKey: "settings") as! String
         
-        //nameArray = [favStr,orderstr,yourAddStr,myReviewStr,myRewardStr,offerStr,walletStr,referFriendStr,helpStr,languageStr,signoutStr]
         nameArray = [homeStr,orderstr,offerStr,walletStr,settingsStr,helpStr,deleteaccount,signoutStr]
-        
-        //        nameArray.append("Favourites")
-        //        nameArray.append("Order History")
-        //        nameArray.append("Your Address")
-        //        nameArray.append("My Reviews")
-        //        nameArray.append("My Rewards")
-        //        nameArray.append("My Offers")
-        //        nameArray.append("My Wallet")
-        //        nameArray.append("Refer Friend")
-        //        nameArray.append("Help")
-        //        nameArray.append("Language")
-        //        nameArray.append("Sign Out")
         
         imageArray.append("ic_home_red")
         imageArray.append("ic_order_red")
@@ -74,12 +64,6 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         imageArray.append("ic_delete")
         //imageArray.append("Image")
         imageArray.append("ic_signout_red")
-        
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         self.getProfileData()
     }
     

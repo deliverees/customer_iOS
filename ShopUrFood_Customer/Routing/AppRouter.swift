@@ -27,7 +27,8 @@ final class AppRouter {
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
+            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+            initialViewController.ComingType = "FIRST"
             window.rootViewController = initialViewController
             window.makeKeyAndVisible()
             self.root = initialViewController
@@ -51,9 +52,17 @@ final class AppRouter {
         root?.navigationController?.popToRootViewController(animated: true)
     }
     
-    func presentMapLocation(from vc: UIViewController) {
+    func presentMapLocation(from vc: UIViewController, completion: @escaping () -> Void) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        nextViewController.completion = completion
+        vc.present(nextViewController, animated: true)
+    }
+    
+    func presentLocationOption(from vc: UIViewController, comingType: String) {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+        nextViewController.ComingType = comingType
         vc.present(nextViewController, animated:true, completion:nil)
     }
 }

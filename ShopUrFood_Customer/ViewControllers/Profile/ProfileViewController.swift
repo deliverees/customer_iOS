@@ -32,7 +32,12 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     @IBOutlet weak var baseView: UIView!
     var imagePicker = UIImagePickerController()
     var resultDict = NSMutableDictionary()
-    var userLocationStr = String()
+    var userLocationStr = String() {
+        didSet {
+            addressTxt.isHidden = userLocationStr.isEmpty
+            addressTxt.text = userLocationStr
+        }
+    }
     var userLatitude = String()
     var userLongitude = String()
     
@@ -107,19 +112,16 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         }else if sender.tag == 2{
             mobileNumberTxt.isUserInteractionEnabled = true
             mobileNumberTxt.becomeFirstResponder()
-        }else if sender.tag == 3{
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        }else if sender.tag == 3 {
             MapLocationPageFrom = "address"
-            self.present(nextViewController, animated:true, completion:nil)
+            AppRouter.shared.presentMapLocation(from: self) {
+                self.userLocationStr = login_session.value(forKey: "user_address") as? String ?? ""
+            }
         }
-
-    
     }
     
-    
     //MARK:- API Methods
-    func ProfileData(){
+    private func ProfileData(){
         let Parse = CommomParsing()
         Parse.getCustomerProfileInfo(lang: login_session.value(forKey: "Language") as? String ?? "es", onSuccess: {
             response in
@@ -143,12 +145,6 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         emailTxt.text = self.resultDict.object(forKey: "user_email")as? String ?? ""
         mobileNumberTxt.text = mobileTxt
         userLocationStr = self.resultDict.object(forKey: "user_address")as? String ?? ""
-        if userLocationStr == ""{
-            addressTxt.isHidden = false
-        }else{
-            locationLbl.text = userLocationStr
-            addressTxt.isHidden = true
-        }
         let userImgeURL = URL(string: self.resultDict.object(forKey: "user_avatar")as! String)
         userImageView.kf.setImage(with: userImgeURL)
         userLatitude = self.resultDict.object(forKey: "user_latitude")as? String ?? ""

@@ -47,6 +47,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     @IBOutlet weak var search_closeBtn: UIButton!
     @IBOutlet weak var searchTxt: UITextField!
     var placeSearchArray = NSMutableArray()
+    var completion: (() -> Void)?
     
     var autocompleteResults :[GApiResponse.Autocomplete] = []
     
@@ -304,109 +305,63 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         saveShippingAddress()
     }
     
-    func saveShippingAddress()
-    {
-        self.showLoadingIndicator(senderVC: self)
-        if landMarkTxtField.text! == ""
-        {
+    private func saveShippingAddress() {
+        guard !(landMarkTxtField.text?.isEmpty ?? true)
+        else {
             self.showTokenExpiredPopUp(msgStr: LanguageDictonary.object(forKey: "locationpop") as! String)
-            
+            return
         }
-        else
+        guard !passLat.isEmpty else {
+            showToastAlert(senderVC: self,
+                           messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        login_session.setValue(passLat, forKey: "user_latitude")
+        login_session.setValue(passLong, forKey: "user_longitude")
+        login_session.setValue(passAddress, forKey: "user_address")
+        login_session.set(passZipCode, forKey: "user_zip_code")
+        login_session.set(landMarkTxtField.text, forKey: "user_additional_address")
+        ActAsSelectedAddress = passAddress
+        ActAsSelectedLatitude = passLat
+        ActAsSelectedLongitude = passLong
+        ActAsSelectedZipCode = passZipCode
+        if globalCartCount != 0
         {
-            if globalCartCount != 0
-            {
-                let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
-                let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
-                
-                refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as? String, style: .default, handler: { (action: UIAlertAction!) in
-                    
-                    if self.passLat != "" {
-                        if MapLocationPageFrom == "login"{
-                            login_session.setValue(self.passLat, forKey: "user_latitude")
-                            login_session.setValue(self.passLong, forKey: "user_longitude")
-                            login_session.setValue(self.passAddress, forKey: "user_address")
-                            login_session.synchronize()
-                            DispatchQueue.main.async {
-                                AppRouter.shared.initialize()
-                            }
-                        }else{
-                            ActAsSelectedAddress = self.passAddress
-                            ActAsSelectedLatitude = self.passLat
-                            ActAsSelectedLongitude = self.passLong
-                            ActAsSelectedZipCode = self.passZipCode
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                        if let _ = login_session.string(forKey: "user_token") {
-                            self.saveFinalShippingAddress()
-                        }
-                    }
-                    else
-                    {
-                        self.showToastAlert(senderVC: self,
-                                            messageStr: Localization.value(for: "validlocation"))
-                    }
-                    
-                }))
-                refreshAlert.addAction(UIAlertAction(title: "NO", style: .default, handler: { (action: UIAlertAction!) in
-                    refreshAlert .dismiss(animated: true, completion: nil)
-                }))
-                
-                self.present(refreshAlert, animated: true, completion: nil)
-            }
-            else
-            {
-                if self.passLat != "" {
-                    if MapLocationPageFrom == "login"{
-                        login_session.setValue(self.passLat, forKey: "user_latitude")
-                        login_session.setValue(self.passLong, forKey: "user_longitude")
-                        login_session.setValue(self.passAddress, forKey: "user_address")
-                        login_session.synchronize()
-                        DispatchQueue.main.async {
-                            AppRouter.shared.initialize()
-                        }
-                    }else{
-                        ActAsSelectedAddress = self.passAddress
-                        ActAsSelectedLatitude = self.passLat
-                        ActAsSelectedLongitude = self.passLong
-                        ActAsSelectedZipCode = self.passZipCode
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    if let _ = login_session.string(forKey: "user_token") {
-                        self.saveFinalShippingAddress()
-                    }
-                }else{
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.object(forKey: "validlocation") as! String )
-                }
-            }
+            let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
+            let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
+            
+            refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as? String, style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert.dismiss(animated: true)
+                self.saveFinalShippingAddress()
+            }))
+            refreshAlert.addAction(UIAlertAction(title: "NO", style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert.dismiss(animated: true, completion: nil)
+            }))
+            self.present(refreshAlert, animated: true, completion: nil)
+            return
         }
+        saveFinalShippingAddress()
     }
     
-    func saveFinalShippingAddress()
-    {
+    private func saveFinalShippingAddress() {
         self.showLoadingIndicator(senderVC: self)
-        let Parse = CommomParsing()
-        Parse.saveShippingAddress(lang: login_session.value(forKey: "Language") as? String ?? "es", search_latitude: passLat, search_longitude: passLong, zipcode: passZipCode, location: passAddress, address: landMarkTxtField.text!, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200
-            {
-                
-            }
-            else if response.object(forKey: "code")as! Int == 400
-            {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired"
-            {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else
-            {
-                print(response.object(forKey: "message") as Any)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await SaveUserLocationUseCase().execute()
+                if MapLocationPageFrom.isEmpty {
+                    AppRouter.shared.initialize()
+                } else {
+                    MapLocationPageFrom = ""
+                    self.dismiss(animated: true) {
+                        self.completion?()
+                    }
+                }
+            } catch {
+                self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
             }
             self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+        }
     }
     
     
@@ -490,7 +445,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
                                  input)
         print(urlString)
         let url = NSURL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-
+        
         let defaultConfigObject = URLSessionConfiguration.default
         let delegateFreeSession = URLSession(configuration: defaultConfigObject, delegate: nil, delegateQueue: OperationQueue.main)
         let request = NSURLRequest(url: url! as URL)

@@ -225,6 +225,7 @@
 		A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37B23C7073800654118 /* TrackingScreen.swift */; };
 		A855D37E23C7075900654118 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37D23C7075900654118 /* BottomSheetViewController.swift */; };
 		C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */; };
+		D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */; };
 		D44E57DB2C490A7F00FA10B2 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */; };
 		D44E57DE2C49134200FA10B2 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DD2C49134200FA10B2 /* UserSession.swift */; };
 		D44E57E02C4A571600FA10B2 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */; };
@@ -478,6 +479,7 @@
 		C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_Customer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.debug.xcconfig"; sourceTree = "<group>"; };
+		D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveUserLocationUseCase.swift; sourceTree = "<group>"; };
 		D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		D44E57DD2C49134200FA10B2 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
@@ -868,6 +870,7 @@
 		24346F74220972C000446252 /* ShopUrFood_Customer */ = {
 			isa = PBXGroup;
 			children = (
+				D445225A2CB52C4E0031FDFA /* Use Cases */,
 				D48955932C6B4D8A0082A2A7 /* Localization */,
 				D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */,
 				2C172DF423C985DC00D02578 /* GoogleApiHelpers */,
@@ -1256,6 +1259,14 @@
 				028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D445225A2CB52C4E0031FDFA /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */,
+			);
+			path = "Use Cases";
 			sourceTree = "<group>";
 		};
 		D44E57D92C490A6700FA10B2 /* Routing */ = {
@@ -1698,6 +1709,7 @@
 				242D78BC221D425B004DE1FD /* RestaurantTwoFoodCell.swift in Sources */,
 				5E40EAC129DF1D570091661E /* Home_Categories_Collection_Cell.swift in Sources */,
 				240ABDBE2244E263001692BC /* HelpPageViewController.swift in Sources */,
+				D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */,
 				240C7CAF2216BCC000D29068 /* sideBarTopCell.swift in Sources */,
 				2C81FF6C22490BEA00E176E5 /* BottomSheetTableCell.swift in Sources */,
 				242A9C1E221BC694002F4E8E /* RestaurantCategoryCell.swift in Sources */,
