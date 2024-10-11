@@ -16,7 +16,6 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     @IBOutlet weak var baCKBTN: UIButton!
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var manualLocBtn: UIButton!
-    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var subTitleLbl: UILabel!
     var ComingType = String()
 
@@ -30,8 +29,13 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
         baseView.layer.cornerRadius = 2.0
         baseView.addShadow()
         manualLocBtn.clipsToBounds = true
-        self.manualLocBtn.setTitle(Localization.value(for: "setdeliverylocation").uppercased(), for: .normal)
-        
+        manualLocBtn.setTitle(Localization.value(for: "setdeliverylocation").uppercased(), for: .normal)
+        subTitleLbl.numberOfLines = 0
+        subTitleLbl.text = "Para mejorar nuestro servicio, establece tu ubicación y te mostraremos los establecimientos asociados más cercanos a ti."
+        subTitleLbl.superview?.layer.borderColor = UIColor.systemRed.cgColor
+        subTitleLbl.superview?.layer.borderWidth = 3.0
+        subTitleLbl.cornerRadius = 4.0
+        subTitleLbl.textColor = UIColor.systemRed
         
         if self.ComingType == "FIRST" {
             self.ComingType = ""
