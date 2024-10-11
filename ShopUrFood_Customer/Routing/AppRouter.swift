@@ -66,4 +66,22 @@ final class AppRouter {
         nextViewController.ComingType = comingType
         vc.present(nextViewController, animated:true, completion:nil)
     }
+    
+    func presentInRoot(vc: UIViewController) {
+        if root == nil {
+            initialize()
+        }
+        dismissAnyOtherModal()
+        root?.present(vc, animated: true)
+    }
+    
+    private func dismissAnyOtherModal() {
+        if root?.presentedViewController != nil {
+            root?.presentedViewController?.dismiss(animated: false)
+        }
+        
+        if let presented = root?.children.first(where: { $0.presentedViewController != nil }) {
+            presented.presentedViewController?.dismiss(animated: false)
+        }
+    }
 }

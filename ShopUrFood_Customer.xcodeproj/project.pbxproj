@@ -233,6 +233,7 @@
 		D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
 		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
+		D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */ = {isa = PBXBuildFile; fileRef = D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,6 +488,7 @@
 		D48955942C6B4DA20082A2A7 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "push-notification-template.apns"; sourceTree = "<group>"; };
 		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -870,6 +872,7 @@
 		24346F74220972C000446252 /* ShopUrFood_Customer */ = {
 			isa = PBXGroup;
 			children = (
+				D4CE865D2CB93B6F00AB1AEE /* Push Notifications Files */,
 				D445225A2CB52C4E0031FDFA /* Use Cases */,
 				D48955932C6B4D8A0082A2A7 /* Localization */,
 				D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */,
@@ -1311,6 +1314,14 @@
 			path = WorkingHoursTests;
 			sourceTree = "<group>";
 		};
+		D4CE865D2CB93B6F00AB1AEE /* Push Notifications Files */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */,
+			);
+			path = "Push Notifications Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1408,6 +1419,7 @@
 			files = (
 				24346FD72209C1CD00446252 /* Poppins-ExtraLightItalic.ttf in Resources */,
 				24346FDA2209C1CD00446252 /* Poppins-LightItalic.ttf in Resources */,
+				D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */,
 				24346FE12209C1CD00446252 /* Poppins-ThinItalic.ttf in Resources */,
 				24D38F6C22AE855800AF1911 /* TapAnimation.json in Resources */,
 				24346FDD2209C1CD00446252 /* Poppins-Regular.ttf in Resources */,
