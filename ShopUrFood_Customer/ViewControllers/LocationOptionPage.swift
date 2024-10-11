@@ -31,7 +31,7 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
         manualLocBtn.clipsToBounds = true
         manualLocBtn.setTitle(Localization.value(for: "setdeliverylocation").uppercased(), for: .normal)
         subTitleLbl.numberOfLines = 0
-        subTitleLbl.text = "Para mejorar nuestro servicio, establece tu ubicación y te mostraremos los establecimientos asociados más cercanos a ti."
+        subTitleLbl.text = Localization.value(for: "location_page_subtitle")
         subTitleLbl.superview?.layer.borderColor = UIColor.systemRed.cgColor
         subTitleLbl.superview?.layer.borderWidth = 3.0
         subTitleLbl.cornerRadius = 4.0

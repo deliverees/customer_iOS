@@ -302,5 +302,8 @@
     "No Restaurant found in your location. try new location":"No se ha encontrado ningún comercio en su ubicación. Pruebe una nueva ubicación",
     "WehavesentaverificationemailValidateyouraccounttocontinue": "Hemos enviado un email de verificación. Valida tu cuenta para continuar",
     "opening_from":"De",
-    "opening_to":"a"
+    "opening_to":"a",
+    "location_page_subtitle": "Para mejorar nuestro servicio, establece tu ubicación y te mostraremos los establecimientos asociados más cercanos a ti.",
+    "map_location_alert_message": "Si tu ubicación no es la direccion de entrega, podrás modificarla al confirmar tu pedido.",
+    "map_location_alert_title": "Atención"
 }

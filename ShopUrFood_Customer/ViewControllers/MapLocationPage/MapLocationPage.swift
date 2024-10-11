@@ -97,6 +97,20 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
+        if MapLocationPageFrom.isEmpty {
+            showLocationAlert()
+        }
+    }
+    
+    private func showLocationAlert() {
+        let alert = UIAlertController(title: Localization.value(for: "map_location_alert_title"),
+                                      message: Localization.value(for: "map_location_alert_message"),
+                                      preferredStyle: .actionSheet)
+        let okAction = UIAlertAction(title: "Ok",
+                                     style: .default)
+        
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
     
     func showTipsView(){

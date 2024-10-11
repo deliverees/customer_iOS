@@ -29,6 +29,7 @@ final class AppRouter {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
             initialViewController.ComingType = "FIRST"
+            MapLocationPageFrom = ""
             window.rootViewController = initialViewController
             window.makeKeyAndVisible()
             self.root = initialViewController
