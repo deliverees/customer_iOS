@@ -306,5 +306,7 @@
     "opening_to":"to",
     "location_page_subtitle": "To improve our service, set your location and we will display the associated partners closer to you.",
     "map_location_alert_message": "If delivery addres is different from your location, you'll be able to change it before confirming your order.",
-    "map_location_alert_title": "Warning"
+    "map_location_alert_title": "Warning",
+    "select_address_edit_address_alert_title": "Reminder",
+    "select_address_edit_address_alert_message": "Review your delivery address, if you need to modify it, tap on edit (on the right side of the address), add any indications or references for the delivery person to be able to find it easily and make the service of your satisfaction."
 }

@@ -23,7 +23,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     @IBOutlet weak var baseContentView: UIView!
     @IBOutlet weak var firstNameLine: UIView!
     @IBOutlet weak var lastNameTxt: UITextField!
-        @IBOutlet weak var lastNameLine: UIView!
+    @IBOutlet weak var lastNameLine: UIView!
     @IBOutlet weak var emailTxt: UITextField!
     @IBOutlet weak var emailLine: UIView!
     @IBOutlet weak var mobileNumberTxt: UITextField!
@@ -77,8 +77,42 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         restaurantLocationLbl.text = storeLocation
         pickUpView.layer.cornerRadius = 5.0
         pickUpView = self.setCornorShadowEffects(sender: pickUpView)
-        // Do any additional setup after loading the view.
     }
+    
+    @IBAction private func tapEditAddress(sender: Any?) {
+        MapLocationPageFrom = "address"
+        AppRouter.shared.presentMapLocation(from: self) {
+            self.customerAddressTxtView2.text = login_session.string(forKey: "user_address")
+            self.customerAddressTxt.text = login_session.string(forKey: "user_additional_address")
+        }
+    }
+    
+    private func presentEditAddressAlert() {
+        let alert = UIAlertController(title: Localization.value(for: "select_address_edit_address_alert_title"),
+                                      message: Localization.value(for: "select_address_edit_address_alert_message"),
+                                      preferredStyle: .alert)
+        let editAction = UIAlertAction(title: "Modificar",
+                                        style: .cancel) { _ in
+            alert.dismiss(animated: false)
+            self.showLoadingIndicator(senderVC: self)
+            self.tapEditAddress(sender: nil)
+            self.stopLoadingIndicator(senderVC: self)
+        }
+        
+        let okAction = UIAlertAction(title: "Ok",
+                                     style: .default)
+        
+        alert.addAction(editAction)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presentEditAddressAlert()
+    }
+    
     
     //MARK:- API Methods
     func getData()
@@ -111,11 +145,6 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         firstNameTxt.text = (resultDict.object(forKey: "sh_cus_fname")as? String ?? "")
         lastNameTxt.text = (resultDict.object(forKey: "sh_cus_lname")as? String ?? "")
         emailTxt.text = (resultDict.object(forKey: "sh_cus_email")as? String ?? "")
-        let numberOne = resultDict.object(forKey: "sh_phone1")as? String ?? ""
-        let numberTwo = resultDict.object(forKey: "sh_phone2")as? String ?? ""
-        
-//        mobileNumberTxt.text = String(numberOne.dropFirst(3))
-//        alternateNumberTxt.text = String(numberTwo.dropFirst(3))
         
         mobileNumberTxt.text = resultDict.object(forKey: "ship_ph1_no_only")as? String ?? ""
         alternateNumberTxt.text = resultDict.object(forKey: "ship_ph2_no_only")as? String ?? ""
@@ -127,9 +156,6 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         customerAddressTxtView2.isUserInteractionEnabled = false
         
         customerAddressTxt.text = (resultDict.object(forKey: "sh_location1")as? String ?? "")
-
-        
-        //self.getAddressFromLatLon(pdblLatitude: resultDict.object(forKey: "sh_latitude")as! String, withLongitude: resultDict.object(forKey: "sh_latitude")as! String)
         
         if firstNameTxt.text == ""{
             firstNameTxt.text = (login_session.object(forKey: "user_name")as! String)
@@ -347,7 +373,5 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         self.alterLine.isHidden = true
 
     }
-    
-    
 
 }

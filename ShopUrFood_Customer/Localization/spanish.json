@@ -161,7 +161,7 @@
     "relatedfood":"ARTÍCULOS RELACIONADOS",
     "viewcart":"VER CARRITO",
     "shippingsddress":"Dirección de entrega",
-    "chooseyouroption":"Elige tú opción",
+    "chooseyouroption":"Elige tu opción",
     "delivery":"Entrega",
     "selfpickup":"Recoger",
     "continue_with":"Continuar con",
@@ -305,5 +305,7 @@
     "opening_to":"a",
     "location_page_subtitle": "Para mejorar nuestro servicio, establece tu ubicación y te mostraremos los establecimientos asociados más cercanos a ti.",
     "map_location_alert_message": "Si tu ubicación no es la direccion de entrega, podrás modificarla al confirmar tu pedido.",
-    "map_location_alert_title": "Atención"
+    "map_location_alert_title": "Atención",
+    "select_address_edit_address_alert_title": "Recordatorio",
+    "select_address_edit_address_alert_message": "Revisa la dirección de entrega, si necesitas modificarla, pulsa el botón de editar junto a la dirección, añade cualquier descripción para que el repartidor pueda encontrarla fácilmente y que el servicio sea de su mayor satisfacción"
 }
