@@ -16120,7 +16120,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="668"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FIR-Ds-g5t">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="701"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PNJ-I2-0OJ">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="341"/>
@@ -16129,7 +16129,7 @@
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcV-Ok-Re9">
-                                                <rect key="frame" x="20" y="65" width="280" height="601"/>
+                                                <rect key="frame" x="20" y="65" width="280" height="600"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tit" translatesAutoresizingMaskIntoConstraints="NO" id="o2f-DI-gwD">
                                                         <rect key="frame" x="25" y="50" width="230" height="80"/>
@@ -16138,10 +16138,10 @@
                                                         </constraints>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0PD-O1-DeR">
-                                                        <rect key="frame" x="12" y="142" width="256" height="46.5"/>
+                                                        <rect key="frame" x="12" y="142" width="256" height="46"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Let's first check we deliver to your address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ndv-kR-z9R">
-                                                                <rect key="frame" x="16" y="16" width="224" height="14.5"/>
+                                                                <rect key="frame" x="16" y="16" width="224" height="14"/>
                                                                 <fontDescription key="fontDescription" name="TruenoRg" family="Trueno" pointSize="12"/>
                                                                 <color key="textColor" red="0.58823529411764708" green="0.58823529411764708" blue="0.58823529411764708" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -16161,14 +16161,14 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LocationBig" translatesAutoresizingMaskIntoConstraints="NO" id="ypx-Gi-ik9">
-                                                        <rect key="frame" x="55" y="220.5" width="170" height="180"/>
+                                                        <rect key="frame" x="55" y="220" width="170" height="180"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="170" id="CbT-qG-f38"/>
                                                             <constraint firstAttribute="height" constant="180" id="ETY-9j-6qj"/>
                                                         </constraints>
                                                     </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xof-Bd-jhf">
-                                                        <rect key="frame" x="15" y="511" width="250" height="50"/>
+                                                        <rect key="frame" x="15" y="510" width="250" height="50"/>
                                                         <color key="backgroundColor" red="0.92941176470588238" green="0.10588235294117647" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="50" id="a28-vc-BeA"/>
@@ -16227,7 +16227,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zht-9E-HGV">
-                                        <rect key="frame" x="60" y="352" width="200" height="200"/>
+                                        <rect key="frame" x="60" y="351" width="200" height="200"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="nqI-IA-oMd"/>
                                             <constraint firstAttribute="height" constant="200" id="zcO-UZ-ZNd"/>

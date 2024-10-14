@@ -339,7 +339,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         ActAsSelectedLatitude = passLat
         ActAsSelectedLongitude = passLong
         ActAsSelectedZipCode = passZipCode
-        if globalCartCount != 0
+        if globalCartCount != 0 && MapLocationPageFrom != "select-address"
         {
             let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
             let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
@@ -359,6 +359,13 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     
     private func saveFinalShippingAddress() {
         self.showLoadingIndicator(senderVC: self)
+        if globalCartCount != 0 && MapLocationPageFrom == "select-address" {
+            MapLocationPageFrom = ""
+            dismiss(animated: true) {
+                self.completion?()
+            }
+            return
+        }
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {

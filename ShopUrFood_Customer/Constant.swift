@@ -66,7 +66,9 @@ var peakHourFee = String()
 var peakHourFeeStatus = String()
 var peakHour_Info = String()
 var peakCurrency = String()
-var globalCartCount = Int()
+var globalCartCount: Int {
+    login_session.integer(forKey: "userCartCount")
+}
 var customTabBar = UITabBar()
 var localeIdendifier = NSLocale()
 var localeIdendifierStr = String()

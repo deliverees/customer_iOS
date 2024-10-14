@@ -80,7 +80,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     }
     
     @IBAction private func tapEditAddress(sender: Any?) {
-        MapLocationPageFrom = "address"
+        MapLocationPageFrom = "select-address"
         AppRouter.shared.presentMapLocation(from: self) {
             self.customerAddressTxtView2.text = login_session.string(forKey: "user_address")
             self.customerAddressTxt.text = login_session.string(forKey: "user_additional_address")
