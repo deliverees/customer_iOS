@@ -96,10 +96,20 @@ class AddressViewController: BaseViewController,UITextFieldDelegate,UITextViewDe
     }
     
     @IBAction func locationBtnTapped(_ sender: Any) {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
         MapLocationPageFrom = "address"
-        self.present(nextViewController, animated:true, completion:nil)
+        AppRouter.shared.presentMapLocation(from: self) { [weak self] newAddress in
+            guard let self else { return }
+            self.showLoadingIndicator(senderVC: self)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    try await SaveUserLocationUseCase().execute(newAddress)
+                } catch {
+                    self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
+                }
+                self.stopLoadingIndicator(senderVC: self)
+            }
+        }
     }
     
     //MARK:- API Methods

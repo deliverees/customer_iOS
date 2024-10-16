@@ -70,8 +70,19 @@ class LocationOptionPage: BaseViewController,CLLocationManagerDelegate {
     }
     
     @IBAction func manualLocBtnAction(_ sender: Any) {
-        AppRouter.shared.presentMapLocation(from: self) {
-            self.dismiss(animated: true)
+        AppRouter.shared.presentMapLocation(from: self) { [weak self] newAddress in
+            guard let self else { return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.showLoadingIndicator(senderVC: self)
+                do {
+                    try await SaveUserLocationUseCase().execute(newAddress)
+                    self.dismiss(animated: true)
+                } catch {
+                    self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
+                }
+                self.stopLoadingIndicator(senderVC: self)
+            }
         }
     }
 }

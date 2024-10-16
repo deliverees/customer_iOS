@@ -172,6 +172,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
         promotionalOfferBGView.isHidden = true
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "yourcart") as? String
         popupPointsShow = true
         self.emptyCartView.isHidden = true

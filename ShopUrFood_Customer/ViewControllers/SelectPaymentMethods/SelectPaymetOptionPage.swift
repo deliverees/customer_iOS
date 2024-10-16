@@ -219,6 +219,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         PaymetData()
     }
     

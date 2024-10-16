@@ -53,7 +53,8 @@ final class AppRouter {
         root?.navigationController?.popToRootViewController(animated: true)
     }
     
-    func presentMapLocation(from vc: UIViewController, completion: @escaping () -> Void) {
+    func presentMapLocation(from vc: UIViewController,
+                            completion: @escaping MapLocationPage.SelectedLocationCompletionHandler) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
         nextViewController.completion = completion

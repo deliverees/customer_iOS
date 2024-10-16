@@ -9,28 +9,38 @@
 import Foundation
 
 struct SaveUserLocationUseCase {
-    typealias UseCase = () async throws -> Void
+    typealias UseCase = (ChangeAddressDTO) async throws -> Void
     private let repository = CommomParsing()
-    func execute() async throws {
+    func execute(_ changeAddress: ChangeAddressDTO) async throws {
         guard login_session.isUserLogged() else {
             return
         }
         let language = login_session.value(forKey: "Language") as? String ?? "es"
-        guard let passLat = login_session.value(forKey: "user_latitude") as? String,
-              let passLong = login_session.value(forKey: "user_longitude") as? String,
-              let passAddress = login_session.value(forKey: "user_address") as? String
+        let passLat = String(changeAddress.latitude)
+        let passLong = String(changeAddress.longitude)
+        guard let passAddress = changeAddress.addressString,
+              let passZipCode = changeAddress.zipCode,
+              let userAdditionalAddress = changeAddress.addressAdditional
         else {
-            throw NSError(domain: "com.deliverees.error", code: -1)
+            throw Localization.value(for: "validlocation")
         }
-        let passZipCode = login_session.value(forKey: "user_zip_code") as? String ?? ActAsSelectedZipCode
-        let userAdditionalAddress = login_session.value(forKey: "user_additional_address") as? String ?? ""
         return try await withCheckedThrowingContinuation { continuation in
             repository.saveShippingAddress(lang: language, search_latitude: passLat, search_longitude: passLong, zipcode: passZipCode, location: passAddress, address: userAdditionalAddress, onSuccess: {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200
                 {
+                    login_session.setValue(passLat, forKey: "user_latitude")
+                    login_session.setValue(passLong, forKey: "user_longitude")
+                    login_session.setValue(passAddress, forKey: "user_address")
+                    login_session.set(passZipCode, forKey: "user_zip_code")
+                    login_session.set(userAdditionalAddress, forKey: "user_additional_address")
+                    ActAsSelectedAddress = passAddress
+                    ActAsSelectedLatitude = passLat
+                    ActAsSelectedLongitude = passLong
+                    ActAsSelectedZipCode = passZipCode
                     continuation.resume()
+                    return
                 }
                 
                 let code = response.object(forKey: "code") as? Int ?? -1
@@ -43,6 +53,8 @@ struct SaveUserLocationUseCase {
                                         NSLocalizedFailureErrorKey: message,
                                         NSDebugDescriptionErrorKey: response
                                     ])
+                
+                continuation.resume(throwing: error)
             }, onFailure: {errorResponse in
                 if let errorResponse {
                     continuation.resume(throwing: errorResponse)

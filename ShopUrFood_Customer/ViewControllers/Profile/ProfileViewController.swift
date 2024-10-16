@@ -114,8 +114,12 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             mobileNumberTxt.becomeFirstResponder()
         }else if sender.tag == 3 {
             MapLocationPageFrom = "address"
-            AppRouter.shared.presentMapLocation(from: self) {
-                self.userLocationStr = login_session.value(forKey: "user_address") as? String ?? ""
+            AppRouter.shared.presentMapLocation(from: self) { newAddress in
+                self.userLocationStr = newAddress.addressString ?? ""
+                self.userLatitude = String(newAddress.latitude)
+                self.userLongitude = String(newAddress.longitude)
+                ActAsSelectedZipCode = newAddress.zipCode ?? ""
+                ActAsSelectedAddress = newAddress.addressString ?? ""
             }
         }
     }
@@ -160,6 +164,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "profile") as? String
         self.navigationController?.navigationBar.isHidden = true
         if ActAsSelectedAddress != "" {
@@ -168,7 +173,6 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             addressTxt.isHidden = true
         }
     }
-    
     
     
     @IBAction func changePhotoBtnAction(_ sender: Any) { 

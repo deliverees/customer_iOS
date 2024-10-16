@@ -17,6 +17,8 @@ import Alamofire
 
 class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource  {
     
+    typealias SelectedLocationCompletionHandler = ((ChangeAddressDTO) -> Void)
+    
     @IBOutlet weak var flatlandmark: UILabel!
     @IBOutlet weak var setDeliveryLocLbl: UILabel!
     @IBOutlet weak var locationStaticLbl: UILabel!
@@ -47,7 +49,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     @IBOutlet weak var search_closeBtn: UIButton!
     @IBOutlet weak var searchTxt: UITextField!
     var placeSearchArray = NSMutableArray()
-    var completion: (() -> Void)?
+    var completion: SelectedLocationCompletionHandler?
     
     var autocompleteResults :[GApiResponse.Autocomplete] = []
     
@@ -319,6 +321,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         saveShippingAddress()
     }
     
+    private var changeAddressDTO: ChangeAddressDTO?
     private func saveShippingAddress() {
         guard !(landMarkTxtField.text?.isEmpty ?? true)
         else {
@@ -330,15 +333,18 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
                            messageStr: Localization.value(for: "validlocation"))
             return
         }
-        login_session.setValue(passLat, forKey: "user_latitude")
-        login_session.setValue(passLong, forKey: "user_longitude")
-        login_session.setValue(passAddress, forKey: "user_address")
-        login_session.set(passZipCode, forKey: "user_zip_code")
-        login_session.set(landMarkTxtField.text, forKey: "user_additional_address")
-        ActAsSelectedAddress = passAddress
-        ActAsSelectedLatitude = passLat
-        ActAsSelectedLongitude = passLong
-        ActAsSelectedZipCode = passZipCode
+        guard let latDouble = Double(passLat),
+              let lonDouble = Double(passLong) else {
+            showToastAlert(senderVC: self,
+                           messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        changeAddressDTO = .init(latitude: latDouble,
+                                 longitude: lonDouble,
+                                 addressString: passAddress,
+                                 addressAdditional: landMarkTxtField.text,
+                                 zipCode: passZipCode)
+        
         if globalCartCount != 0 && MapLocationPageFrom != "select-address"
         {
             let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
@@ -359,25 +365,22 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     
     private func saveFinalShippingAddress() {
         self.showLoadingIndicator(senderVC: self)
-        if globalCartCount != 0 && MapLocationPageFrom == "select-address" {
+        guard let changeAddressDTO else {
+            self.showToastAlert(senderVC: self, messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        if !MapLocationPageFrom.isEmpty {
             MapLocationPageFrom = ""
             dismiss(animated: true) {
-                self.completion?()
+                self.completion?(changeAddressDTO)
             }
             return
         }
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await SaveUserLocationUseCase().execute()
-                if MapLocationPageFrom.isEmpty {
-                    AppRouter.shared.initialize()
-                } else {
-                    MapLocationPageFrom = ""
-                    self.dismiss(animated: true) {
-                        self.completion?()
-                    }
-                }
+                try await SaveUserLocationUseCase().execute(changeAddressDTO)
+                AppRouter.shared.initialize()
             } catch {
                 self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
             }
