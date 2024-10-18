@@ -27,21 +27,21 @@ struct CheckShippingAddressResponseDTO: Decodable {
 struct CheckShippingAddressUseCase {
     typealias UseCase = (CheckShippingAddressRequestDTO) async throws -> CheckShippingAddressResponseDTO
     
-    private let network = CommomParsing()
+    private let repository = CommomParsing()
     func execute(_ request: CheckShippingAddressRequestDTO) async throws -> CheckShippingAddressResponseDTO {
         guard login_session.isUserLogged() else {
             throw "User not logged in"
         }
-        let language = login_session.value(forKey: "Language") as? String ?? "es"
+        let language = login_session.selectedLanguage()
         let passLat = String(request.user_lat)
         let passLong = String(request.user_long)
         let store_id = String(request.store_id)
         
         return try await withCheckedThrowingContinuation { continuation in
-            network.checkShippingAddress(lang: language,
-                                         user_latitude: passLat,
-                                         user_longitude: passLong,
-                                         storeId: store_id) { dictionaryResponse in
+            repository.checkShippingAddress(lang: language,
+                                            user_latitude: passLat,
+                                            user_longitude: passLong,
+                                            storeId: store_id) { dictionaryResponse in
                 print(dictionaryResponse)
                 guard let message = dictionaryResponse.value(forKey: "message") as? String,
                       let statusInt = dictionaryResponse.value(forKey: "status") as? Int,

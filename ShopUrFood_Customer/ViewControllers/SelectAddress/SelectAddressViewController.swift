@@ -273,14 +273,14 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
                 do {
                     try await verifyNewLocation(newLocation)
                     stopLoadingIndicator(senderVC: self)
-                    continueToPaymentOption()
+                    validateFormAndContinueToPayment()
                 } catch {
                     stopLoadingIndicator(senderVC: self)
                     showTokenExpiredPopUp(msgStr: error.localizedDescription)
                 }
             }
         } else {
-            continueToPaymentOption()
+            validateFormAndContinueToPayment()
         }
     }
     
@@ -292,8 +292,8 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
             
             let usecase = CheckShippingAddressUseCase()
             let response = try await usecase.execute(.init(user_lat: address.latitude,
-                                            user_long: address.longitude,
-                                            store_id: storeId))
+                                                           user_long: address.longitude,
+                                                           store_id: storeId))
             guard response.status == .valid else {
                 throw response.message
             }
@@ -305,69 +305,55 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     @IBAction func mobileCodeBtnAction(_ sender: Any) {
     }
     
-    private func continueToPaymentOption() {
-        if sameShippingFlag {
-            if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
-            }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
-            }else if emailTxt.text == "" || emailTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
-            }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
-            }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
-            }else{
-                resultDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
-                resultDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
-                resultDict.setValue(emailTxt.text, forKey: "sh_cus_email")
-                resultDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
-                resultDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
-                resultDict.setValue(customerAddressTxt.text, forKey: "sh_location1")
-                resultDict.setValue(customerAddressTxtView2.text, forKey: "sh_location")
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
-                nextViewController.addressDict = resultDict
-                nextViewController.pickUpType = "delivery"
-                self.present(nextViewController, animated:true, completion:nil)
-            }
-        }else{
-            if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr:  LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
-            }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
-            }else if emailTxt.text == "" || emailTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
-            }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
-            }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
-            }
-            else{
-                let addressDict = NSMutableDictionary()
-                addressDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
-                addressDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
-                addressDict.setValue(emailTxt.text, forKey: "sh_cus_email")
-                addressDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
-                addressDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
-                let landmarkStr = resultDict.object(forKey: "sh_location1")as! String
-                let locationStr = resultDict.object(forKey: "sh_location")as! String
-                let latitude = resultDict.object(forKey: "sh_latitude")as! String
-                let longitute = resultDict.object(forKey: "sh_longitude")as! String
-                addressDict.setValue(landmarkStr, forKey: "sh_location1")
-                addressDict.setValue(locationStr, forKey: "sh_location")
-                addressDict.setValue(latitude, forKey: "sh_latitude")
-                addressDict.setValue(longitute, forKey: "sh_longitude")
-                
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
-                nextViewController.addressDict = addressDict
-                nextViewController.pickUpType = "delivery"
-                self.present(nextViewController, animated:true, completion:nil)
-            }
+    // NOTE: - we can't update user address since it will clean cart during checkout
+    private func validateFormAndContinueToPayment() {
+        guard validateForm(), let newLocation else {
+            return
         }
+        continueToPaymentOption()
+    }
+    
+    private func validateForm() -> Bool {
+        var valid = false
+        if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr:  LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
+        }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
+        }else if emailTxt.text == "" || emailTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
+        }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
+        }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
+        } else {
+            valid = true
+        }
+        
+        return valid
+    }
+    
+    private func continueToPaymentOption() {
+        let addressDict = NSMutableDictionary()
+        addressDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
+        addressDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
+        addressDict.setValue(emailTxt.text, forKey: "sh_cus_email")
+        addressDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
+        addressDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
+        let landmarkStr = resultDict.object(forKey: "sh_location1")as! String
+        let locationStr = resultDict.object(forKey: "sh_location")as! String
+        let latitude = resultDict.object(forKey: "sh_latitude")as! String
+        let longitute = resultDict.object(forKey: "sh_longitude")as! String
+        addressDict.setValue(landmarkStr, forKey: "sh_location1")
+        addressDict.setValue(locationStr, forKey: "sh_location")
+        addressDict.setValue(latitude, forKey: "sh_latitude")
+        addressDict.setValue(longitute, forKey: "sh_longitude")
+        
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
+        nextViewController.addressDict = addressDict
+        nextViewController.pickUpType = sameShippingFlag ? "delivery" : "self"
+        self.present(nextViewController, animated:true, completion:nil)
     }
     
     @IBAction func sameShippingBtnAction(_ sender: Any) {

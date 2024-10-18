@@ -12,7 +12,7 @@ struct SaveUserLocationUseCase {
     typealias UseCase = (ChangeAddressDTO) async throws -> Void
     private let repository = CommomParsing()
     func execute(_ changeAddress: ChangeAddressDTO) async throws {
-        let language = login_session.value(forKey: "Language") as? String ?? "es"
+        let language = login_session.selectedLanguage()
         let passLat = String(changeAddress.latitude)
         let passLong = String(changeAddress.longitude)
         guard let passAddress = changeAddress.addressString,
