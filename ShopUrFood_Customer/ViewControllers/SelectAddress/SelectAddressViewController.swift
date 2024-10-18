@@ -82,7 +82,12 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     private var newLocation: ChangeAddressDTO?
     @IBAction private func tapEditAddress(sender: Any?) {
         MapLocationPageFrom = "select-address"
-        AppRouter.shared.presentMapLocation(from: self) { [weak self] newAddress in
+        var coordinate: CLLocationCoordinate2D?
+        if let newLocation {
+            coordinate = .init(latitude: newLocation.latitude,
+                               longitude: newLocation.longitude)
+        }
+        AppRouter.shared.presentMapLocation(from: self, userLocation: coordinate) { [weak self] newAddress in
             self?.newLocation = newAddress
             self?.customerAddressTxtView2.text = newAddress.addressString
             self?.customerAddressTxt.text = newAddress.addressAdditional
@@ -153,11 +158,24 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         mobileNoCountryCodeBtn.setTitle(resultDict.object(forKey: "ship_cnty_code")as? String ?? "", for: .normal)
         alterNoCountryCodeBtn.setTitle(resultDict.object(forKey: "ship_cnty_code")as? String ?? "", for: .normal)
         
-        customerAddressTxtView2.text = (resultDict.object(forKey: "sh_location")as? String ?? "")
+        let additionalAddressString = resultDict.value(forKey: "sh_location1") as? String ?? ""
+        let addressString = resultDict.value(forKey: "sh_location") as? String ?? ""
+        let zipCode = resultDict.value(forKey: "sh_zipcode") as? String
+        customerAddressTxtView2.text = addressString
+        if let longitudeString = resultDict.value(forKey: "sh_longitude") as? String,
+           let latitudeSstring = resultDict.value(forKey: "sh_latitude") as? String,
+           let longitude = Double(longitudeString),
+           let latitude = Double(latitudeSstring) {
+            newLocation = .init(latitude: latitude,
+                                longitude: longitude,
+                                addressString: addressString,
+                                addressAdditional: additionalAddressString,
+                                zipCode: zipCode)
+        }
         customerAddressTxtView2.textColor = UIColor.darkText
         customerAddressTxtView2.isUserInteractionEnabled = false
         
-        customerAddressTxt.text = (resultDict.object(forKey: "sh_location1")as? String ?? "")
+        customerAddressTxt.text = additionalAddressString
         
         if firstNameTxt.text == ""{
             firstNameTxt.text = (login_session.object(forKey: "user_name")as! String)
@@ -237,8 +255,6 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         
     }
     
-    
-    
     //MARK:- Button Actions
     @IBAction func skipAndContinueBtnAction(_ sender: Any) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
@@ -270,7 +286,17 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     
     private func verifyNewLocation(_ address: ChangeAddressDTO) async throws {
         try await Task {
-            try await Task.sleep(nanoseconds: 3_000_000_000)
+            guard let storeId = Singleton.sharedInstance.MyCartModel.data.cartDetails.first?.storeId else {
+                throw "Invalid Store selected"
+            }
+            
+            let usecase = CheckShippingAddressUseCase()
+            let response = try await usecase.execute(.init(user_lat: address.latitude,
+                                            user_long: address.longitude,
+                                            store_id: storeId))
+            guard response.status == .valid else {
+                throw response.message
+            }
         }.value
     }
     

@@ -8,4 +8,12 @@
 
 import Foundation
 
-extension String: Error { }
+extension String: Error, LocalizedError {
+    public var errorDescription: String? {
+        self
+    }
+    
+    public var recoverySuggestion: String? {
+        "Error: \(self)"
+    }
+}

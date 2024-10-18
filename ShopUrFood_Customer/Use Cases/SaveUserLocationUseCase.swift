@@ -12,9 +12,6 @@ struct SaveUserLocationUseCase {
     typealias UseCase = (ChangeAddressDTO) async throws -> Void
     private let repository = CommomParsing()
     func execute(_ changeAddress: ChangeAddressDTO) async throws {
-        guard login_session.isUserLogged() else {
-            return
-        }
         let language = login_session.value(forKey: "Language") as? String ?? "es"
         let passLat = String(changeAddress.latitude)
         let passLong = String(changeAddress.longitude)
@@ -24,21 +21,24 @@ struct SaveUserLocationUseCase {
         else {
             throw Localization.value(for: "validlocation")
         }
+        login_session.setValue(passLat, forKey: "user_latitude")
+        login_session.setValue(passLong, forKey: "user_longitude")
+        login_session.setValue(passAddress, forKey: "user_address")
+        login_session.set(passZipCode, forKey: "user_zip_code")
+        login_session.set(userAdditionalAddress, forKey: "user_additional_address")
+        ActAsSelectedAddress = passAddress
+        ActAsSelectedLatitude = passLat
+        ActAsSelectedLongitude = passLong
+        ActAsSelectedZipCode = passZipCode
+        guard login_session.isUserLogged() else {
+            return
+        }
         return try await withCheckedThrowingContinuation { continuation in
             repository.saveShippingAddress(lang: language, search_latitude: passLat, search_longitude: passLong, zipcode: passZipCode, location: passAddress, address: userAdditionalAddress, onSuccess: {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200
                 {
-                    login_session.setValue(passLat, forKey: "user_latitude")
-                    login_session.setValue(passLong, forKey: "user_longitude")
-                    login_session.setValue(passAddress, forKey: "user_address")
-                    login_session.set(passZipCode, forKey: "user_zip_code")
-                    login_session.set(userAdditionalAddress, forKey: "user_additional_address")
-                    ActAsSelectedAddress = passAddress
-                    ActAsSelectedLatitude = passLat
-                    ActAsSelectedLongitude = passLong
-                    ActAsSelectedZipCode = passZipCode
                     continuation.resume()
                     return
                 }

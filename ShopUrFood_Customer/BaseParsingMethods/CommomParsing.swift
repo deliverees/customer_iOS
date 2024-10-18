@@ -398,6 +398,28 @@ class CommomParsing: BaseParsing {
         })
     }
     
+    // Check Shipping Address
+    public func checkShippingAddress(lang: String, user_latitude: String, user_longitude: String, storeId: String, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void) {
+        let requestDict = NSMutableDictionary()
+        requestDict.setValue(lang, forKey: "lang")
+        requestDict.setValue(user_latitude, forKey: "user_lat")
+        requestDict.setValue(user_longitude, forKey: "user_long")
+        requestDict.setValue(storeId, forKey: "store_id")
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
+        self.blockResponse = self.blockStatus
+        
+        self.ParsingFunctionCallWithToken(token: tokenStr as NSString,
+                                          subURl: CHECK_SHIPPING_ADDRESS as NSString,
+                                          params: requestDict as? Parameters,
+                                          encoding: JSONEncoding.default,
+                                          onSuccess: success,
+                                          onFailure: failure)
+    }
+    
     //Get AllRestaurant Details
     public func getAllRestaurantList(lang:String,user_latitude:String,user_longitude:String,page:Int,category_id:Any,search_halal:String,orderBy_delivery:String,orderBy_rating:String,orderBy_offers:String,restaurant_type:Any,prefer_time:Any,search_key:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {

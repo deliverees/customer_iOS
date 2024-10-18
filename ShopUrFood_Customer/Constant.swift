@@ -175,6 +175,7 @@ let REFUND_DETAILS = "refund_details"
 let PROFILE_UPDATE_OTP = "customer_update_account_with_otp"
 let ADD_CHOICE_TOCART = "add_choice_toCart"
 let USER_LOGOUT = "customer_logout"
+let CHECK_SHIPPING_ADDRESS = "check-customer-range"
 
 
 

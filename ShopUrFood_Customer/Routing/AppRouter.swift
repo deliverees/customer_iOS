@@ -8,6 +8,7 @@
 
 import Foundation
 import SWRevealViewController
+import CoreLocation
 
 final class AppRouter {
     public static var shared: AppRouter = AppRouter()
@@ -54,9 +55,11 @@ final class AppRouter {
     }
     
     func presentMapLocation(from vc: UIViewController,
+                            userLocation: CLLocationCoordinate2D? = nil,
                             completion: @escaping MapLocationPage.SelectedLocationCompletionHandler) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        nextViewController.currentSelectedUserLocation = userLocation
         nextViewController.completion = completion
         vc.present(nextViewController, animated: true)
     }

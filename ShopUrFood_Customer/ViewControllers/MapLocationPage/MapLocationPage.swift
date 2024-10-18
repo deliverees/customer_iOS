@@ -53,6 +53,8 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     
     var autocompleteResults :[GApiResponse.Autocomplete] = []
     
+    var currentSelectedUserLocation: CLLocationCoordinate2D?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,9 +98,15 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        if let currentSelectedUserLocation {
+            isFollowingLocationEnabled = false
+            setupCameraPositionManually(userLocation: currentSelectedUserLocation)
+        }
+        if (isFollowingLocationEnabled) {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
         if MapLocationPageFrom.isEmpty {
             showLocationAlert()
         }
@@ -277,13 +285,16 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard isFollowingLocationEnabled else { return }
         let userLocation = locations.last
-        _ = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
-        
-        let camera = GMSCameraPosition.camera(withLatitude: userLocation!.coordinate.latitude,
-                                              longitude: userLocation!.coordinate.longitude, zoom: 15.0)
+        setupCameraPositionManually(userLocation: userLocation!.coordinate)
+    }
+    
+    private func setupCameraPositionManually(userLocation: CLLocationCoordinate2D) {
+        let camera = GMSCameraPosition.camera(withLatitude: userLocation.latitude,
+                                              longitude: userLocation.longitude, zoom: 15.0)
         baseMapView.camera = camera
         baseMapView.isMyLocationEnabled = true
-        let position = CLLocationCoordinate2DMake(userLocation!.coordinate.latitude,userLocation!.coordinate.longitude)
+        let position = CLLocationCoordinate2DMake(userLocation.latitude,
+                                                  userLocation.longitude)
         baseMapView.clear()
         let marker = GMSMarker(position: position)
         marker.map = self.baseMapView
@@ -291,14 +302,13 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         marker.title = "Tap to select location"
         
         marker.appearAnimation = GMSMarkerAnimation.pop
-        let lat = String(userLocation!.coordinate.latitude)
-        let lon = String(userLocation!.coordinate.longitude)
-        
-        // self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon) // Temporary disabled
+        let lat = String(userLocation.latitude)
+        let lon = String(userLocation.longitude)
         
         var input = GInput()
         self.addressString = ""
-        let destination = GLocation.init(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+        let destination = GLocation.init(latitude: userLocation.latitude,
+                                         longitude: userLocation.longitude)
         input.destinationCoordinate = destination
         GoogleApi.shared.callApi(.reverseGeo , input: input) { (response) in
             if let places = response.data as? [GApiResponse.ReverseGio], response.isValidFor(.reverseGeo) {
@@ -310,7 +320,7 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
                     self.passLat = lat
                     self.passLong = lon
                     self.passAddress = self.addressString
-                    self.getAddressFromLatLong(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+                    self.getAddressFromLatLong(latitude: userLocation.latitude, longitude: userLocation.longitude)
                 }
             } else { print(response.error ?? "ERROR") }
         }
@@ -446,8 +456,6 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
         
         
     }
-    
-    
     
     // MARK: TextField Delegate
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

@@ -235,6 +235,7 @@
 		D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
 		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
+		D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */; };
 		D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */ = {isa = PBXBuildFile; fileRef = D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */; };
 /* End PBXBuildFile section */
 
@@ -492,6 +493,7 @@
 		D48955942C6B4DA20082A2A7 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckShippingAddressUseCase.swift; sourceTree = "<group>"; };
 		D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "push-notification-template.apns"; sourceTree = "<group>"; };
 		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1290,6 +1292,7 @@
 			isa = PBXGroup;
 			children = (
 				D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */,
+				D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */,
 			);
 			path = "Use Cases";
 			sourceTree = "<group>";
@@ -1741,6 +1744,7 @@
 				242AB3F3223FBADB006ED8CA /* paymentTermsConditionsCell.swift in Sources */,
 				244F068B2226C11A00185E57 /* InfoAboutRestaurantViewController.swift in Sources */,
 				2405EAB222424020003F4766 /* SambagDatePickerViewController.swift in Sources */,
+				D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */,
 				242D78BC221D425B004DE1FD /* RestaurantTwoFoodCell.swift in Sources */,
 				5E40EAC129DF1D570091661E /* Home_Categories_Collection_Cell.swift in Sources */,
 				240ABDBE2244E263001692BC /* HelpPageViewController.swift in Sources */,
