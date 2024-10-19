@@ -339,10 +339,10 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         addressDict.setValue(emailTxt.text, forKey: "sh_cus_email")
         addressDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
         addressDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
-        let landmarkStr = resultDict.object(forKey: "sh_location1")as! String
-        let locationStr = resultDict.object(forKey: "sh_location")as! String
-        let latitude = resultDict.object(forKey: "sh_latitude")as! String
-        let longitute = resultDict.object(forKey: "sh_longitude")as! String
+        let landmarkStr = newLocation?.addressAdditional ?? resultDict.object(forKey: "sh_location1")as! String
+        let locationStr = newLocation?.addressString ?? resultDict.object(forKey: "sh_location")as! String
+        let latitude = String(newLocation!.latitude)
+        let longitute = String(newLocation!.longitude)
         addressDict.setValue(landmarkStr, forKey: "sh_location1")
         addressDict.setValue(locationStr, forKey: "sh_location")
         addressDict.setValue(latitude, forKey: "sh_latitude")
