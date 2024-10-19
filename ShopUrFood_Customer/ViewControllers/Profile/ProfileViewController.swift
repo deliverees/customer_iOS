@@ -120,6 +120,8 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
                 self.userLongitude = String(newAddress.longitude)
                 ActAsSelectedZipCode = newAddress.zipCode ?? ""
                 ActAsSelectedAddress = newAddress.addressString ?? ""
+                ActAsSelectedLatitude = String(newAddress.latitude)
+                ActAsSelectedLongitude = String(newAddress.longitude)
             }
         }
     }
