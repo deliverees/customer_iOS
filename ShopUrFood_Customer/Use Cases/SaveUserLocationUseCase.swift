@@ -21,6 +21,7 @@ struct SaveUserLocationUseCase {
         else {
             throw Localization.value(for: "validlocation")
         }
+        isfromShippingAddressPage = true
         login_session.setValue(passLat, forKey: "user_latitude")
         login_session.setValue(passLong, forKey: "user_longitude")
         login_session.setValue(passAddress, forKey: "user_address")

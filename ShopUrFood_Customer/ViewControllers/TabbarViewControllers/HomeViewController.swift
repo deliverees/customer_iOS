@@ -234,9 +234,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     @objc func didTapLocationLbl(sender: UITapGestureRecognizer)
     {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-        self.present(nextViewController, animated:true, completion:nil)
+        AppRouter.shared.presentLocationOption(from: self, comingType: "")
         
     }
     
@@ -273,11 +271,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     
     @IBAction func locationBtnAction(_ sender: Any) {
-        
-        self.promotionalOfferBGView.isHidden = true
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-        self.present(nextViewController, animated:true, completion:nil)
+        AppRouter.shared.presentLocationOption(from: self, comingType: "")
     }
     
     @IBAction func viewAllOne(_ sender: Any) {

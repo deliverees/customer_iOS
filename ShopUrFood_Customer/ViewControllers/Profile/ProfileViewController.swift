@@ -235,6 +235,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             userLatitude = ActAsSelectedLatitude
             userLongitude = ActAsSelectedLongitude
         }
+        isfromShippingAddressPage = true
         
         if userNameTxt.text == ""{
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterusername") as! String)

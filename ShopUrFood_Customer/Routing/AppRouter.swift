@@ -68,6 +68,7 @@ final class AppRouter {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
         nextViewController.ComingType = comingType
+        nextViewController.modalPresentationStyle = .fullScreen
         vc.present(nextViewController, animated:true, completion:nil)
     }
     
