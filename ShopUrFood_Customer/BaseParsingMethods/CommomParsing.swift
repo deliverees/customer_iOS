@@ -332,18 +332,21 @@ class CommomParsing: BaseParsing {
         
         print("getCategoryBasedItems : ",requestDict)
         
-        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
-            failure(NSError(domain: "anonymous", code: -1))
-            return
-        }
         self.blockResponse = self.blockStatus
         
-        //make base method call
-        self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
-            success(response)
-        }, onFailure: {errorResponse in
-            failure(errorResponse)
-        })
+        if let tokenStr = login_session.object(forKey: "user_token") as? String {
+            self.ParsingFunctionCallWithToken(token:tokenStr as NSString,subURl:CATEGORY_BASE_ITEM as NSString, params: (requestDict as! Parameters), encoding: URLEncoding.queryString, onSuccess: {response in
+                success(response)
+            }, onFailure: {errorResponse in
+                failure(errorResponse)
+            })
+        } else {
+            self.ParsingFunctionCall(subURl: CATEGORY_BASE_ITEM_V1 as NSString,
+                                     params: (requestDict as! Parameters),
+                                     encoding: URLEncoding.queryString,
+                                     onSuccess: success,
+                                     onFailure: failure)
+        }
     }
     
     
@@ -393,6 +396,28 @@ class CommomParsing: BaseParsing {
         }, onFailure: {errorResponse in
             failure(errorResponse)
         })
+    }
+    
+    // Check Shipping Address
+    public func checkShippingAddress(lang: String, user_latitude: String, user_longitude: String, storeId: String, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void) {
+        let requestDict = NSMutableDictionary()
+        requestDict.setValue(lang, forKey: "lang")
+        requestDict.setValue(user_latitude, forKey: "user_lat")
+        requestDict.setValue(user_longitude, forKey: "user_long")
+        requestDict.setValue(storeId, forKey: "store_id")
+        
+        guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
+            failure(NSError(domain: "anonymous", code: -1))
+            return
+        }
+        self.blockResponse = self.blockStatus
+        
+        self.ParsingFunctionCallWithToken(token: tokenStr as NSString,
+                                          subURl: CHECK_SHIPPING_ADDRESS as NSString,
+                                          params: requestDict as? Parameters,
+                                          encoding: JSONEncoding.default,
+                                          onSuccess: success,
+                                          onFailure: failure)
     }
     
     //Get AllRestaurant Details

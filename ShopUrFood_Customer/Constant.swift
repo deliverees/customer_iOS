@@ -66,7 +66,9 @@ var peakHourFee = String()
 var peakHourFeeStatus = String()
 var peakHour_Info = String()
 var peakCurrency = String()
-var globalCartCount = Int()
+var globalCartCount: Int {
+    login_session.integer(forKey: "userCartCount")
+}
 var customTabBar = UITabBar()
 var localeIdendifier = NSLocale()
 var localeIdendifierStr = String()
@@ -118,6 +120,7 @@ let RESTURANT_HOME_V1 = "v1_restaurant_home_page"
 let RESTAURANT_DETAILS_API = "restaurant_details"
 let RESTAURANT_DETAILS_API_V1 = "v1_restaurant_details"
 let CATEGORY_BASE_ITEM = "category_based_items"
+let CATEGORY_BASE_ITEM_V1 = "v1_category_based_items"
 let ITEM_DETAILS = "item_details"
 let ITEM_DETAILS_V1 = "v1_item_details"
 let SAVE_SHIPPING_ADDRESS = "save_shipping_address"
@@ -172,6 +175,7 @@ let REFUND_DETAILS = "refund_details"
 let PROFILE_UPDATE_OTP = "customer_update_account_with_otp"
 let ADD_CHOICE_TOCART = "add_choice_toCart"
 let USER_LOGOUT = "customer_logout"
+let CHECK_SHIPPING_ADDRESS = "check-customer-range"
 
 
 

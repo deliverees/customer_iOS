@@ -1,0 +1,15 @@
+{
+  "Simulator Target Bundle": "com.app.delivereesCustomer",
+  "aps": {
+    "alert": {
+      "title": "Título de la notificación",
+      "body": "Cuerpo del mensaje de la notificación"
+    },
+    "sound": "Metroid-tonosdellamada.mobi.aiff",
+    "badge": 1
+  },
+  "type_id": "3",
+  "order_id": "1",
+  "store_id": "10",
+  "gcm.message_id": "abcd-1234-efgh-5678"
+}
