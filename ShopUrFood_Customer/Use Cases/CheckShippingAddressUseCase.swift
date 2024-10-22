@@ -43,8 +43,8 @@ struct CheckShippingAddressUseCase {
                                             user_longitude: passLong,
                                             storeId: store_id) { dictionaryResponse in
                 print(dictionaryResponse)
-                guard let message = dictionaryResponse.value(forKey: "message") as? String,
-                      let statusInt = dictionaryResponse.value(forKey: "status") as? Int,
+                let message = Localization.value(for: "shipping_address_commerce_unavailable")
+                guard let statusInt = dictionaryResponse.value(forKey: "status") as? Int,
                       let status = CheckShippingAddressResponseDTO.Status(rawValue: statusInt) else {
                     continuation.resume(throwing: "No se pudo recibir la respuesta correctamente, \(dictionaryResponse)")
                     return
