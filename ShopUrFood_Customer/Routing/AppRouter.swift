@@ -8,6 +8,7 @@
 
 import Foundation
 import SWRevealViewController
+import CoreLocation
 
 final class AppRouter {
     public static var shared: AppRouter = AppRouter()
@@ -27,7 +28,9 @@ final class AppRouter {
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage")
+            let initialViewController = storyboard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+            initialViewController.ComingType = "FIRST"
+            MapLocationPageFrom = ""
             window.rootViewController = initialViewController
             window.makeKeyAndVisible()
             self.root = initialViewController
@@ -49,5 +52,41 @@ final class AppRouter {
     func popToRoot() {
         root?.presentedViewController?.dismiss(animated: true)
         root?.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func presentMapLocation(from vc: UIViewController,
+                            userLocation: CLLocationCoordinate2D? = nil,
+                            completion: @escaping MapLocationPage.SelectedLocationCompletionHandler) {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        nextViewController.currentSelectedUserLocation = userLocation
+        nextViewController.completion = completion
+        vc.present(nextViewController, animated: true)
+    }
+    
+    func presentLocationOption(from vc: UIViewController, comingType: String) {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+        nextViewController.ComingType = comingType
+        nextViewController.modalPresentationStyle = .fullScreen
+        vc.present(nextViewController, animated:true, completion:nil)
+    }
+    
+    func presentInRoot(vc: UIViewController) {
+        if root == nil {
+            initialize()
+        }
+        dismissAnyOtherModal()
+        root?.present(vc, animated: true)
+    }
+    
+    private func dismissAnyOtherModal() {
+        if root?.presentedViewController != nil {
+            root?.presentedViewController?.dismiss(animated: false)
+        }
+        
+        if let presented = root?.children.first(where: { $0.presentedViewController != nil }) {
+            presented.presentedViewController?.dismiss(animated: false)
+        }
     }
 }

@@ -107,8 +107,6 @@
 		24346F78220972C000446252 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F77220972C000446252 /* ViewController.swift */; };
 		24346F7B220972C000446252 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24346F79220972C000446252 /* Main.storyboard */; };
 		24346F7D220972CC00446252 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24346F7C220972CC00446252 /* Assets.xcassets */; };
-		24346F8B220972CC00446252 /* ShopUrFood_CustomerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */; };
-		24346F96220972CC00446252 /* ShopUrFood_CustomerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F95220972CC00446252 /* ShopUrFood_CustomerUITests.swift */; };
 		24346FA4220973B500446252 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA3220973B500446252 /* Constant.swift */; };
 		24346FA62209743100446252 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA52209743100446252 /* Utility.swift */; };
 		24346FAA22098FC100446252 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346FA922098FC100446252 /* HomeViewController.swift */; };
@@ -227,22 +225,23 @@
 		A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37B23C7073800654118 /* TrackingScreen.swift */; };
 		A855D37E23C7075900654118 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37D23C7075900654118 /* BottomSheetViewController.swift */; };
 		C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */; };
+		D42A98B22CC04FF800A73909 /* ChangeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B12CC04FF800A73909 /* ChangeAddress.swift */; };
+		D42A98B52CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */; };
+		D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */; };
 		D44E57DB2C490A7F00FA10B2 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */; };
 		D44E57DE2C49134200FA10B2 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DD2C49134200FA10B2 /* UserSession.swift */; };
 		D44E57E02C4A571600FA10B2 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */; };
+		D48955922C6A8F380082A2A7 /* WorkingHoursModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */; };
+		D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
+		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
-		E1C089344BE94318655C6CA0 /* Pods_ShopUrFood_CustomerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */; };
+		D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */; };
+		D4BE924E2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */; };
+		D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */ = {isa = PBXBuildFile; fileRef = D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		24346F87220972CC00446252 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 24346F6A220972C000446252 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 24346F71220972C000446252;
-			remoteInfo = ShopUrFood_Customer;
-		};
-		24346F92220972CC00446252 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 24346F6A220972C000446252 /* Project object */;
 			proxyType = 1;
@@ -357,9 +356,7 @@
 		24346F7C220972CC00446252 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		24346F81220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShopUrFood_CustomerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopUrFood_CustomerTests.swift; sourceTree = "<group>"; };
 		24346F8C220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShopUrFood_CustomerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		24346F95220972CC00446252 /* ShopUrFood_CustomerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopUrFood_CustomerUITests.swift; sourceTree = "<group>"; };
 		24346F97220972CC00446252 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24346FA3220973B500446252 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -487,10 +484,19 @@
 		C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_Customer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.debug.xcconfig"; sourceTree = "<group>"; };
+		D42A98B12CC04FF800A73909 /* ChangeAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAddress.swift; sourceTree = "<group>"; };
+		D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+ExpressibleByStringLiteral.swift"; sourceTree = "<group>"; };
+		D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveUserLocationUseCase.swift; sourceTree = "<group>"; };
 		D44E57DA2C490A7F00FA10B2 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		D44E57DD2C49134200FA10B2 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
+		D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursModel.swift; sourceTree = "<group>"; };
+		D48955942C6B4DA20082A2A7 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckShippingAddressUseCase.swift; sourceTree = "<group>"; };
+		D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCartShippingAddressUseCase.swift; sourceTree = "<group>"; };
+		D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "push-notification-template.apns"; sourceTree = "<group>"; };
 		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -509,14 +515,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24346F8E220972CC00446252 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E1C089344BE94318655C6CA0 /* Pods_ShopUrFood_CustomerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +708,7 @@
 		241A6EB922153A0700667436 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D42A98B02CC04FD700A73909 /* Address */,
 				24211B3F22294B3A002BFB4A /* myOrders */,
 				245F37DC22250681003024BC /* My_Cart */,
 				24496AD42220154E0021DDC8 /* ItemDetailModel */,
@@ -875,7 +874,6 @@
 			children = (
 				24346F72220972C000446252 /* ShopUrFood_Customer.app */,
 				24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */,
-				24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -883,8 +881,10 @@
 		24346F74220972C000446252 /* ShopUrFood_Customer */ = {
 			isa = PBXGroup;
 			children = (
-				24D950DB22C48A8E00A34D61 /* English.json */,
-				20FBFCBC2345D310002CC29E /* spanish.json */,
+				D42A98B32CC0517300A73909 /* Helpers */,
+				D4CE865D2CB93B6F00AB1AEE /* Push Notifications Files */,
+				D445225A2CB52C4E0031FDFA /* Use Cases */,
+				D48955932C6B4D8A0082A2A7 /* Localization */,
 				D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */,
 				2C172DF423C985DC00D02578 /* GoogleApiHelpers */,
 				2405EAA022423FE4003F4766 /* ExternalLibrary */,
@@ -915,7 +915,7 @@
 		24346F89220972CC00446252 /* ShopUrFood_CustomerTests */ = {
 			isa = PBXGroup;
 			children = (
-				24346F8A220972CC00446252 /* ShopUrFood_CustomerTests.swift */,
+				D495F03F2C6B5E7A009BC158 /* WorkingHoursTests */,
 				24346F8C220972CC00446252 /* Info.plist */,
 			);
 			path = ShopUrFood_CustomerTests;
@@ -1162,6 +1162,7 @@
 		2474345E2251FC0800041EB8 /* WorkingHoursPage */ = {
 			isa = PBXGroup;
 			children = (
+				D48955902C6A8F250082A2A7 /* Model */,
 				2474345F2251FC3A00041EB8 /* WrokingHoursViewController.swift */,
 				247434612251FFC100041EB8 /* WorkingHoursTableViewCell.swift */,
 			);
@@ -1273,6 +1274,32 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		D42A98B02CC04FD700A73909 /* Address */ = {
+			isa = PBXGroup;
+			children = (
+				D42A98B12CC04FF800A73909 /* ChangeAddress.swift */,
+			);
+			path = Address;
+			sourceTree = "<group>";
+		};
+		D42A98B32CC0517300A73909 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		D445225A2CB52C4E0031FDFA /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */,
+				D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */,
+				D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */,
+			);
+			path = "Use Cases";
+			sourceTree = "<group>";
+		};
 		D44E57D92C490A6700FA10B2 /* Routing */ = {
 			isa = PBXGroup;
 			children = (
@@ -1287,6 +1314,40 @@
 				D44E57DD2C49134200FA10B2 /* UserSession.swift */,
 			);
 			path = UserSession;
+			sourceTree = "<group>";
+		};
+		D48955902C6A8F250082A2A7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D48955932C6B4D8A0082A2A7 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				24D950DB22C48A8E00A34D61 /* English.json */,
+				20FBFCBC2345D310002CC29E /* spanish.json */,
+				D48955942C6B4DA20082A2A7 /* Localization.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		D495F03F2C6B5E7A009BC158 /* WorkingHoursTests */ = {
+			isa = PBXGroup;
+			children = (
+				D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */,
+			);
+			path = WorkingHoursTests;
+			sourceTree = "<group>";
+		};
+		D4CE865D2CB93B6F00AB1AEE /* Push Notifications Files */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */,
+			);
+			path = "Push Notifications Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1332,25 +1393,6 @@
 			productReference = 24346F86220972CC00446252 /* ShopUrFood_CustomerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		24346F90220972CC00446252 /* ShopUrFood_CustomerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 24346FA0220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_CustomerUITests" */;
-			buildPhases = (
-				326AC2A4C0AEE5BF30378CAE /* [CP] Check Pods Manifest.lock */,
-				24346F8D220972CC00446252 /* Sources */,
-				24346F8E220972CC00446252 /* Frameworks */,
-				24346F8F220972CC00446252 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				24346F93220972CC00446252 /* PBXTargetDependency */,
-			);
-			name = ShopUrFood_CustomerUITests;
-			productName = ShopUrFood_CustomerUITests;
-			productReference = 24346F91220972CC00446252 /* ShopUrFood_CustomerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1377,10 +1419,6 @@
 						CreatedOnToolsVersion = 10.1;
 						TestTargetID = 24346F71220972C000446252;
 					};
-					24346F90220972CC00446252 = {
-						CreatedOnToolsVersion = 10.1;
-						TestTargetID = 24346F71220972C000446252;
-					};
 				};
 			};
 			buildConfigurationList = 24346F6D220972C000446252 /* Build configuration list for PBXProject "ShopUrFood_Customer" */;
@@ -1398,7 +1436,6 @@
 			targets = (
 				24346F71220972C000446252 /* ShopUrFood_Customer */,
 				24346F85220972CC00446252 /* ShopUrFood_CustomerTests */,
-				24346F90220972CC00446252 /* ShopUrFood_CustomerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1410,6 +1447,7 @@
 			files = (
 				24346FD72209C1CD00446252 /* Poppins-ExtraLightItalic.ttf in Resources */,
 				24346FDA2209C1CD00446252 /* Poppins-LightItalic.ttf in Resources */,
+				D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */,
 				24346FE12209C1CD00446252 /* Poppins-ThinItalic.ttf in Resources */,
 				24D38F6C22AE855800AF1911 /* TapAnimation.json in Resources */,
 				24346FDD2209C1CD00446252 /* Poppins-Regular.ttf in Resources */,
@@ -1449,13 +1487,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		24346F84220972CC00446252 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24346F8F220972CC00446252 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1503,28 +1534,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n\n";
-		};
-		326AC2A4C0AEE5BF30378CAE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ShopUrFood_CustomerUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 		631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1667,6 +1676,7 @@
 				24F003B9222EB46D0093189D /* InvoiceViewController.swift in Sources */,
 				2C172DF123C985A100D02578 /* GoogleApiHelper.swift in Sources */,
 				24496AD3221FCDE90021DDC8 /* RelatedItemsCollectionCell.swift in Sources */,
+				D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */,
 				2458B1BA2248DCBD0093B29B /* MyReviewPage.swift in Sources */,
 				2C5CE6872252465A003ECC0E /* OrderStatusViewController.swift in Sources */,
 				24262CFD229FEE1800DB8F28 /* newWalletTBCell.swift in Sources */,
@@ -1720,6 +1730,7 @@
 				240C7CBF2216EF1B00D29068 /* ProfileData.swift in Sources */,
 				24FA11AE2212A58200599AB9 /* ForgetPasswordPage.swift in Sources */,
 				24F003B5222E4D270093189D /* CancelOrderPage.swift in Sources */,
+				D42A98B52CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift in Sources */,
 				245F37E922252278003024BC /* CartChoice.swift in Sources */,
 				242CA172221AEA3C0004485E /* CategoryList.swift in Sources */,
 				240738BA2227C06D001D11DD /* filterViewController.swift in Sources */,
@@ -1736,9 +1747,11 @@
 				242AB3F3223FBADB006ED8CA /* paymentTermsConditionsCell.swift in Sources */,
 				244F068B2226C11A00185E57 /* InfoAboutRestaurantViewController.swift in Sources */,
 				2405EAB222424020003F4766 /* SambagDatePickerViewController.swift in Sources */,
+				D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */,
 				242D78BC221D425B004DE1FD /* RestaurantTwoFoodCell.swift in Sources */,
 				5E40EAC129DF1D570091661E /* Home_Categories_Collection_Cell.swift in Sources */,
 				240ABDBE2244E263001692BC /* HelpPageViewController.swift in Sources */,
+				D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */,
 				240C7CAF2216BCC000D29068 /* sideBarTopCell.swift in Sources */,
 				2C81FF6C22490BEA00E176E5 /* BottomSheetTableCell.swift in Sources */,
 				242A9C1E221BC694002F4E8E /* RestaurantCategoryCell.swift in Sources */,
@@ -1757,8 +1770,11 @@
 				24F72360222692EE001D2BCA /* AllRestaurantViewController.swift in Sources */,
 				2435959A224FA17B00ECBF02 /* LocationListTBCell.swift in Sources */,
 				242AB3ED223F7E9B006ED8CA /* SelectPaymetOptionPage.swift in Sources */,
+				D42A98B22CC04FF800A73909 /* ChangeAddress.swift in Sources */,
 				24FA11B02212A59E00599AB9 /* SignUpViewController.swift in Sources */,
 				24F67FA9222D3298002AD641 /* OrderDetailsCell.swift in Sources */,
+				D4BE924E2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift in Sources */,
+				D48955922C6A8F380082A2A7 /* WorkingHoursModel.swift in Sources */,
 				24346FB92209B99B00446252 /* LoginViewController.swift in Sources */,
 				2444F880220C35C200EF1574 /* Network.swift in Sources */,
 				5E40EAC329DF49D90091661E /* AllCategoriesDetail.swift in Sources */,
@@ -1778,15 +1794,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24346F8B220972CC00446252 /* ShopUrFood_CustomerTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24346F8D220972CC00446252 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				24346F96220972CC00446252 /* ShopUrFood_CustomerUITests.swift in Sources */,
+				D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1797,11 +1805,6 @@
 			isa = PBXTargetDependency;
 			target = 24346F71220972C000446252 /* ShopUrFood_Customer */;
 			targetProxy = 24346F87220972CC00446252 /* PBXContainerItemProxy */;
-		};
-		24346F93220972CC00446252 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 24346F71220972C000446252 /* ShopUrFood_Customer */;
-			targetProxy = 24346F92220972CC00446252 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1946,7 +1949,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.7;
+				CURRENT_PROJECT_VERSION = 1.11;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -1957,7 +1960,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -1999,7 +2002,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.7;
+				CURRENT_PROJECT_VERSION = 1.11;
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = ShopUrFood_Customer/Info.plist;
@@ -2009,7 +2012,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2048,6 +2051,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VYF2Z948FZ;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = ShopUrFood_CustomerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2056,9 +2064,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/ShopUrFood_Customer";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShopUrFood_Customer";
 			};
 			name = Debug;
 		};
@@ -2080,49 +2089,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/ShopUrFood_Customer";
-			};
-			name = Release;
-		};
-		24346FA1220972CC00446252 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 54747E0CA11CA997AC0D4E00 /* Pods-ShopUrFood_CustomerUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VYF2Z948FZ;
-				INFOPLIST_FILE = ShopUrFood_CustomerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ShopUrFood_Customer;
-			};
-			name = Debug;
-		};
-		24346FA2220972CC00446252 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VYF2Z948FZ;
-				INFOPLIST_FILE = ShopUrFood_CustomerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.pofi.ShopUrFood-CustomerUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ShopUrFood_Customer;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShopUrFood_Customer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShopUrFood_Customer";
 			};
 			name = Release;
 		};
@@ -2152,15 +2119,6 @@
 			buildConfigurations = (
 				24346F9E220972CC00446252 /* Debug */,
 				24346F9F220972CC00446252 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		24346FA0220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_CustomerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				24346FA1220972CC00446252 /* Debug */,
-				24346FA2220972CC00446252 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

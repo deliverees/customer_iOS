@@ -15,7 +15,7 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - Alamofire (4.0.1)
-  - AMPopTip (4.10.0)
+  - AMPopTip (4.12.0)
   - BetterSegmentedControl (1.3.0)
   - Bolts (1.9.1):
     - Bolts/AppLinks (= 1.9.1)
@@ -149,9 +149,9 @@ PODS:
     - GoogleUtilities/Network (~> 7.7)
     - "GoogleUtilities/NSData+zlib (~> 7.7)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.2.5):
+  - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
   - GoogleMaps (7.4.0):
     - GoogleMaps/Maps (= 7.4.0)
@@ -171,56 +171,67 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.3.2)
     - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
   - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
-  - GoogleUtilities (7.11.5):
-    - GoogleUtilities/AppDelegateSwizzler (= 7.11.5)
-    - GoogleUtilities/Environment (= 7.11.5)
-    - GoogleUtilities/ISASwizzler (= 7.11.5)
-    - GoogleUtilities/Logger (= 7.11.5)
-    - GoogleUtilities/MethodSwizzler (= 7.11.5)
-    - GoogleUtilities/Network (= 7.11.5)
-    - "GoogleUtilities/NSData+zlib (= 7.11.5)"
-    - GoogleUtilities/Reachability (= 7.11.5)
-    - GoogleUtilities/SwizzlerTestHelpers (= 7.11.5)
-    - GoogleUtilities/UserDefaults (= 7.11.5)
-  - GoogleUtilities/AppDelegateSwizzler (7.11.5):
+  - GoogleUtilities (7.13.3):
+    - GoogleUtilities/AppDelegateSwizzler (= 7.13.3)
+    - GoogleUtilities/Environment (= 7.13.3)
+    - GoogleUtilities/ISASwizzler (= 7.13.3)
+    - GoogleUtilities/Logger (= 7.13.3)
+    - GoogleUtilities/MethodSwizzler (= 7.13.3)
+    - GoogleUtilities/Network (= 7.13.3)
+    - "GoogleUtilities/NSData+zlib (= 7.13.3)"
+    - GoogleUtilities/Privacy (= 7.13.3)
+    - GoogleUtilities/Reachability (= 7.13.3)
+    - GoogleUtilities/SwizzlerTestHelpers (= 7.13.3)
+    - GoogleUtilities/UserDefaults (= 7.13.3)
+  - GoogleUtilities/AppDelegateSwizzler (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.11.5):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Environment (7.13.3):
+    - GoogleUtilities/Privacy
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/ISASwizzler (7.11.5)
-  - GoogleUtilities/Logger (7.11.5):
+  - GoogleUtilities/ISASwizzler (7.13.3):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (7.13.3):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.11.5):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/MethodSwizzler (7.13.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.11.5):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Network (7.13.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Privacy
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.11.5)"
-  - GoogleUtilities/Reachability (7.11.5):
+  - "GoogleUtilities/NSData+zlib (7.13.3)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (7.13.3)
+  - GoogleUtilities/Reachability (7.13.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/SwizzlerTestHelpers (7.11.5):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/SwizzlerTestHelpers (7.13.3):
     - GoogleUtilities/MethodSwizzler
-  - GoogleUtilities/UserDefaults (7.11.5):
+  - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
   - GTMSessionFetcher/Core (1.7.2)
-  - IQKeyboardManager (6.5.16)
+  - IQKeyboardManager (6.5.19)
   - JonAlert (1.0.0)
-  - Kingfisher (7.9.1)
+  - Kingfisher (7.12.0)
   - ListPlaceholder (1.5)
-  - lottie-ios (4.3.3)
+  - lottie-ios (4.5.0)
   - MarqueeLabel/Swift (3.2.1)
   - MIBlurPopup (1.0.0)
   - MqttCocoaAsyncSocket (1.0.8)
-  - nanopb (2.30909.0):
-    - nanopb/decode (= 2.30909.0)
-    - nanopb/encode (= 2.30909.0)
-  - nanopb/decode (2.30909.0)
-  - nanopb/encode (2.30909.0)
-  - NVActivityIndicatorView (5.1.1):
-    - NVActivityIndicatorView/Base (= 5.1.1)
-  - NVActivityIndicatorView/Base (5.1.1)
+  - nanopb (2.30909.1):
+    - nanopb/decode (= 2.30909.1)
+    - nanopb/encode (= 2.30909.1)
+  - nanopb/decode (2.30909.1)
+  - nanopb/encode (2.30909.1)
+  - NVActivityIndicatorView (5.2.0):
+    - NVActivityIndicatorView/Base (= 5.2.0)
+  - NVActivityIndicatorView/Base (5.2.0)
   - PayPal-iOS-SDK (2.18.1):
     - PayPal-iOS-SDK/CardIO (= 2.18.1)
     - PayPal-iOS-SDK/Core (= 2.18.1)
@@ -228,12 +239,12 @@ PODS:
     - CardIO (~> 5.4.1)
   - PayPal-iOS-SDK/Core (2.18.1)
   - Popover (1.3.0)
-  - PromisesObjC (2.3.1)
+  - PromisesObjC (2.4.0)
   - RAMAnimatedTabBarController (5.2.0)
   - SCLAlertView (0.8)
   - ScrollableSegmentedControl (1.4.0)
   - Segmentio (3.3)
-  - SwiftyGif (5.4.4)
+  - SwiftyGif (5.4.5)
   - SWRevealViewController (2.3.0)
   - Toast-Swift (4.0.1)
 
@@ -365,7 +376,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
-  AMPopTip: 4630471652faf06872f72a39bfcb6f5b68a7e208
+  AMPopTip: cf89d8690aa6e59ddc86bf46c0ccabb3e7d148a1
   BetterSegmentedControl: 85d1b0343a09603b098884d527f550dfc8e6cdd9
   Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
   BottomPopup: fe3e284628532f99093ae68c592c6b9d392c972d
@@ -396,34 +407,34 @@ SPEC CHECKSUMS:
   FirebaseMessagingInterop: 348785028509e1a5a9af277123e7fc08b2d17306
   FirebaseSharedSwift: 2269c2ddc7a5efb7fb5f3f3177e790613b52dfda
   GoogleAppMeasurement: 6de2b1a69e4326eb82ee05d138f6a5cb7311bcb1
-  GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
+  GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   GooglePlaces: 544e908d94860bf6f8fc1865b80d2c7eb6b5f937
   GoogleSignIn: 7ff245e1a7b26d379099d3243a562f5747e23d39
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
-  GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
+  GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
-  IQKeyboardManager: 024b54d7dcb765c5bc99882cb4d5ea24a8cb7c3c
+  IQKeyboardManager: c8665b3396bd0b79402b4c573eac345a31c7d485
   JonAlert: b254830587addcc52d0e9ee871f43f4d6194d342
-  Kingfisher: 1d14e9f59cbe19389f591c929000332bf70efd32
+  Kingfisher: 53a10ea35051a436b5fb626ca2dd8f3144d755e9
   ListPlaceholder: 2d7950014852ee5613d636cf14fd1bb93419e330
-  lottie-ios: 25e7b2675dad5c3ddad369ac9baab03560c5bfdd
+  lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MIBlurPopup: 7e855df6a79d13bc0840519c2ec9bac50b1ac01a
   MqttCocoaAsyncSocket: 77d3b74f76228dd5a05d1f9526eab101d415b30c
-  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
-  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
+  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  NVActivityIndicatorView: fe52a6a68664c2df8991d7d9e3d86d8d19453c53
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
   Popover: 10e1d9528f81d9504df984b7b3f491292bc1822d
-  PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RAMAnimatedTabBarController: 6863a386e7ae2ab227cd60aa73ab8ff56cdacfdd
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   ScrollableSegmentedControl: 56f7baa7f1d7e622e00abb9d6658856c2d52dd4b
   Segmentio: 4ff49aa4f4c916998c0d886c549ce62ca9eae251
-  SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
+  SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   SWRevealViewController: 6d3fd97f70112fd7cef9de14df4260eacce4c63a
   Toast-Swift: e42a638589a2f95036b4bb7626cfbdde7daf0393
 
-PODFILE CHECKSUM: 39354fe25ce165687b8657378ea46a41f788909e
+PODFILE CHECKSUM: e08650248421f21fb5c9c22f8e639d01d7fd791a
 
 COCOAPODS: 1.15.2

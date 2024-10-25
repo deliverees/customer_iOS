@@ -32,7 +32,12 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     @IBOutlet weak var baseView: UIView!
     var imagePicker = UIImagePickerController()
     var resultDict = NSMutableDictionary()
-    var userLocationStr = String()
+    var userLocationStr = String() {
+        didSet {
+            addressTxt.isHidden = userLocationStr.isEmpty
+            addressTxt.text = userLocationStr
+        }
+    }
     var userLatitude = String()
     var userLongitude = String()
     
@@ -107,19 +112,22 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         }else if sender.tag == 2{
             mobileNumberTxt.isUserInteractionEnabled = true
             mobileNumberTxt.becomeFirstResponder()
-        }else if sender.tag == 3{
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "MapLocationPage") as! MapLocationPage
+        }else if sender.tag == 3 {
             MapLocationPageFrom = "address"
-            self.present(nextViewController, animated:true, completion:nil)
+            AppRouter.shared.presentMapLocation(from: self) { newAddress in
+                self.userLocationStr = newAddress.addressString ?? ""
+                self.userLatitude = String(newAddress.latitude)
+                self.userLongitude = String(newAddress.longitude)
+                ActAsSelectedZipCode = newAddress.zipCode ?? ""
+                ActAsSelectedAddress = newAddress.addressString ?? ""
+                ActAsSelectedLatitude = String(newAddress.latitude)
+                ActAsSelectedLongitude = String(newAddress.longitude)
+            }
         }
-
-    
     }
     
-    
     //MARK:- API Methods
-    func ProfileData(){
+    private func ProfileData(){
         let Parse = CommomParsing()
         Parse.getCustomerProfileInfo(lang: login_session.value(forKey: "Language") as? String ?? "es", onSuccess: {
             response in
@@ -143,12 +151,6 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         emailTxt.text = self.resultDict.object(forKey: "user_email")as? String ?? ""
         mobileNumberTxt.text = mobileTxt
         userLocationStr = self.resultDict.object(forKey: "user_address")as? String ?? ""
-        if userLocationStr == ""{
-            addressTxt.isHidden = false
-        }else{
-            locationLbl.text = userLocationStr
-            addressTxt.isHidden = true
-        }
         let userImgeURL = URL(string: self.resultDict.object(forKey: "user_avatar")as! String)
         userImageView.kf.setImage(with: userImgeURL)
         userLatitude = self.resultDict.object(forKey: "user_latitude")as? String ?? ""
@@ -164,6 +166,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "profile") as? String
         self.navigationController?.navigationBar.isHidden = true
         if ActAsSelectedAddress != "" {
@@ -172,7 +175,6 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             addressTxt.isHidden = true
         }
     }
-    
     
     
     @IBAction func changePhotoBtnAction(_ sender: Any) { 
@@ -233,6 +235,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             userLatitude = ActAsSelectedLatitude
             userLongitude = ActAsSelectedLongitude
         }
+        isfromShippingAddressPage = true
         
         if userNameTxt.text == ""{
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterusername") as! String)

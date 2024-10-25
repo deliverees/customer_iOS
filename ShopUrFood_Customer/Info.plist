@@ -4,10 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -39,12 +35,20 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
 	<key>FacebookAppID</key>
 	<string>947105282289402</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<true/>
 	<key>FacebookClientToken</key>
 	<string>02ccf803a575321e38f59fefa157a4cc</string>
 	<key>FacebookDisplayName</key>
 	<string>Deliverees.Customer</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -54,6 +58,8 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>12</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -71,8 +77,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>would like to save photos to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>User can upload the user image using the camera and gallery</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -81,6 +85,8 @@
 	<string>We show the restaurants based on the user location. So User can find near by resturants easily</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We show the restaurants based on the user location. So User can find near by resturants easily</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>User can upload the user image using the camera and gallery</string>
 	<key>NSUserTrackingUsageDescription</key>
@@ -104,6 +110,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -121,9 +129,5 @@
 	<array>
 		<string>Default</string>
 	</array>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-	<true/>
-	<key>FacebookAdvertiserIDCollectionEnabled</key>
-	<true/>
 </dict>
 </plist>

@@ -16,4 +16,8 @@ extension UserDefaults {
     func setUserLogged(_ value: Bool) {
         setValue(value, forKey: "user_logged")
     }
+    
+    func selectedLanguage() -> String {
+        string(forKey: "Language") ?? ""
+    }
 }

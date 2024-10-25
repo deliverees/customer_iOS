@@ -15,7 +15,7 @@ class CustomTabBarController: UITabBarController,UITabBarControllerDelegate {
         self.delegate = self
         self.selectedIndex = 2
         tabBar.items?[0].title = LanguageDictonary.object(forKey: "cartTab") as! String
-        tabBar.items?[1].title = LanguageDictonary.object(forKey: "search") as! String
+        tabBar.items?[1].title = "Search"
         tabBar.items?[2].title = LanguageDictonary.object(forKey: "home") as! String
         tabBar.items?[3].title = LanguageDictonary.object(forKey: "track") as! String
         tabBar.items?[4].title = LanguageDictonary.object(forKey: "wallet") as! String

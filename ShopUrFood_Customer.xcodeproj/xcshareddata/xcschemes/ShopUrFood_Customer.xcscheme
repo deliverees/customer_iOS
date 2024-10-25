@@ -26,7 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -36,24 +36,29 @@
             ReferencedContainer = "container:ShopUrFood_Customer.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "UNIT_TESTS=1"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "UNIT_TESTS"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "24346F85220972CC00446252"
                BuildableName = "ShopUrFood_CustomerTests.xctest"
                BlueprintName = "ShopUrFood_CustomerTests"
-               ReferencedContainer = "container:ShopUrFood_Customer.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "24346F90220972CC00446252"
-               BuildableName = "ShopUrFood_CustomerUITests.xctest"
-               BlueprintName = "ShopUrFood_CustomerUITests"
                ReferencedContainer = "container:ShopUrFood_Customer.xcodeproj">
             </BuildableReference>
          </TestableReference>

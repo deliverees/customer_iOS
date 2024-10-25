@@ -172,6 +172,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
         promotionalOfferBGView.isHidden = true
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "yourcart") as? String
         popupPointsShow = true
         self.emptyCartView.isHidden = true
@@ -226,7 +227,6 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
                 let grandTotal = Singleton.sharedInstance.MyCartModel.data.totalCartAmount as String
                 self.navigationPriceLbl.text = LanguageDictonary.value(forKey: "pay") as! String + " " + currency + grandTotal
                 self.navigationPriceLbl.isHidden = false
-                self.cartTable.reloadData()
                 self.cartTable.isHidden = false
                 self.emptyCartView.isHidden = true
                 self.baseContentView.isHidden = false
@@ -253,8 +253,14 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
                 actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
                 login_session.synchronize()
             }
-            self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+            DispatchQueue.main.async {
+                self.extrasTable.reloadData()
+                self.cartTable.reloadData()
+                self.stopLoadingIndicator(senderVC: self)
+            }
+        }, onFailure: {errorResponse in
+            self.showTokenExpiredPopUp(msgStr: errorResponse?.localizedDescription ?? "")
+        })
     }
     
     //MARK:- Tableview Delegate & DataSource Methods
@@ -714,6 +720,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
                 let tempDict = NSMutableDictionary()
                 tempDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
                 self.getCartData()
+                return
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }else{
@@ -757,6 +764,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             if response.object(forKey: "code") as! Int == 200
             {
                 self.getCartData()
+                return
             }
             else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)

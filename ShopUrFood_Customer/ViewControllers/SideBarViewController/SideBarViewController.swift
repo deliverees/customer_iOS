@@ -30,7 +30,10 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         iPhoneUDIDString = UIDevice.current.identifierForVendor!.uuidString
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         let favStr = LanguageDictonary.object(forKey: "favourites") as! String
         let orderstr = LanguageDictonary.object(forKey: "orderhistory") as! String
         let yourAddStr = LanguageDictonary.object(forKey: "youraddress") as! String
@@ -46,20 +49,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         let deleteaccount = LanguageDictonary.object(forKey: "deleteaccount") as! String
         let settingsStr = LanguageDictonary.object(forKey: "settings") as! String
         
-        //nameArray = [favStr,orderstr,yourAddStr,myReviewStr,myRewardStr,offerStr,walletStr,referFriendStr,helpStr,languageStr,signoutStr]
         nameArray = [homeStr,orderstr,offerStr,walletStr,settingsStr,helpStr,deleteaccount,signoutStr]
-        
-        //        nameArray.append("Favourites")
-        //        nameArray.append("Order History")
-        //        nameArray.append("Your Address")
-        //        nameArray.append("My Reviews")
-        //        nameArray.append("My Rewards")
-        //        nameArray.append("My Offers")
-        //        nameArray.append("My Wallet")
-        //        nameArray.append("Refer Friend")
-        //        nameArray.append("Help")
-        //        nameArray.append("Language")
-        //        nameArray.append("Sign Out")
         
         imageArray.append("ic_home_red")
         imageArray.append("ic_order_red")
@@ -74,12 +64,6 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         imageArray.append("ic_delete")
         //imageArray.append("Image")
         imageArray.append("ic_signout_red")
-        
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         self.getProfileData()
     }
     
@@ -270,20 +254,20 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
         }else if indexPath.row == 8 {
             /*if login_session.object(forKey: "user_longitude") != nil{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainViewController = storyboard.instantiateViewController(withIdentifier: "WalletViewController") as! WalletViewController
-                tabBarSelectedIndex = 4
-                mainViewController.isfromSideBarOrNotifyPage = true
-                self.window?.rootViewController = mainViewController
-                self.window?.makeKeyAndVisible()
-            }else{
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let initialViewController = storyboard.instantiateViewController(withIdentifier: "SelectLocationPage")
-                self.window?.rootViewController = initialViewController
-                self.window?.makeKeyAndVisible()
-            }*/
+             self.window = UIWindow(frame: UIScreen.main.bounds)
+             let storyboard = UIStoryboard(name: "Main", bundle: nil)
+             let mainViewController = storyboard.instantiateViewController(withIdentifier: "WalletViewController") as! WalletViewController
+             tabBarSelectedIndex = 4
+             mainViewController.isfromSideBarOrNotifyPage = true
+             self.window?.rootViewController = mainViewController
+             self.window?.makeKeyAndVisible()
+             }else{
+             self.window = UIWindow(frame: UIScreen.main.bounds)
+             let storyboard = UIStoryboard(name: "Main", bundle: nil)
+             let initialViewController = storyboard.instantiateViewController(withIdentifier: "SelectLocationPage")
+             self.window?.rootViewController = initialViewController
+             self.window?.makeKeyAndVisible()
+             }*/
             if login_session.isUserLogged() {
                 self.logOut()
             } else {
@@ -292,19 +276,19 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         }
         else if indexPath.row == 8 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ReferFriendsPageViewController") as! ReferFriendsPageViewController
-            NotificationVC.navigationType = "sidebar"
-            let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
-            self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
+             NotificationVC.navigationType = "sidebar"
+             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
+             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
         }else if indexPath.row == 9 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "HelpPageViewController") as! HelpPageViewController
-            NotificationVC.navigaionType = "sidebar"
-            let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
-            self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
+             NotificationVC.navigaionType = "sidebar"
+             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
+             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
         }else if indexPath.row == 10 {
             
             /*let nav = self.storyboard?.instantiateViewController(withIdentifier: "LanguageViewController") as? LanguageViewController
-            nav?.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-            self.present(nav!, animated: true, completion: nil)*/
+             nav?.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+             self.present(nav!, animated: true, completion: nil)*/
             
         }else if indexPath.row == 11 {
             //self.logOut()
@@ -333,10 +317,8 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
-            var window: UIWindow?
-            AppRouter.shared.initialize()
-            (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
+            AppRouter.shared.initialize()
         }, onFailure: {errorResponse in
             // Logout not successful but we must remove user session
             let domain = Bundle.main.bundleIdentifier!
@@ -348,10 +330,8 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             }
             login_session.synchronize()
             self.stopLoadingIndicator(senderVC: self)
-            var window: UIWindow?
-            AppRouter.shared.initialize()
-            (UIApplication.shared.delegate as? AppDelegate)?.window = window
             login_session.setValue(lang, forKey: "Language")
+            AppRouter.shared.initialize()
         })
         
         login_session.setValue(lang, forKey: "Language")

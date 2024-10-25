@@ -1,21 +1,23 @@
- //
- //  MapLocationPage.swift
- //  ShopUrFood_Customer
- //
- //  Created by apple4 on 13/02/19.
- //  Copyright © 2019 apple4. All rights reserved.
- //
- 
- import UIKit
- import GoogleMaps
- import CoreLocation
- import GooglePlaces
- import Lottie
- import Alamofire
- 
- 
- 
- class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource  {
+//
+//  MapLocationPage.swift
+//  ShopUrFood_Customer
+//
+//  Created by apple4 on 13/02/19.
+//  Copyright © 2019 apple4. All rights reserved.
+//
+
+import UIKit
+import GoogleMaps
+import CoreLocation
+import GooglePlaces
+import Lottie
+import Alamofire
+
+
+
+class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource  {
+    
+    typealias SelectedLocationCompletionHandler = ((ChangeAddressDTO) -> Void)
     
     @IBOutlet weak var flatlandmark: UILabel!
     @IBOutlet weak var setDeliveryLocLbl: UILabel!
@@ -27,14 +29,16 @@
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var addressLbl: UILabel!
     @IBOutlet weak var landMarkTxtField: UITextField!
-    
     @IBOutlet weak var baseMapView: GMSMapView!
+    
     var locationManager = CLLocationManager()
     var passLat = String()
     var passLong = String()
     var passAddress = String()
     var passZipCode = String()
     var addressString : String = ""
+    
+    private var isFollowingLocationEnabled = true
     
     @IBOutlet weak var animtationView: UIView!
     @IBOutlet weak var gifImageView: UIImageView!
@@ -45,21 +49,22 @@
     @IBOutlet weak var search_closeBtn: UIButton!
     @IBOutlet weak var searchTxt: UITextField!
     var placeSearchArray = NSMutableArray()
+    var completion: SelectedLocationCompletionHandler?
     
     var autocompleteResults :[GApiResponse.Autocomplete] = []
+    
+    var currentSelectedUserLocation: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.searchTxt.placeholder = LanguageDictonary.object(forKey: "search") as? String
-        self.locationStaticLbl.text = LanguageDictonary.object(forKey: "location") as? String
-        self.SAVEANDPROCEEDBTN.setTitle(LanguageDictonary.object(forKey: "saveandproceed") as? String, for: .normal)
-        self.setDeliveryLocLbl.text = LanguageDictonary.object(forKey: "setdeliverylocation") as? String
-        self.flatlandmark.text = LanguageDictonary.object(forKey: "flatlandmark") as? String
-        self.landMarkTxtField.placeholder = LanguageDictonary.object(forKey: "flatlandmark") as? String
-        
-        
-        
+        searchTxt.placeholder = Localization.value(for: "search")
+        locationStaticLbl.text = Localization.value(for: "location")
+        SAVEANDPROCEEDBTN.setTitle(Localization.value(for: "saveandproceed"),
+                                   for: .normal)
+        setDeliveryLocLbl.text = Localization.value(for: "setdeliverylocation")
+        flatlandmark.text = Localization.value(for: "flatlandmark")
+        landMarkTxtField.placeholder = Localization.value(for: "flatlandmark")
         
         do {
             // Set the map style by passing the URL of the local file.
@@ -75,16 +80,11 @@
         searchTxt.delegate = self
         
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-        // Do any additional setup after loading the view.
         
         searchView.layer.cornerRadius = 5.0
         searchView = self.setCornorShadowEffects(sender: searchView)
         baseMapView.delegate = self
         bottomLocationView.backgroundColor = .white
-        //currentLocationBtn.layer.cornerRadius = 25.0
         currentLocationBtn.clipsToBounds = true
         currentLocationBtn.backgroundColor = UIColor.white
         
@@ -95,6 +95,34 @@
             self.showTipsView()
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let currentSelectedUserLocation {
+            isFollowingLocationEnabled = false
+            setupCameraPositionManually(userLocation: currentSelectedUserLocation)
+        }
+        if (isFollowingLocationEnabled) {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
+        if MapLocationPageFrom.isEmpty {
+            showLocationAlert()
+        }
+    }
+    
+    private func showLocationAlert() {
+        let alert = UIAlertController(title: Localization.value(for: "map_location_alert_title"),
+                                      message: Localization.value(for: "map_location_alert_message"),
+                                      preferredStyle: .actionSheet)
+        let okAction = UIAlertAction(title: "Ok",
+                                     style: .default)
+        
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+    
     func showTipsView(){
         animtationView.isHidden = false
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
@@ -106,7 +134,7 @@
         animtationView.addSubview(tempView)
         
         tempView.play()
-        //tempView.loopAnimation = true
+        tempView.loopMode = .loop
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         animtationView.addGestureRecognizer(tap)
     }
@@ -125,6 +153,7 @@
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
+        isFollowingLocationEnabled = true
     }
     
     func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
@@ -172,20 +201,9 @@
     }
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("Tapped at coordinate: " + String(coordinate.latitude) + " "
-            + String(coordinate.longitude))
+              + String(coordinate.longitude))
         mapView.clear()
-        /*
-        let position = CLLocationCoordinate2DMake(coordinate.latitude,coordinate.longitude)
-        let marker = GMSMarker(position: position)
-        marker.map = mapView
-        marker.icon = GMSMarker.markerImage(with: AppLightOrange)
-        marker.title = "Tap to select location"
-        marker.appearAnimation = GMSMarkerAnimation.pop
-        let lat = String(coordinate.latitude)
-        let lon = String(coordinate.longitude)
-        self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon)
-        */
-        
+        isFollowingLocationEnabled = false
         var input = GInput()
         let destination = GLocation.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let position = CLLocationCoordinate2DMake(coordinate.latitude,coordinate.longitude)
@@ -217,15 +235,15 @@
     
     func getAddressFromLatLong(latitude: Double, longitude : Double) {
         let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(googleMapsApiKey)"
-
+        
         Alamofire.request(url).validate().responseJSON { response in
             switch response.result {
             case .success:
-
+                
                 guard let responseJson = response.result.value as? NSDictionary else {
                     return
                 }
-
+                
                 if let results = responseJson.object(forKey: "results")! as? [NSDictionary] {
                     if results.count > 0 {
                         if let addressComponents = results[0]["address_components"]! as? [NSDictionary],
@@ -236,18 +254,7 @@
                                     if temp.count != 0 {
                                         if (temp[0] == "postal_code") {
                                             self.passZipCode = component["long_name"] as? String ?? .init()
-                                            print(temp[0])
-                                            print(self.passZipCode)
                                         }
-                                        /*if (temp[0] == "locality") {
-                                            self.city = component["long_name"] as? String
-                                        }
-                                        if (temp[0] == "administrative_area_level_1") {
-                                            self.state = component["long_name"] as? String
-                                        }
-                                        if (temp[0] == "country") {
-                                            self.country = component["long_name"] as? String
-                                        }*/
                                     }
                                 }
                             }
@@ -264,14 +271,9 @@
         if let typedText = textField.text {
             if typedText.count > 2 {
                 showResults(string:typedText)
-            }else{
+            } else {
                 hideResults()
             }
-            
-            /*
-            googlePlacesResult(input: typedText) { (result) -> Void in
-                print(result)
-            }*/
         }
     }
     
@@ -281,15 +283,18 @@
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard isFollowingLocationEnabled else { return }
         let userLocation = locations.last
-        _ = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
-        
-        let camera = GMSCameraPosition.camera(withLatitude: userLocation!.coordinate.latitude,
-                                              longitude: userLocation!.coordinate.longitude, zoom: 15.0)
+        setupCameraPositionManually(userLocation: userLocation!.coordinate)
+    }
+    
+    private func setupCameraPositionManually(userLocation: CLLocationCoordinate2D) {
+        let camera = GMSCameraPosition.camera(withLatitude: userLocation.latitude,
+                                              longitude: userLocation.longitude, zoom: 15.0)
         baseMapView.camera = camera
         baseMapView.isMyLocationEnabled = true
-        locationManager.stopUpdatingLocation()
-        let position = CLLocationCoordinate2DMake(userLocation!.coordinate.latitude,userLocation!.coordinate.longitude)
+        let position = CLLocationCoordinate2DMake(userLocation.latitude,
+                                                  userLocation.longitude)
         baseMapView.clear()
         let marker = GMSMarker(position: position)
         marker.map = self.baseMapView
@@ -297,14 +302,13 @@
         marker.title = "Tap to select location"
         
         marker.appearAnimation = GMSMarkerAnimation.pop
-        let lat = String(userLocation!.coordinate.latitude)
-        let lon = String(userLocation!.coordinate.longitude)
-        
-        // self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon) // Temporary disabled
+        let lat = String(userLocation.latitude)
+        let lon = String(userLocation.longitude)
         
         var input = GInput()
         self.addressString = ""
-        let destination = GLocation.init(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+        let destination = GLocation.init(latitude: userLocation.latitude,
+                                         longitude: userLocation.longitude)
         input.destinationCoordinate = destination
         GoogleApi.shared.callApi(.reverseGeo , input: input) { (response) in
             if let places = response.data as? [GApiResponse.ReverseGio], response.isValidFor(.reverseGeo) {
@@ -316,7 +320,7 @@
                     self.passLat = lat
                     self.passLong = lon
                     self.passAddress = self.addressString
-                    self.getAddressFromLatLong(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+                    self.getAddressFromLatLong(latitude: userLocation.latitude, longitude: userLocation.longitude)
                 }
             } else { print(response.error ?? "ERROR") }
         }
@@ -327,109 +331,71 @@
         saveShippingAddress()
     }
     
-    func saveShippingAddress()
-    {
-        self.showLoadingIndicator(senderVC: self)
-        if landMarkTxtField.text! == ""
-        {
+    private var changeAddressDTO: ChangeAddressDTO?
+    private func saveShippingAddress() {
+        guard !(landMarkTxtField.text?.isEmpty ?? true)
+        else {
             self.showTokenExpiredPopUp(msgStr: LanguageDictonary.object(forKey: "locationpop") as! String)
-            
+            return
         }
-        else
+        guard !passLat.isEmpty else {
+            showToastAlert(senderVC: self,
+                           messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        guard let latDouble = Double(passLat),
+              let lonDouble = Double(passLong) else {
+            showToastAlert(senderVC: self,
+                           messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        changeAddressDTO = .init(latitude: latDouble,
+                                 longitude: lonDouble,
+                                 addressString: passAddress,
+                                 addressAdditional: landMarkTxtField.text,
+                                 zipCode: passZipCode)
+        
+        if globalCartCount != 0 && MapLocationPageFrom != "select-address"
         {
-            if globalCartCount != 0
-            {
-                let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
-                let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
-                
-                refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as? String, style: .default, handler: { (action: UIAlertAction!) in
-                    
-                    if self.passLat != "" {
-                        if MapLocationPageFrom == "login"{
-                            login_session.setValue(self.passLat, forKey: "user_latitude")
-                            login_session.setValue(self.passLong, forKey: "user_longitude")
-                            login_session.setValue(self.passAddress, forKey: "user_address")
-                            login_session.synchronize()
-                            DispatchQueue.main.async {
-                                var appDelegateWindow: UIWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window ?? UIWindow()
-                                AppRouter.shared.initialize()
-                            }
-                        }else{
-                            ActAsSelectedAddress = self.passAddress
-                            ActAsSelectedLatitude = self.passLat
-                            ActAsSelectedLongitude = self.passLong
-                            ActAsSelectedZipCode = self.passZipCode
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                        if let userToken = login_session.string(forKey: "user_token") {
-                            self.saveFinalShippingAddress()
-                        }
-                    }
-                    else
-                    {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.object(forKey: "validlocation") as! String )
-                    }
-                    
-                }))
-                refreshAlert.addAction(UIAlertAction(title: "NO", style: .default, handler: { (action: UIAlertAction!) in
-                    refreshAlert .dismiss(animated: true, completion: nil)
-                }))
-                
-                self.present(refreshAlert, animated: true, completion: nil)
-            }
-            else
-            {
-                if self.passLat != "" {
-                    if MapLocationPageFrom == "login"{
-                        login_session.setValue(self.passLat, forKey: "user_latitude")
-                        login_session.setValue(self.passLong, forKey: "user_longitude")
-                        login_session.setValue(self.passAddress, forKey: "user_address")
-                        login_session.synchronize()
-                        DispatchQueue.main.async {
-                            AppRouter.shared.initialize()
-                        }
-                    }else{
-                        ActAsSelectedAddress = self.passAddress
-                        ActAsSelectedLatitude = self.passLat
-                        ActAsSelectedLongitude = self.passLong
-                        ActAsSelectedZipCode = self.passZipCode
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    if let userToken = login_session.string(forKey: "user_token") {
-                        self.saveFinalShippingAddress()
-                    }
-                }else{
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.object(forKey: "validlocation") as! String )
-                }
-            }
+            let messagefrom = LanguageDictonary.object(forKey: "messagefrom") as! String
+            let refreshAlert = UIAlertController(title: "\(messagefrom) \(Appname)", message: LanguageDictonary.object(forKey: "mapcart") as? String, preferredStyle: UIAlertController.Style.alert)
+            
+            refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yes") as? String, style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert.dismiss(animated: true)
+                self.saveFinalShippingAddress()
+            }))
+            refreshAlert.addAction(UIAlertAction(title: "NO", style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert.dismiss(animated: true, completion: nil)
+            }))
+            self.present(refreshAlert, animated: true, completion: nil)
+            return
         }
+        saveFinalShippingAddress()
     }
     
-    func saveFinalShippingAddress()
-    {
+    private func saveFinalShippingAddress() {
         self.showLoadingIndicator(senderVC: self)
-        let Parse = CommomParsing()
-        Parse.saveShippingAddress(lang: login_session.value(forKey: "Language") as? String ?? "es", search_latitude: passLat, search_longitude: passLong, zipcode: passZipCode, location: passAddress, address: landMarkTxtField.text!, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200
-            {
-                
+        guard let changeAddressDTO else {
+            self.showToastAlert(senderVC: self, messageStr: Localization.value(for: "validlocation"))
+            return
+        }
+        if !MapLocationPageFrom.isEmpty {
+            MapLocationPageFrom = ""
+            dismiss(animated: true) {
+                self.completion?(changeAddressDTO)
             }
-            else if response.object(forKey: "code")as! Int == 400
-            {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired"
-            {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else
-            {
-                print(response.object(forKey: "message") as Any)
+            return
+        }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await SaveUserLocationUseCase().execute(changeAddressDTO)
+                AppRouter.shared.initialize()
+            } catch {
+                self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
             }
             self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+        }
     }
     
     
@@ -448,50 +414,48 @@
         
         
         ceo.reverseGeocodeLocation(loc, completionHandler:
-            {(placemarks, error) in
-                if (error != nil)
-                {
-                    print("reverse geodcode fail: \(error!.localizedDescription)")
+                                    {(placemarks, error) in
+            if (error != nil)
+            {
+                print("reverse geodcode fail: \(error!.localizedDescription)")
+            }
+            let pm = placemarks! as [CLPlacemark]
+            self.addressString = ""
+            if pm.count > 0 {
+                let pm = placemarks![0]
+                if pm.subThoroughfare != nil {
+                    self.addressString = self.addressString + pm.subThoroughfare! + ", "
                 }
-                let pm = placemarks! as [CLPlacemark]
-                self.addressString = ""
-                if pm.count > 0 {
-                    let pm = placemarks![0]
-                    if pm.subThoroughfare != nil {
-                        self.addressString = self.addressString + pm.subThoroughfare! + ", "
-                    }
-                    if pm.subLocality != nil {
-                        self.addressString = self.addressString + pm.subLocality! + ", "
-                    }
-                    if pm.thoroughfare != nil {
-                        self.addressString = self.addressString + pm.thoroughfare! + ", "
-                    }
-                    if pm.locality != nil {
-                        self.addressString = self.addressString + pm.locality! + ", "
-                    }
-                    if pm.country != nil {
-                        self.addressString = self.addressString + pm.country! + ", "
-                    }
-                    if pm.postalCode != nil {
-                        self.addressString = self.addressString + pm.postalCode! + " "
-                    }
-                    
-                    
-                    print(self.addressString)
-                    self.addressLbl.text = self.addressString
-                    self.passLat = pdblLatitude
-                    if let postalCode = pm.postalCode {
-                        self.passZipCode = postalCode
-                    }
-                    self.passLong = pdblLongitude
-                    self.passAddress = self.addressString
+                if pm.subLocality != nil {
+                    self.addressString = self.addressString + pm.subLocality! + ", "
                 }
+                if pm.thoroughfare != nil {
+                    self.addressString = self.addressString + pm.thoroughfare! + ", "
+                }
+                if pm.locality != nil {
+                    self.addressString = self.addressString + pm.locality! + ", "
+                }
+                if pm.country != nil {
+                    self.addressString = self.addressString + pm.country! + ", "
+                }
+                if pm.postalCode != nil {
+                    self.addressString = self.addressString + pm.postalCode! + " "
+                }
+                
+                
+                print(self.addressString)
+                self.addressLbl.text = self.addressString
+                self.passLat = pdblLatitude
+                if let postalCode = pm.postalCode {
+                    self.passZipCode = postalCode
+                }
+                self.passLong = pdblLongitude
+                self.passAddress = self.addressString
+            }
         })
         
         
     }
-    
-    
     
     // MARK: TextField Delegate
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -509,17 +473,16 @@
     //MARK: - Google place API request -
     func googlePlacesResult(input: String, completion: @escaping (_ result: NSArray) -> Void) {
         
-        let urlString = NSString(format: "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%@&key=AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI&sessiontoken=1234567890",input)
+        let urlString = NSString(format: "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%@&key=AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI&sessiontoken=1234567890",
+                                 input)
         print(urlString)
-        let url = NSURL(string: urlString.addingPercentEscapes(using: String.Encoding.utf8.rawValue)!)
+        let url = NSURL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
         
-        //let url = URL(string: urlString as String)
-        //print(url!)
         let defaultConfigObject = URLSessionConfiguration.default
         let delegateFreeSession = URLSession(configuration: defaultConfigObject, delegate: nil, delegateQueue: OperationQueue.main)
         let request = NSURLRequest(url: url! as URL)
         let task =  delegateFreeSession.dataTask(with: request as URLRequest, completionHandler:
-        {
+                                                    {
             (data, response, error) -> Void in
             if let data = data
             {
@@ -529,10 +492,6 @@
                     let status = jSONresult["status"] as! String
                     if status == "NOT_FOUND" || status == "REQUEST_DENIED"
                     {
-                        //                            let userInfo:NSDictionary = ["error": jSONresult["status"]!]
-                        //                            let newError = NSError(domain: "API Error", code: 666, userInfo: userInfo as [NSObject : AnyObject])
-                        //                            let arr:NSArray = [newError]
-                        //                            completion(arr)
                         return
                     }
                     else
@@ -565,14 +524,13 @@
         
         let urlString = NSString(format: "https://maps.googleapis.com/maps/api/place/details/json?input=&placeid=%@&key=AIzaSyDI3KfTjweOu_rjMSgzZpV3kq_GCxwPLvI",place_id)
         print(urlString)
-        //let url = NSURL(string: urlString.addingPercentEscapes(using: String.Encoding.utf8.rawValue)!)
         let url = URL(string: urlString as String)
         print(url!)
         let defaultConfigObject = URLSessionConfiguration.default
         let delegateFreeSession = URLSession(configuration: defaultConfigObject, delegate: nil, delegateQueue: OperationQueue.main)
         let request = NSURLRequest(url: url! as URL)
         let task =  delegateFreeSession.dataTask(with: request as URLRequest, completionHandler:
-        {
+                                                    {
             (data, response, error) -> Void in
             if let data = data
             {
@@ -584,10 +542,6 @@
                     let status = jSONresult["status"] as! String
                     if status == "NOT_FOUND" || status == "REQUEST_DENIED"
                     {
-                        //                            let userInfo:NSDictionary = ["error": jSONresult["status"]!]
-                        //                            let newError = NSError(domain: "API Error", code: 666, userInfo: userInfo as [NSObject : AnyObject])
-                        //                            let arr:NSArray = [newError]
-                        //                            completion(arr)
                         return
                     }
                     else
@@ -608,55 +562,6 @@
         task.resume()
     }
     
-    /*
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return placeSearchArray.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LocationListTBCell") as? LocationListTBCell
-        cell?.selectionStyle = .none
-        let tempDict = NSMutableDictionary()
-        tempDict.addEntries(from: (placeSearchArray.object(at: indexPath.row)as! NSDictionary) as! [AnyHashable : Any])
-        cell?.locationNameLbl.text = (tempDict.object(forKey: "description") as! String)
-        return cell!
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.view.endEditing(true)
-        placeSearchView.isHidden = true
-        var placeId = String()
-        let tempDict = NSMutableDictionary()
-        tempDict.addEntries(from: (placeSearchArray.object(at: indexPath.row)as! NSDictionary) as! [AnyHashable : Any])
-        searchTxt.text = (tempDict.object(forKey: "description") as! String)
-        placeId = tempDict.object(forKey: "place_id")as! String
-        self.getLatitudeLogitude(place_id: placeId){ (result) -> Void in
-            print(result)
-            self.baseMapView.clear()
-            let MomentaryLatitude = result.object(forKey: "lat")as! Double
-            let MomentaryLongitude = result.object(forKey: "lng")as! Double
-            var coordinate = CLLocationCoordinate2D()
-            coordinate.latitude = MomentaryLatitude
-            coordinate.longitude = MomentaryLongitude
-            let position = CLLocationCoordinate2DMake(coordinate.latitude,coordinate.longitude)
-            let marker = GMSMarker(position: position)
-            marker.map = self.baseMapView
-            marker.icon = GMSMarker.markerImage(with: AppLightOrange)
-            marker.title = "Tap to select location"
-            
-            marker.appearAnimation = GMSMarkerAnimation.pop
-            let lat = String(coordinate.latitude)
-            let lon = String(coordinate.longitude)
-            self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon)
-            let camera = GMSCameraPosition.camera(withLatitude: MomentaryLatitude, longitude: MomentaryLongitude, zoom: 16)
-            self.baseMapView?.camera = camera
-            self.baseMapView?.animate(to: camera)
-        }
-    }
-    */
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -670,6 +575,7 @@
         return cell!
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        isFollowingLocationEnabled = false
         searchTxt.text = autocompleteResults[indexPath.row].formattedAddress
         searchTxt.resignFirstResponder()
         self.view.endEditing(true)
@@ -704,9 +610,6 @@
                         coordinate.latitude = MomentaryLatitude
                         coordinate.longitude = MomentaryLongitude
                         
-                        //let lat = String(coordinate.latitude)
-                        //let lon = String(coordinate.longitude)
-                        //self.getAddressFromLatLon(pdblLatitude: lat, pdblLongitude: lon)
                         let camera = GMSCameraPosition.camera(withLatitude: MomentaryLatitude, longitude: MomentaryLongitude, zoom: 16)
                         self.baseMapView?.camera = camera
                         self.baseMapView?.animate(to: camera)
@@ -726,15 +629,12 @@
                     self.searchView.isHidden = false
                     self.autocompleteResults = response.data as! [GApiResponse.Autocomplete]
                     
-                    //self.placeSearchArray.removeAllObjects()
-                    //self.placeSearchArray.addObjects(from: self.autocompleteResults as! [NSDictionary])
                     if self.autocompleteResults.count == 0 {
                         self.placeSearchView.isHidden = true
                     }else{
                         self.placeSearchView.isHidden = false
                         self.placeTable.reloadData()
                     }
-                    //self.placeTable.reloadData()
                 }
             } else { print(response.error ?? "ERROR") }
         }
@@ -744,7 +644,4 @@
         autocompleteResults.removeAll()
         placeTable.reloadData()
     }
-    
-    
-    
- }
+}

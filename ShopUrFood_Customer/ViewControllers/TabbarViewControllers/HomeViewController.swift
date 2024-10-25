@@ -10,6 +10,7 @@ import UIKit
 import QuartzCore
 import MarqueeLabel
 import ListPlaceholder
+import SwiftUI
 
 @available(iOS 11.0, *)
 class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -73,7 +74,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.allResturants.setTitle(LanguageDictonary.value(forKey: "viewall") as? String, for: .normal)
         self.allResturants.isHidden = true
         
@@ -87,7 +87,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         
         self.promotionalOfferOkayButton.setTitle(LanguageDictonary.value(forKey: "okaygotit") as? String, for: .normal)
         self.staticResturentLbl.text =  LanguageDictonary.value(forKey: "featured") as? String
-        //self.staticResturentLbl.isHidden = true
         self.noRestLbl.text =  LanguageDictonary.value(forKey: "No Restaurant found in your location. try new location") as? String
         self.featuredLblStatic.text =  LanguageDictonary.value(forKey: "featuredresturants") as? String
         self.featuredLblStatic.isHidden = true
@@ -132,33 +131,17 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         // Set the newly created shape layer as the mask for the image view's layer
         promotionalOfferPopupView.layer.mask = maskLayer
         
-        let tapGestureRecognizerBtnAllHome = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnAllHome(tapGestureRecognizer:)))
-        
-        //btnAllHome.isUserInteractionEnabled = true
-        //btnAllHome.addGestureRecognizer(tapGestureRecognizerBtnAllHome)
-        
-        //let tapGestureRecognizerBtnAllRestaurantsHome = UITapGestureRecognizer(target: self, action: #selector(imagedTapedBtnAllRestaurantsHome(tapGestureRecognizer:)))
-        
-        //btnAllRestaurantsHome.isUserInteractionEnabled = true
-        //btnAllRestaurantsHome.addGestureRecognizer(tapGestureRecognizerBtnAllRestaurantsHome)
-        
-        //btnAllRestaurantsHome.alpha = 0.5
-        
         view.addSubview(fb)
         
         fb.addTarget(self, action: #selector(onClickFB), for: .touchUpInside)
     }
     
     @objc func imagedTapedBtnAllHome(tapGestureRecognizer:UITapGestureRecognizer) {
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
-        
         btnAllHome.alpha = 1
         btnAllRestaurantsHome.alpha = 0.5
     }
     
     @objc func imagedTapedBtnAllRestaurantsHome(tapGestureRecognizer:UITapGestureRecognizer) {
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
-        
         btnAllHome.alpha = 0.5
         btnAllRestaurantsHome.alpha = 1
     }
@@ -173,26 +156,12 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         
         button.backgroundColor = .white
         
-        //let image = UIImage(systemName: "cartfb", withConfiguration: UIImage.SymbolConfiguration(pointSize: 48, weight: .medium))
-        
         let image = UIImage(named: "cartfb")
         let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24.0)
         
         let adjustedImage = image?.applyingSymbolConfiguration(symbolConfiguration)
         
-        //let imageView2 = UIImageView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-        //let image2 = UIImage(named: "cart_fb")
-        //imageView2.image = image2
-        //passwordTxt.leftView = imageView2
-        
         button.setImage(adjustedImage, for: .normal)
-        
-        //button.imageView = imageView2
-        
-        //button.tintColor = .red
-        //button.setTitleColor(.red, for: .normal)
-        //button.layer.shadowRadius = 10
-        //button.layer.shadowOpacity = 0.3
         
         button.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
         button.layer.shadowOpacity = 0.5
@@ -210,13 +179,10 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                           y: view.frame.size.height - 160,
                           width: 60,
                           height: 60)
+        self.topUserNameLbl.text = self.greetingLogic()
     }
     
     //MARK: - UITextField Delegate
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        //shouldShowResults = true
-    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         view.endEditing(true)
         if textField.text == ""
@@ -268,9 +234,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     @objc func didTapLocationLbl(sender: UITapGestureRecognizer)
     {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-        self.present(nextViewController, animated:true, completion:nil)
+        AppRouter.shared.presentLocationOption(from: self, comingType: "")
         
     }
     
@@ -307,20 +271,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     
     @IBAction func locationBtnAction(_ sender: Any) {
-        
-        self.promotionalOfferBGView.isHidden = true
-        
-        //        let Parse = CommomParsing()
-        //        Parse.commonTest(u_email:"lakshmi@pofitec.com",u_psd:"Lk123456",device_type:"ios",u_key:"121", onSuccess: {
-        //            response in
-        //            print (response)
-        //        }, onFailure: {errorResponse in
-        //            print (errorResponse?.localizedDescription as Any)
-        //        })
-        //
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-        self.present(nextViewController, animated:true, completion:nil)
+        AppRouter.shared.presentLocationOption(from: self, comingType: "")
     }
     
     @IBAction func viewAllOne(_ sender: Any) {
@@ -379,7 +330,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     
     //MARK:- Calling API methods
     func getHomeDataFromAPI(){
-        // self.showLoadingIndicator(senderVC: self)
         self.showCollectionLoader()
         let Parse = CommomParsing()
         Parse.Resturant_Home_Pasre(lang: login_session.value(forKey: "Language") as? String ?? "es", user_latitude: String(describing:login_session.object(forKey: "user_latitude") as AnyObject), user_longitude: String(describing: login_session.object(forKey: "user_longitude") as AnyObject), onSuccess: {
@@ -403,13 +353,10 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 }
                 
                 self.hideCollectionLoader()
-                self.LoadHeaderTxt()
                 self.resturantsCollectionView.reloadData()
                 self.categories_collectionView.reloadData()
                 self.food_collectionView.reloadData()
                 self.shop_collectionView.reloadData()
-                //self.food_two_collectionView.reloadData()
-                //self.food_three_collectionView.reloadData()
                 self.resturantsCollectionView.isHidden = false
                 self.food_collectionView.isHidden = false
                 self.shop_collectionView.isHidden = true
@@ -431,7 +378,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     self.noItemsView.isHidden = false
                     
                 }
-                //print(response.object(forKey: "message") as Any)
             }
         }, onFailure: {errorResponse in
             
@@ -442,7 +388,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     //MARK:- API Methods
     func getSearchData()
     {
-        //self.showLoadingIndicator(senderVC: self)
         let Parse = CommomParsing()
         Parse.getHomeSearchData(lang: login_session.value(forKey: "Language") as? String ?? "es",search_key: searchTxtStr, onSuccess: {
             response in
@@ -467,14 +412,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         resultsArray.removeAllObjects()
         resultsArray.addObjects(from: (resultDict.object(forKey: "search_list")as! NSArray) as! [Any])
         print("resultsArray", resultsArray)
-        if resultsArray.count == 0
-        {
-            // searchTableView.isHidden = true
-        }
-        else
-        {
-            //searchTableView.isHidden = false
-        }
         searchTableView.reloadData()
     }
     
@@ -497,14 +434,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         categories_collectionView.reloadData()
         categories_collectionView.layoutIfNeeded()
         self.categories_collectionView.showLoader()
-        
-        /*food_two_collectionView.reloadData()
-         food_two_collectionView.layoutIfNeeded()
-         self.food_two_collectionView.showLoader()
-         
-         food_three_collectionView.reloadData()
-         food_three_collectionView.layoutIfNeeded()
-         self.food_three_collectionView.showLoader()*/
     }
     func checkUIwithData()
     {
@@ -538,18 +467,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
         self.food_two_collectionView.hideLoader()
         self.food_three_collectionView.hideLoader()
         self.categories_collectionView.hideLoader()
-    }
-    
-    func LoadHeaderTxt()
-    {
-        /*firstCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].categoryName.uppercased()
-         firstCategoryNameLbl.isHidden = true
-         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 2 {
-         secondCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].categoryName.uppercased()
-         }
-         if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count >= 3 {
-         thirdCategoryNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].categoryName.uppercased()
-         }*/
     }
     
     //MARK:- UITableView Delegate & DataSource Methods
@@ -653,7 +570,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 
                 for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count {
                     
-                    var cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
+                    let cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
                     
                     if allCats == false && cat_id != cat_selected {
                         continue
@@ -676,12 +593,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                     return 0
                 }
             }else {
-                /*if Singleton.sharedInstance.resturantHomeModel.data.category_list.count >= 3{
-                 return Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails.count
-                 }
-                 else{
-                 return 0
-                 }*/
                 return 0
             }
         }else{
@@ -704,7 +615,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             if Singleton.sharedInstance.resturantHomeModel != nil {
                 let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantLogo)
                 cell.resturantImg.kf.setImage(with:rest_img!)
-                //cell.ImgBGView.backgroundColor = BlackTranspertantColor
                 cell.resturantNameLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurant[indexPath.row].restaurantName
             }
             cell.layer.cornerRadius = 5.0
@@ -724,7 +634,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 if (indexPath.row != 0) {
                     let rest_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryImage)
                     cell.category_image.kf.setImage(with:rest_img!)
-                    //cell.ImgBGView.backgroundColor = BlackTranspertantColor
                 } else {
                     let imageName = Singleton.sharedInstance.resturantHomeModel.data.category_list[indexPath.row].categoryImage
                     cell.category_image.frame = CGRect.init(x: 0, y: 0, width: 24, height: 24)
@@ -750,9 +659,9 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 }
                 
                 for index in 0..<Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails.count {
-                    var cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
+                    let cat_id = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].categoryId
                     
-                    var ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].restaurantDetails
+                    let ard = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[index].restaurantDetails
                     
                     for idx in 0..<ard!.count {
                         
@@ -797,7 +706,7 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 if (rating == 0) {
                     cell.lblRestaurantRating.text = LanguageDictonary.value(forKey: "noratings") as? String
                 } else {
-                    cell.lblRestaurantRating.text = "\(rating)"
+                    cell.lblRestaurantRating.text = "\(rating ?? 0)"
                 }
                 
                 if ard.restaurantRating == 0{
@@ -828,7 +737,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantImage)
                 cell.foodImg.kf.setImage(with: food_img)
                 cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantName
-                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantRating)
                 cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].todayWkingTime
                 cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[1].restaurantDetails[indexPath.row].restaurantDesc
                 
@@ -875,7 +783,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
                 let food_img = URL(string: Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantImage)
                 cell.foodImg.kf.setImage(with: food_img)
                 cell.food_titleLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantName
-                //cell.ratingsLbl.text = String(format: "%d", Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating)
                 cell.openTimeLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].todayWkingTime
                 cell.shopLocationLbl.text = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantDesc
                 if Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[2].restaurantDetails[indexPath.row].restaurantRating == 0{
@@ -942,7 +849,6 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
             
             self.food_collectionView.reloadData()
             self.categories_collectionView.reloadData()
-            //let filter = Singleton.sharedInstance.resturantHomeModel.data.allRestaurantDetails[0].restaurantDetails.filter({ $0.restaurantId == cat_id, options: .caseInsensitive) != nil})
             
             return
         }else{
@@ -972,12 +878,16 @@ class HomeViewController: BaseViewController,UICollectionViewDataSource,UICollec
     }
     
     @IBAction func searchButtonTapped(_ sender: Any)
-    {
-        self.promotionalOfferBGView.isHidden = true
-        self.searchGrayView.isHidden = false
-        if self.searchTxtStr == ""
-        {
-            self.searchTableView.isHidden = true
+    {   
+        if login_session.isUserLogged() {
+            self.promotionalOfferBGView.isHidden = true
+            self.searchGrayView.isHidden = false
+            if self.searchTxtStr == ""
+            {
+                self.searchTableView.isHidden = true
+            }
+        } else {
+            AppRouter.shared.presentLogin(in: self)
         }
     }
     

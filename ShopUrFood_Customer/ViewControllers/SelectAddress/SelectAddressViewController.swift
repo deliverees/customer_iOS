@@ -11,7 +11,7 @@ import CoreLocation
 
 @available(iOS 11.0, *)
 class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
-
+    
     @IBOutlet weak var sameShippingBtn: UIButton!
     @IBOutlet weak var pickUpYesBtn: UIButton!
     @IBOutlet weak var pickUpNoBtn: UIButton!
@@ -23,7 +23,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     @IBOutlet weak var baseContentView: UIView!
     @IBOutlet weak var firstNameLine: UIView!
     @IBOutlet weak var lastNameTxt: UITextField!
-        @IBOutlet weak var lastNameLine: UIView!
+    @IBOutlet weak var lastNameLine: UIView!
     @IBOutlet weak var emailTxt: UITextField!
     @IBOutlet weak var emailLine: UIView!
     @IBOutlet weak var mobileNumberTxt: UITextField!
@@ -77,8 +77,49 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         restaurantLocationLbl.text = storeLocation
         pickUpView.layer.cornerRadius = 5.0
         pickUpView = self.setCornorShadowEffects(sender: pickUpView)
-        // Do any additional setup after loading the view.
     }
+    
+    private var newLocation: ChangeAddressDTO?
+    @IBAction private func tapEditAddress(sender: Any?) {
+        MapLocationPageFrom = "select-address"
+        var coordinate: CLLocationCoordinate2D?
+        if let newLocation {
+            coordinate = .init(latitude: newLocation.latitude,
+                               longitude: newLocation.longitude)
+        }
+        AppRouter.shared.presentMapLocation(from: self, userLocation: coordinate) { [weak self] newAddress in
+            self?.newLocation = newAddress
+            self?.customerAddressTxtView2.text = newAddress.addressString
+            self?.customerAddressTxt.text = newAddress.addressAdditional
+        }
+    }
+    
+    private func presentEditAddressAlert() {
+        let alert = UIAlertController(title: Localization.value(for: "select_address_edit_address_alert_title"),
+                                      message: Localization.value(for: "select_address_edit_address_alert_message"),
+                                      preferredStyle: .alert)
+        let editAction = UIAlertAction(title: "Modificar",
+                                       style: .cancel) { _ in
+            alert.dismiss(animated: false)
+            self.showLoadingIndicator(senderVC: self)
+            self.tapEditAddress(sender: nil)
+            self.stopLoadingIndicator(senderVC: self)
+        }
+        
+        let okAction = UIAlertAction(title: "Ok",
+                                     style: .default)
+        
+        alert.addAction(editAction)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presentEditAddressAlert()
+    }
+    
     
     //MARK:- API Methods
     func getData()
@@ -111,25 +152,30 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         firstNameTxt.text = (resultDict.object(forKey: "sh_cus_fname")as? String ?? "")
         lastNameTxt.text = (resultDict.object(forKey: "sh_cus_lname")as? String ?? "")
         emailTxt.text = (resultDict.object(forKey: "sh_cus_email")as? String ?? "")
-        let numberOne = resultDict.object(forKey: "sh_phone1")as? String ?? ""
-        let numberTwo = resultDict.object(forKey: "sh_phone2")as? String ?? ""
-        
-//        mobileNumberTxt.text = String(numberOne.dropFirst(3))
-//        alternateNumberTxt.text = String(numberTwo.dropFirst(3))
         
         mobileNumberTxt.text = resultDict.object(forKey: "ship_ph1_no_only")as? String ?? ""
         alternateNumberTxt.text = resultDict.object(forKey: "ship_ph2_no_only")as? String ?? ""
         mobileNoCountryCodeBtn.setTitle(resultDict.object(forKey: "ship_cnty_code")as? String ?? "", for: .normal)
         alterNoCountryCodeBtn.setTitle(resultDict.object(forKey: "ship_cnty_code")as? String ?? "", for: .normal)
-
-        customerAddressTxtView2.text = (resultDict.object(forKey: "sh_location")as? String ?? "")
+        
+        let additionalAddressString = resultDict.value(forKey: "sh_location1") as? String ?? ""
+        let addressString = resultDict.value(forKey: "sh_location") as? String ?? ""
+        let zipCode = resultDict.value(forKey: "sh_zipcode") as? String
+        customerAddressTxtView2.text = addressString
+        if let longitudeString = resultDict.value(forKey: "sh_longitude") as? String,
+           let latitudeSstring = resultDict.value(forKey: "sh_latitude") as? String,
+           let longitude = Double(longitudeString),
+           let latitude = Double(latitudeSstring) {
+            newLocation = .init(latitude: latitude,
+                                longitude: longitude,
+                                addressString: addressString,
+                                addressAdditional: additionalAddressString,
+                                zipCode: zipCode)
+        }
         customerAddressTxtView2.textColor = UIColor.darkText
         customerAddressTxtView2.isUserInteractionEnabled = false
         
-        customerAddressTxt.text = (resultDict.object(forKey: "sh_location1")as? String ?? "")
-
-        
-        //self.getAddressFromLatLon(pdblLatitude: resultDict.object(forKey: "sh_latitude")as! String, withLongitude: resultDict.object(forKey: "sh_latitude")as! String)
+        customerAddressTxt.text = additionalAddressString
         
         if firstNameTxt.text == ""{
             firstNameTxt.text = (login_session.object(forKey: "user_name")as! String)
@@ -140,7 +186,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         if mobileNumberTxt.text == ""{
             mobileNumberTxt.text = ((login_session.object(forKey: "user_mobileNo") as? String) ?? "")
         }
-    
+        
     }
     
     func setEmptyData()
@@ -150,7 +196,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         emailTxt.text = ""
         mobileNumberTxt.text = ""
         alternateNumberTxt.text = ""
-       
+        
         
         firstNameTxt.isUserInteractionEnabled = true
         lastNameTxt.isUserInteractionEnabled = true
@@ -177,39 +223,37 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         
         
         ceo.reverseGeocodeLocation(loc, completionHandler:
-            {(placemarks, error) in
-                if (error != nil)
-                {
-                    print("reverse geodcode fail: \(error!.localizedDescription)")
+                                    {(placemarks, error) in
+            if (error != nil)
+            {
+                print("reverse geodcode fail: \(error!.localizedDescription)")
+            }
+            let pm = placemarks! as [CLPlacemark]
+            
+            if pm.count > 0 {
+                let pm = placemarks![0]
+                var addressString : String = ""
+                if pm.subLocality != nil {
+                    addressString = addressString + pm.subLocality! + ", "
                 }
-                let pm = placemarks! as [CLPlacemark]
-                
-                if pm.count > 0 {
-                    let pm = placemarks![0]
-                    var addressString : String = ""
-                    if pm.subLocality != nil {
-                        addressString = addressString + pm.subLocality! + ", "
-                    }
-                    if pm.thoroughfare != nil {
-                        addressString = addressString + pm.thoroughfare! + ", "
-                    }
-                    if pm.locality != nil {
-                        addressString = addressString + pm.locality! + ", "
-                    }
-                    if pm.country != nil {
-                        addressString = addressString + pm.country! + ", "
-                    }
-                    if pm.postalCode != nil {
-                        addressString = addressString + pm.postalCode! + " "
-                    }
-                    print(addressString)
-                    self.customerAddressTxtView2.text  = addressString
+                if pm.thoroughfare != nil {
+                    addressString = addressString + pm.thoroughfare! + ", "
                 }
+                if pm.locality != nil {
+                    addressString = addressString + pm.locality! + ", "
+                }
+                if pm.country != nil {
+                    addressString = addressString + pm.country! + ", "
+                }
+                if pm.postalCode != nil {
+                    addressString = addressString + pm.postalCode! + " "
+                }
+                print(addressString)
+                self.customerAddressTxtView2.text  = addressString
+            }
         })
         
     }
-    
-    
     
     //MARK:- Button Actions
     @IBAction func skipAndContinueBtnAction(_ sender: Any) {
@@ -223,73 +267,93 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
     }
     
     @IBAction func continueBtnAction(_ sender: Any) {
-        if sameShippingFlag {
-            if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
-            }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
-            }else if emailTxt.text == "" || emailTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
-            }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
-            }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
-            }else{
-                resultDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
-                resultDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
-                resultDict.setValue(emailTxt.text, forKey: "sh_cus_email")
-                resultDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
-                resultDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
-                resultDict.setValue(customerAddressTxt.text, forKey: "sh_location1")
-                resultDict.setValue(customerAddressTxtView2.text, forKey: "sh_location")
-
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
-            nextViewController.addressDict = resultDict
-            nextViewController.pickUpType = "delivery"
-            self.present(nextViewController, animated:true, completion:nil)
+        if let newLocation {
+            Task { @MainActor in
+                showLoadingIndicator(senderVC: self)
+                do {
+                    try await verifyNewLocation(newLocation)
+                    stopLoadingIndicator(senderVC: self)
+                    validateFormAndContinueToPayment()
+                } catch {
+                    stopLoadingIndicator(senderVC: self)
+                    showTokenExpiredPopUp(msgStr: error.localizedDescription)
+                }
             }
-        }else{
-            if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr:  LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
-            }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
-            }else if emailTxt.text == "" || emailTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
-            }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
-            }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
-            }
-            else{
-                let addressDict = NSMutableDictionary()
-                addressDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
-                addressDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
-                addressDict.setValue(emailTxt.text, forKey: "sh_cus_email")
-                addressDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
-                addressDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
-                let landmarkStr = resultDict.object(forKey: "sh_location1")as! String
-                let locationStr = resultDict.object(forKey: "sh_location")as! String
-                let latitude = resultDict.object(forKey: "sh_latitude")as! String
-                let longitute = resultDict.object(forKey: "sh_longitude")as! String
-                addressDict.setValue(landmarkStr, forKey: "sh_location1")
-                addressDict.setValue(locationStr, forKey: "sh_location")
-                addressDict.setValue(latitude, forKey: "sh_latitude")
-                addressDict.setValue(longitute, forKey: "sh_longitude")
-
-
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
-                nextViewController.addressDict = addressDict
-                nextViewController.pickUpType = "delivery"
-                self.present(nextViewController, animated:true, completion:nil)
-            }
+        } else {
+            validateFormAndContinueToPayment()
         }
+    }
+    
+    private func verifyNewLocation(_ address: ChangeAddressDTO) async throws {
+        try await Task {
+            guard let storeId = Singleton.sharedInstance.MyCartModel.data.cartDetails.first?.storeId else {
+                throw "Invalid Store selected"
+            }
+            
+            let usecase = CheckShippingAddressUseCase()
+            let response = try await usecase.execute(.init(user_lat: address.latitude,
+                                                           user_long: address.longitude,
+                                                           store_id: storeId))
+            guard response.status == .valid else {
+                throw response.message
+            }
+        }.value
     }
     
     @IBAction func alterCodeBtnAction(_ sender: Any) {
     }
     @IBAction func mobileCodeBtnAction(_ sender: Any) {
+    }
+    
+    // NOTE: - we can't update user address since it will clean cart during checkout
+    private func validateFormAndContinueToPayment() {
+        guard validateForm(), let newLocation else {
+            return
+        }
+        continueToPaymentOption()
+    }
+    
+    private func validateForm() -> Bool {
+        var valid = false
+        if firstNameTxt.text == "" || firstNameTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr:  LanguageDictonary.value(forKey: "pleaseenterfirstname") as! String)
+        }else if lastNameTxt.text == "" || lastNameTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenterlastname") as! String)
+        }else if emailTxt.text == "" || emailTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteremailtocontinue") as! String)
+        }else if mobileNumberTxt.text == "" || mobileNumberTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobiletocontinue") as! String)
+        }else if customerAddressTxt.text == "" || customerAddressTxt.text?.count == 0{
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "flatlandmark") as! String)
+        } else {
+            valid = true
+        }
+        
+        return valid
+    }
+    
+    private func continueToPaymentOption() {
+        let addressDict = NSMutableDictionary()
+        addressDict.setValue(firstNameTxt.text, forKey: "sh_cus_fname")
+        addressDict.setValue(lastNameTxt.text, forKey: "sh_cus_lname")
+        addressDict.setValue(emailTxt.text, forKey: "sh_cus_email")
+        addressDict.setValue("\(mobileNoCountryCodeBtn.titleLabel?.text ?? "")\(mobileNumberTxt.text ?? "")", forKey: "sh_phone1")
+        addressDict.setValue("\(alterNoCountryCodeBtn.titleLabel?.text ?? "")\(alternateNumberTxt.text ?? "")", forKey: "sh_phone2")
+        let landmarkStr = newLocation?.addressAdditional ?? resultDict.object(forKey: "sh_location1")as! String
+        let locationStr = newLocation?.addressString ?? resultDict.object(forKey: "sh_location")as! String
+        let latitude = String(newLocation!.latitude)
+        let longitute = String(newLocation!.longitude)
+        addressDict.setValue(landmarkStr, forKey: "sh_location1")
+        addressDict.setValue(locationStr, forKey: "sh_location")
+        addressDict.setValue(latitude, forKey: "sh_latitude")
+        addressDict.setValue(longitute, forKey: "sh_longitude")
+        
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "SelectPaymetOptionPage") as! SelectPaymetOptionPage
+        nextViewController.addressDict = addressDict
+        nextViewController.pickUpType = sameShippingFlag ? "delivery" : "self"
+        self.present(nextViewController, animated:true, completion:nil)
     }
     
     @IBAction func sameShippingBtnAction(_ sender: Any) {
@@ -322,7 +386,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-
+    
     // MARK: TextField Delegate
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.hideLines()
@@ -345,9 +409,7 @@ class SelectAddressViewController: BaseViewController,UITextFieldDelegate {
         self.emailLine.isHidden = true
         self.mobileLine.isHidden = true
         self.alterLine.isHidden = true
-
+        
     }
     
-    
-
 }

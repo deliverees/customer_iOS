@@ -219,6 +219,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         PaymetData()
     }
     
@@ -1893,6 +1894,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
             else{
+                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message") as? String ?? "Error")
             }
             self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in})

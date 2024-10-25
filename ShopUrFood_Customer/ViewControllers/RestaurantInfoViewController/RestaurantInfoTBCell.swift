@@ -27,9 +27,9 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
     @IBOutlet weak var subCategoryDropDown: UIImageView!
     @IBOutlet weak var subCategoryLineView: UIView!
     @IBOutlet weak var preferableItemTextLbl: UILabel!
-
+    
     @IBOutlet weak var veg_NonVegSwitch: UISwitch!
-
+    
     @IBOutlet weak var searchView: UIView!
     var delegate : delegateForCategorySearch?
     var OnceCategoryChanged = Bool()
@@ -37,7 +37,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
     var responseDict = NSMutableDictionary()
     var categoryIndex = Int()
     var categoryIndexforBGColor = Int()
-
+    
     var sameFirstcategoryIndexfromDidselect = Int()
     
     var subCategoryArray = NSArray()
@@ -57,7 +57,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         searchView.layer.borderColor = AppDarkOrange.cgColor
         dishNameTxt.delegate = self
         OnceCategoryChanged = true
-        self.minimumOrderLbl.text = LanguageDictonary.object(forKey: "minimumorder") as! String
+        self.minimumOrderLbl.text = Localization.value(for: "minimumorder")
         // Initialization code
     }
     func getCategoryData(result:NSMutableDictionary){
@@ -71,7 +71,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         priceLbl.text = currency + price
         
     }
-
+    
     @IBAction func veg_NonVegSwitchToggle(_ sender: Any)
     {
         pagingIndex = 1
@@ -83,15 +83,15 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
                 if sameFirstcategoryIndexfromDidselect == 0
                 {
                     allcategoryItemsStr = "1"
-
-                self.delegate?.showItemsBasedOnCategory()
+                    
+                    self.delegate?.showItemsBasedOnCategory()
                 }
                 else
                 {
                     allcategoryItemsStr = "0"
                     OnceCategoryChanged = true
                     self.setSubCategoryDropDownData()
-
+                    
                 }
             }
             else
@@ -104,7 +104,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
                 
             }
             categoryCollectionView.reloadData()
-
+            
         }
         else
         {
@@ -114,14 +114,14 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
                 if sameFirstcategoryIndexfromDidselect == 0
                 {
                     allcategoryItemsStr = "1"
-                self.delegate?.showItemsBasedOnCategory()
+                    self.delegate?.showItemsBasedOnCategory()
                 }
                 else
                 {
                     allcategoryItemsStr = "0"
                     OnceCategoryChanged = true
                     self.setSubCategoryDropDownData()
-
+                    
                 }
             }else
             {
@@ -133,7 +133,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
                 
             }
             categoryCollectionView.reloadData()
-
+            
         }
     }
     
@@ -141,23 +141,25 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
     func setSubCategoryDropDownData()
     {
         //get Datas
-        let strArray = self.responseDict.object(forKey: "category_list")as! NSArray
-        let StrmutableArray = strArray.mutableCopy() as! NSMutableArray
-        let subCateArray = (StrmutableArray.object(at: categoryIndex)as! NSDictionary).object(forKey: "sub_category_list")as! NSArray
-        //self.subCategoryArray.addObjects(from: [subCateArray.value(forKey: "sub_category_name")])
-        self.subCategoryArray = subCateArray.value(forKey: "sub_category_name") as! NSArray
+        guard let strArray = self.responseDict.object(forKey: "category_list") as? NSArray else { return }
+        guard let StrmutableArray = strArray.mutableCopy() as? NSMutableArray else { return }
+        if categoryIndex >= StrmutableArray.count {
+            categoryIndex = StrmutableArray.count - 1
+        }
+        guard let subCateArray = (StrmutableArray.object(at: categoryIndex) as? NSDictionary)?.object(forKey: "sub_category_list") as? NSArray else { return }
+        self.subCategoryArray = subCateArray.value(forKey: "sub_category_name") as? NSArray ?? []
         self.subCategoryBtn.setTitle((subCategoryArray[0] as! String), for: .normal)
         
         let subCategoryIDArray = subCateArray.value(forKey: "sub_category_id") as! NSArray
-        sub_category_id = subCategoryIDArray[0]as! NSNumber
-        main_category_id = (StrmutableArray.object(at: categoryIndex)as! NSDictionary).object(forKey: "main_category_id")as! NSNumber
+        sub_category_id = subCategoryIDArray[0] as? NSNumber ?? 0
+        main_category_id = (StrmutableArray.object(at: categoryIndex) as? NSDictionary)?.object(forKey: "main_category_id") as? NSNumber ?? 0
         if OnceCategoryChanged{
             OnceCategoryChanged = false
             self.delegate?.showItemsBasedOnCategory()
         }
         
         //alloc data to dropdown
-        chooseSubCategoryDropDown.dataSource = subCategoryArray as! [String]
+        chooseSubCategoryDropDown.dataSource = subCategoryArray as? [String] ?? []
         chooseSubCategoryDropDown.anchorView = subCategoryBtn
         chooseSubCategoryDropDown.direction = .bottom
         chooseSubCategoryDropDown.bottomOffset = CGPoint(x: 0, y: subCategoryBtn.bounds.height)
@@ -182,17 +184,17 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-            return (responseDict.object(forKey: "category_list")as! NSArray).count + 1
+        return (responseDict.object(forKey: "category_list")as! NSArray).count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RestaurantCategoryCell", for: indexPath) as! RestaurantCategoryCell
-        let strArray = responseDict.object(forKey: "category_list")as! NSArray
-        let StrmutableArray = strArray.mutableCopy() as! NSMutableArray
+        let strArray = responseDict.object(forKey: "category_list") as? NSArray ?? []
+        let StrmutableArray = strArray.mutableCopy() as? NSMutableArray ?? []
         if indexPath.row == 0{
             cell.categoryNameLbl.text = "All"
         }else{
-        cell.categoryNameLbl.text = ((StrmutableArray.object(at: indexPath.row-1)as! NSDictionary).object(forKey: "main_category_name")as! String)
+            cell.categoryNameLbl.text = ((StrmutableArray.object(at: indexPath.row-1) as? NSDictionary)?.object(forKey: "main_category_name") as? String) ?? ""
         }
         cell.categoryNameLbl.cornerRadius = 2 //15.0
         
@@ -200,27 +202,27 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         if categoryIndexforBGColor == indexPath.row{
             cell.categoryNameLbl.backgroundColor = AppLightOrange
             cell.categoryNameLbl.textColor = UIColor.white
-             cell.categoryNameLbl.layer.borderColor = AppDarkOrange.cgColor
+            cell.categoryNameLbl.layer.borderColor = AppDarkOrange.cgColor
         }else{
             cell.categoryNameLbl.backgroundColor = UIColor.white
             cell.categoryNameLbl.textColor = UIColor.darkText
             cell.categoryNameLbl.layer.borderColor = AppDarkOrange.cgColor
         }
-
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let strArray = responseDict.object(forKey: "category_list")as! NSArray
-        let StrmutableArray = strArray.mutableCopy() as! NSMutableArray
+        let strArray = responseDict.object(forKey: "category_list") as? NSArray ?? []
+        let StrmutableArray = strArray.mutableCopy() as? NSMutableArray ?? []
         var categoryStr = String()
         if indexPath.row == 0
         {
-        categoryStr = "All"
+            categoryStr = "All"
         }
         else
         {
-        categoryStr = (StrmutableArray.object(at: indexPath.row - 1)as! NSDictionary).object(forKey: "main_category_name")as! String
+            categoryStr = (StrmutableArray.object(at: indexPath.row - 1) as? NSDictionary)?.object(forKey: "main_category_name") as? String ?? ""
         }
         var size = categoryStr.size(withAttributes: nil)
         size.width = size.width + 100
@@ -238,21 +240,16 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
             pagingIndex = 1
             sameFirstcategoryIndexfromDidselect = 0
             allcategoryItemsStr = "1"
-            //self.delegate?.showItemsBasedOnCategory()
             self.delegate?.getRestaurantItems()
         }
         else
         {
-            guard login_session.isUserLogged() else {
-                delegate?.showItemsBasedOnCategory()
-                return
-            }
             OnceCategoryChanged = true
             pagingIndex = 1
-           sameFirstcategoryIndexfromDidselect = 1
-           categoryIndex = categoryIndex - 1
-           allcategoryItemsStr = "0"
-           self.setSubCategoryDropDownData()
+            sameFirstcategoryIndexfromDidselect = 1
+            categoryIndex = categoryIndex - 1
+            allcategoryItemsStr = "0"
+            self.setSubCategoryDropDownData()
         }
         
         categoryCollectionView.reloadData()
@@ -275,7 +272,7 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text,
-            let textRange = Range(range, in: text) {
+           let textRange = Range(range, in: text) {
             pagingIndex = 1
             let updatedText = text.replacingCharacters(in: textRange,
                                                        with: string)
@@ -283,5 +280,5 @@ class RestaurantInfoTBCell: UITableViewCell,UICollectionViewDelegate,UICollectio
         }
         return true
     }
-
+    
 }

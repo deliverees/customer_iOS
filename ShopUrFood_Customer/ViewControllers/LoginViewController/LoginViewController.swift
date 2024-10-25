@@ -137,12 +137,6 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     fileprivate var currentNonce: String?
     
     @objc func handleAppleIdRequest(_ sender: Any?) {
-//        login_session.set("Anonymous", forKey: "user_id")
-//        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-//        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-//        nextViewController.ComingType = "FIRST"
-//        self.present(nextViewController, animated:true, completion:nil)
-//        return
         let nonce = randomNonceString()
         currentNonce = nonce
         let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -340,10 +334,12 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
                         login_session.setUserLogged(true)
                         login_session.synchronize()
                         self.stopLoadingIndicator(senderVC: self)
-                        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-                        nextViewController.ComingType = "FIRST"
-                        self.present(nextViewController, animated:true, completion:nil)
+                        if login_session.object(forKey: "user_longitude") != nil {
+                            self.dismiss(animated: true)
+                            return
+                        }
+                        MapLocationPageFrom = "login"
+                        AppRouter.shared.presentLocationOption(from: self, comingType: "FIRST")
                     }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                         self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                     }else{
