@@ -13,14 +13,14 @@ import AMPopTip
 
 @available(iOS 11.0, *)
 class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableViewDataSource,PayPalPaymentDelegate,SambagMonthYearPickerViewControllerDelegate,UITextFieldDelegate {
-   
+    
     @IBOutlet weak var skipBtn: UIButton!
     
     @IBOutlet weak var paymentSettingsErrorLbl: UILabel!
     
     @IBOutlet weak var navigationTitleLbl: UILabel!
     @IBOutlet weak var baseContentView: UIView!
-   
+    
     @IBOutlet weak var paymentTable: UITableView!
     @IBOutlet weak var pageTitleLbl: UILabel!
     
@@ -29,12 +29,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     @IBOutlet weak var couponPopupView: UIView!
     @IBOutlet weak var couponTableView: UITableView!
     @IBOutlet weak var couponPopupCloseButton: UIButton!
-
+    
     @IBOutlet weak var peakBGView: UIView!
     @IBOutlet weak var peakClickedPopupview: UIView!
     @IBOutlet weak var peakDescLbl: UILabel!
     @IBOutlet weak var peakChargeLbl: UILabel!
-
+    
     @IBOutlet weak var offersforLbl: UILabel!
     @IBOutlet weak var warningLbl: UILabel!
     
@@ -46,20 +46,20 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     var useWallet = Bool()
     let popTip = PopTip()
     var direction = PopTipDirection.up
-
+    
     //Coupon Variables
     var useCouponOffer = Bool()
     var selectedCouponPrice = String()
     var selectedCouponID = String()
     var couponisUsed = String()
-
+    
     var couponListArray = NSMutableArray()
-
+    
     var fullAmtPayByWallet = Bool()
     var addressDict = NSMutableDictionary()
     var pickUpType = String()
     var isfromRepeatOrderAPIResponse = Bool()
-
+    
     var customerManagepaypalFlag = Bool()
     var customerManageStripeFlag = Bool()
     var customerNetBankingFlag = Bool()
@@ -69,9 +69,9 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     var adminManageStripeFlag = Bool()
     var adminManageCODFlag = Bool()
     var userPaymentDict = NSMutableDictionary()
-
+    
     var paymentResultDict = NSMutableDictionary()
-
+    
     
     //USED FOR OFFERS AND WALLET APPLY
     var selfOrderPickUpforAPI = String()
@@ -80,7 +80,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     
     var walletAmountforAPI = String()
     var walletUsedStatusForAPI = String()
-
+    
     var couponIDforAPI = String()
     var couponAmountforAPI = String()
     var couponUsedStatusForAPI = String()
@@ -91,16 +91,15 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     var finalCoupon_Amount = String()
     var finalMessage = String()
     
-    
     @IBOutlet weak var cartGrayView: UIView!
     @IBOutlet weak var cartPaymentPopUpView: UIView!
     @IBOutlet weak var cartOrangelineView: UIView!
     @IBOutlet weak var cartOKButton: UIButton!
-
+    
     var remainingAmountCalc = Float()
     
     //PayPal Variables
-     var payPalConfig = PayPalConfiguration()
+    var payPalConfig = PayPalConfiguration()
     //MARK:- PayPal Constants
     var environment:String = PayPalEnvironmentSandbox {
         willSet(newEnvironment) {
@@ -113,11 +112,11 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "payment") as? String
-
+        
         self.pageTitleLbl.text = LanguageDictonary.value(forKey: "choosehowtopay") as? String
         self.warningLbl.text = LanguageDictonary.value(forKey: "warning") as? String
         self.cartOKButton.setTitle(LanguageDictonary.value(forKey: "continue") as? String, for: .normal)
-         self.skipBtn.setTitle(LanguageDictonary.value(forKey: "skip") as? String, for: .normal)
+        self.skipBtn.setTitle(LanguageDictonary.value(forKey: "skip") as? String, for: .normal)
         self.offersforLbl.text = LanguageDictonary.value(forKey: "offerforyou") as? String
         
         
@@ -144,7 +143,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         couponGrayView.isHidden = true
         couponPopupView.layer.cornerRadius = 8.0
         couponPopupView.layer.masksToBounds = true
-
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         peakBGView.addGestureRecognizer(tap)
         peakBGView.isUserInteractionEnabled = true
@@ -155,12 +154,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         
         remainingAmountCalc = exactToatlAmt
         
-//         if peakHourFeeStatus == "1"
-//         {
-//         self.peakDescLbl.text = peakHour_Info
-//         self.peakChargeLbl.text = "Extra Charges : " + peakCurrency + peakHourFee
-//         }
-
+        //         if peakHourFeeStatus == "1"
+        //         {
+        //         self.peakDescLbl.text = peakHour_Info
+        //         self.peakChargeLbl.text = "Extra Charges : " + peakCurrency + peakHourFee
+        //         }
+        
         
         baseContentView.layer.cornerRadius = 5.0
         baseContentView = self.setCornorShadowEffects(sender: baseContentView)
@@ -177,7 +176,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         popTip.offset = 2
         popTip.bubbleOffset = 0
         popTip.edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-
+        
         popTip.actionAnimation = .bounce(8)
         
         popTip.tapHandler = { _ in
@@ -236,8 +235,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         popTip.bubbleColor = UIColor.black
         let tempCard = self.paymentTable.viewWithTag(1001)
         popTip.show(text: "\(peakHour_Info)\("\n")\("Extra Charges : ")\(peakCurrency)\(peakHourFee)", direction: direction, maxWidth: 200, in: tempCard!, from: sender.frame)
-
-      //  popTip.show(text: "Animated popover, great for subtle UI tips and onboarding", direction: direction, maxWidth: 200, in: tempCard!, from: sender.frame)
+        
+        //  popTip.show(text: "Animated popover, great for subtle UI tips and onboarding", direction: direction, maxWidth: 200, in: tempCard!, from: sender.frame)
     }
     
     
@@ -252,7 +251,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     @IBAction func skipBtnTapped(_ sender: Any) {
         self.cartGrayView.isHidden = true
         userAllowedToPay = true
-
+        
         if selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" //"Cash On Delivery"
         {
             self.PaymentOnCOD()
@@ -260,8 +259,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         else if selectedPaymetMethod == "PayPal"
         {
             
-                self.payByPaypal()
-                login_session.setValue("0", forKey: "userCartCount")
+            self.payByPaypal()
+            login_session.setValue("0", forKey: "userCartCount")
         }
         else if selectedPaymetMethod == "STRIPE" || selectedPaymetMethod == "Raya"
         {
@@ -307,16 +306,16 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     self.userAllowedToPay = false
                     self.paymentSettingsErrorLbl.text = (self.userPaymentDict.object(forKey: "payment_status_err")as! String)
                 }
-
+                
             }
-//            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired"
-//            {
-//                
-//            }
-//            else
-//            {
-//                
-//            }
+            //            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired"
+            //            {
+            //                
+            //            }
+            //            else
+            //            {
+            //                
+            //            }
             self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in})
     }
@@ -348,65 +347,65 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     
     func useWalletAmount()
     {
-         if pickUpType == "self"
-         {
-           self.selfOrderPickUpforAPI = "1"
+        if pickUpType == "self"
+        {
+            self.selfOrderPickUpforAPI = "1"
         }
-         else
-         {
+        else
+        {
             self.selfOrderPickUpforAPI = "0"
-         }
+        }
         
         if useWallet == true
         {
-        self.deliveryFeeAmountforAPI = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-        let Parse = CommomParsing()
-        Parse.useWalletMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAvailableBalance, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200
-            {
-                self.finalPayable_amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "payable_amount") as? String)!
-                
-                if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String) != nil)
+            self.deliveryFeeAmountforAPI = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
+            let Parse = CommomParsing()
+            Parse.useWalletMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAvailableBalance, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200
                 {
-                    self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String)!
+                    self.finalPayable_amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "payable_amount") as? String)!
+                    
+                    if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String) != nil)
+                    {
+                        self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String)!
+                    }
+                    else
+                    {
+                        self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? NSNumber)!.stringValue
+                    }
+                    
+                    if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as? String) != nil)
+                    {
+                        self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
+                    }
+                    else
+                    {
+                        self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! NSNumber).stringValue
+                    }
+                    
+                    self.finalMessage = response.object(forKey: "message") as! String
+                    
+                    if self.finalMessage == "No need to pay"
+                    {
+                        self.fullAmtPayByWallet = true
+                        self.selectedPaymetMethod = ""
+                    }
+                    
+                    self.paymentTable.reloadData()
                 }
-                else
+                else if response.object(forKey: "code")as! Int == 400
                 {
-                    self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? NSNumber)!.stringValue
+                    self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
+                    
                 }
-                
-                if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as? String) != nil)
-                {
-                    self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
+                else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
                 }
-                else
-                {
-                    self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! NSNumber).stringValue
+                else{
                 }
-                
-                self.finalMessage = response.object(forKey: "message") as! String
-                
-                if self.finalMessage == "No need to pay"
-                {
-                    self.fullAmtPayByWallet = true
-                    self.selectedPaymetMethod = ""
-                }
-                
-                self.paymentTable.reloadData()
-            }
-            else if response.object(forKey: "code")as! Int == 400
-            {
-                self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
-                
-            }
-            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else{
-            }
-        }, onFailure: {errorResponse in})
+            }, onFailure: {errorResponse in})
         }
         else
         {
@@ -475,89 +474,15 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         
         if useWallet == true
         {
-        self.deliveryFeeAmountforAPI = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-        let Parse = CommomParsing()
-        Parse.useOfferMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAvailableBalance, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200
-            {
-                self.finalPayable_amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "payable_amount") as? String)!
-                
-                if (response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as! String == "0"
-                {
-                    self.finalWallet_Amount = "0"
-                }
-                else if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String) != nil)
-                {
-                    self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String)!
-                }
-                else if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? Int) != nil)
-                {
-                    self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? NSNumber)!.stringValue
-                }
-                else
-                {
-                    self.finalWallet_Amount = "0"
-                }
-                
-                if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as? String) != nil)
-                {
-                    self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
-                }
-                else
-                {
-                    self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! NSNumber).stringValue
-                }
-                
-                self.finalMessage = response.object(forKey: "message") as! String
-                
-                if self.finalMessage == "No need to pay"
-                {
-                  self.useCouponOffer = false
-                  self.couponGrayView.isHidden = true
-                  //self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
-                }
-                else
-                {
-                  self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
-                }
-                
-                self.paymentTable.reloadData()
-            }
-            else if response.object(forKey: "code")as! Int == 400
-            {
-                if self.finalCoupon_Amount == ""
-                {
-                    self.useCouponOffer = false
-                }
-                self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
-                
-            }
-            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                if self.finalCoupon_Amount == ""
-                {
-                    self.useCouponOffer = false
-                }
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }
-            else
-            {
-                
-            }
-        }, onFailure: {errorResponse in})
-        }
-        else
-        {
             self.deliveryFeeAmountforAPI = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
             let Parse = CommomParsing()
-            Parse.useOfferMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAmountforAPI, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
+            Parse.useOfferMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAvailableBalance, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200
                 {
                     self.finalPayable_amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "payable_amount") as? String)!
-
+                    
                     if (response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as! String == "0"
                     {
                         self.finalWallet_Amount = "0"
@@ -577,7 +502,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     
                     if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as? String) != nil)
                     {
-                    self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
+                        self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
                     }
                     else
                     {
@@ -603,10 +528,84 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     if self.finalCoupon_Amount == ""
                     {
-                    self.useCouponOffer = false
+                        self.useCouponOffer = false
                     }
                     self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
-
+                    
+                }
+                else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                    if self.finalCoupon_Amount == ""
+                    {
+                        self.useCouponOffer = false
+                    }
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                }
+                else
+                {
+                    
+                }
+            }, onFailure: {errorResponse in})
+        }
+        else
+        {
+            self.deliveryFeeAmountforAPI = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
+            let Parse = CommomParsing()
+            Parse.useOfferMethod(lang: login_session.value(forKey: "Language") as? String ?? "es", ord_self_pickup: self.selfOrderPickUpforAPI, use_wallet: self.walletUsedStatusForAPI, wallet_amt: self.walletAmountforAPI, delivery_fee: self.deliveryFeeAmountforAPI, use_coupon: self.couponUsedStatusForAPI, coupon_id: self.couponIDforAPI, coupon_amount: self.couponAmountforAPI, onSuccess: {
+                response in
+                print (response)
+                if response.object(forKey: "code") as! Int == 200
+                {
+                    self.finalPayable_amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "payable_amount") as? String)!
+                    
+                    if (response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as! String == "0"
+                    {
+                        self.finalWallet_Amount = "0"
+                    }
+                    else if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String) != nil)
+                    {
+                        self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? String)!
+                    }
+                    else if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? Int) != nil)
+                    {
+                        self.finalWallet_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_wallet") as? NSNumber)!.stringValue
+                    }
+                    else
+                    {
+                        self.finalWallet_Amount = "0"
+                    }
+                    
+                    if (((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as? String) != nil)
+                    {
+                        self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! String)
+                    }
+                    else
+                    {
+                        self.finalCoupon_Amount = ((response.object(forKey: "data") as! NSDictionary).value(forKey: "used_offer") as! NSNumber).stringValue
+                    }
+                    
+                    self.finalMessage = response.object(forKey: "message") as! String
+                    
+                    if self.finalMessage == "No need to pay"
+                    {
+                        self.useCouponOffer = false
+                        self.couponGrayView.isHidden = true
+                        //self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
+                    }
+                    else
+                    {
+                        self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
+                    }
+                    
+                    self.paymentTable.reloadData()
+                }
+                else if response.object(forKey: "code")as! Int == 400
+                {
+                    if self.finalCoupon_Amount == ""
+                    {
+                        self.useCouponOffer = false
+                    }
+                    self.showToastAlert(senderVC: self, messageStr: response.object(forKey: "message") as! String)
+                    
                 }
                 else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                     if self.finalCoupon_Amount == ""
@@ -633,29 +632,29 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 print("PAYMENT DETAILS RESPONSE : ",self.paymentResultDict)
                 if (self.paymentResultDict.object(forKey: "counpon_list") as? NSArray) != nil
                 {
-                self.couponListArray.removeAllObjects()
-                self.couponListArray.addObjects(from: (self.paymentResultDict.object(forKey: "counpon_list")as! NSArray) as! [Any])
-                print("couponListArray", self.couponListArray)
-                self.couponTableView.reloadData()
+                    self.couponListArray.removeAllObjects()
+                    self.couponListArray.addObjects(from: (self.paymentResultDict.object(forKey: "counpon_list")as! NSArray) as! [Any])
+                    print("couponListArray", self.couponListArray)
+                    self.couponTableView.reloadData()
                 }
                 
                 if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "paypal") as? NSNumber)?.stringValue == "1"
                 {
                     self.adminManagepaypalFlag = true
-
+                    
                 }else
                 {
                     self.adminManagepaypalFlag = false
-
+                    
                 }
-
+                
                 if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "stripe") as? NSNumber)?.stringValue == "1"
                 {
-                   self.adminManageStripeFlag = true
+                    self.adminManageStripeFlag = true
                 }else
                 {
                     self.adminManageStripeFlag = false
-
+                    
                 }
                 
                 if ((self.paymentResultDict.object(forKey: "payment_methods") as? NSDictionary)?.value(forKey: "cod") as? NSNumber)?.stringValue == "1"
@@ -665,8 +664,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     self.adminManageCODFlag = false
                 }
-
-              self.getWalletData()
+                
+                self.getWalletData()
             }
             else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
@@ -675,7 +674,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             }
         }, onFailure: {errorResponse in})
     }
-
+    
     
     
     //MARK:- Back Btn Action
@@ -696,22 +695,22 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "choosepayment") as! String)
         }
         else {
-           // useCouponOffer = false
+            // useCouponOffer = false
             if selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" // selectedPaymetMethod == "Cash On Delivery"
             {
-               self.PaymentOnCOD()
+                self.PaymentOnCOD()
             }
             else if selectedPaymetMethod == "PayPal"
             {
                 if  userAllowedToPay
                 {
-                self.cartGrayView.isHidden = true
-                self.payByPaypal()
-                login_session.setValue("0", forKey: "userCartCount")
+                    self.cartGrayView.isHidden = true
+                    self.payByPaypal()
+                    login_session.setValue("0", forKey: "userCartCount")
                 }
                 else
                 {
-                   self.cartGrayView.isHidden = false
+                    self.cartGrayView.isHidden = false
                 }
             }
             else if selectedPaymetMethod == "STRIPE"  || selectedPaymetMethod == "Raya"
@@ -719,353 +718,327 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 if userAllowedToPay
                 {
                     self.cartGrayView.isHidden = true
-
-                let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
-                let tempExp = self.paymentTable.viewWithTag(222)as? UITextField
-                let tempCvv = self.paymentTable.viewWithTag(333)as? UITextField
-                if tempCard?.text == "" || tempCard?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-                }else if tempExp?.text == "" || tempExp?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
-                }else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-                }else{
-                    let commonDateStr = tempExp?.text
-                    let dateArray = commonDateStr?.components(separatedBy: "-")
-                    let expMonth = self.monthConverstion(month: dateArray![0])
-                    let expYear = dateArray![1]
-                    self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
-                    login_session.setValue("0", forKey: "userCartCount")
-
-                 }
+                    
+                    let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
+                    let tempExp = self.paymentTable.viewWithTag(222)as? UITextField
+                    let tempCvv = self.paymentTable.viewWithTag(333)as? UITextField
+                    if tempCard?.text == "" || tempCard?.text?.count == 0 {
+                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
+                    }else if tempExp?.text == "" || tempExp?.text?.count == 0 {
+                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
+                    }else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
+                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
+                    }else{
+                        let commonDateStr = tempExp?.text
+                        let dateArray = commonDateStr?.components(separatedBy: "-")
+                        let expMonth = self.monthConverstion(month: dateArray![0])
+                        let expYear = dateArray![1]
+                        self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
+                        login_session.setValue("0", forKey: "userCartCount")
+                        
+                    }
                 }else{
                     self.cartGrayView.isHidden = false
-
+                    
                 }
-
+                
             }else{
-               self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "choosepayment") as! String)
+                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "choosepayment") as! String)
             }
         }
     }
-
+    
     
     //MARK:- Tableview Delegate & DataSource Methods
     func numberOfSections(in tableView: UITableView) -> Int
     {
         if tableView == couponTableView
         {
-          return 2
+            return 2
         }
         else
         {
-        return 5
+            return 5
         }
         
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      
+        
         if tableView == couponTableView
-        {
-             return UITableView.automaticDimension
-        }
-        else
-        {
-        if indexPath.section == 0
-        {
-            if indexPath.row == 1
-            {
-                // for use wallet (section = 0, row = 1)
-                if useWallet
-                {
-                if walletAvailableBalance >= exactToatlAmt
-
-                {
-                    return 0
-
-                }
-                else
-                {
-                    if selectedPaymetMethod == paymentMethodsArray[indexPath.row]
-                    {
-                        return 150
-                        
-                    }
-                    else
-                    {
-                        if adminManageStripeFlag == true
-                        {
-                            return 50
-                        }
-                        else
-                        {
-                            return 0
-                        }
-                    }
-                   }
-                }
-                // for non-using wallet (section = 0, row = 1)
-                else
-                {
-                if selectedPaymetMethod == paymentMethodsArray[indexPath.row]
-                {
-                    return 150
-
-                }
-                else
-                {
-                if adminManageStripeFlag == true
-                {
-                return 50
-                }
-                else
-                {
-                return 0
-                 }
-                }
-              }
-            }
-           else if indexPath.row == 0
-            {
-                //use wallet (section = 0, row = 0)
-                if useWallet
-                {
-                if walletAvailableBalance >= exactToatlAmt
-                {
-                    return 0
-                    
-                }
-                else
-                {
-                    
-                    if selectedPaymetMethod == "PayPal"
-                    {
-                        if adminManagepaypalFlag == true
-                        {
-                            return 50
-                        }
-                        else
-                        {
-                            return 0
-                        }
-                    }
-                    else
-                    {
-                        if adminManagepaypalFlag == true
-                        {
-                            return 50
-                        }
-                        else
-                        {
-                            return 0
-                        }
-                        
-                    }
-                    }
-                }
-                // for non-using wallet(section = 0, row = 0)
-                else
-                {
-
-            if selectedPaymetMethod == "PayPal"
-            {
-                if adminManagepaypalFlag == true
-                {
-                    return 50
-                }
-                else
-                {
-                    return 0
-                }
-            }
-            else
-            {
-                if adminManagepaypalFlag == true
-                {
-                    return 50
-                }
-                else
-                {
-                    return 0
-                }
-
-              }
-             }
-            }
-            else
-            {
-                //for using wallet (section = 0, row = 2)
-                if useWallet
-                {
-                if walletAvailableBalance >= exactToatlAmt
-                {
-                    return 0
-                    
-                }else
-                {
-                    
-                    if  selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" // selectedPaymetMethod == "Cash On Delivery"
-                    {
-                        if adminManageCODFlag == true
-                        {
-                            
-                            return 50
-                        }
-                        else
-                        {
-                            return 0
-                            
-                        }
-                    }
-                    else
-                    {
-                        if adminManageCODFlag == true
-                        {
-                            return 50
-                        }
-                        else
-                        {
-                            return 0
-                        }
-                        
-                    }
-                  }
-                }
-                //for non using wallet (section = 0, row = 2)
-                else
-                {
-
-                if selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" //selectedPaymetMethod == "Cash On Delivery"
-                {
-                    if adminManageCODFlag == true
-                    {
-
-                     return 50
-                    }
-                    else
-                    {
-                     return 0
-
-                    }
-                }
-                else
-                {
-                    if adminManageCODFlag == true
-                    {
-                        return 50
-                    }
-                    else
-                    {
-                        return 0
-                    }
-                    
-                }
-               }
-            }
-            
-        }
-        else if indexPath.section == 2 // Terms & Conditions Cell
         {
             return UITableView.automaticDimension
         }
-        else if indexPath.section == 3
+        else
         {
-            if self.useCouponOffer == true
+            if indexPath.section == 0
             {
-                if exactCouponAmt <= exactToatlAmt
+                if indexPath.row == 1
                 {
-                    //changes done here
+                    // for use wallet (section = 0, row = 1)
+                    if useWallet
+                    {
+                        if walletAvailableBalance >= exactToatlAmt
+                            
+                        {
+                            return 0
+                            
+                        }
+                        else
+                        {
+                            if selectedPaymetMethod == paymentMethodsArray[indexPath.row]
+                            {
+                                return 150
+                                
+                            }
+                            else
+                            {
+                                if adminManageStripeFlag == true
+                                {
+                                    return 50
+                                }
+                                else
+                                {
+                                    return 0
+                                }
+                            }
+                        }
+                    }
+                    // for non-using wallet (section = 0, row = 1)
+                    else
+                    {
+                        if selectedPaymetMethod == paymentMethodsArray[indexPath.row]
+                        {
+                            return 150
+                            
+                        }
+                        else
+                        {
+                            if adminManageStripeFlag == true
+                            {
+                                return 50
+                            }
+                            else
+                            {
+                                return 0
+                            }
+                        }
+                    }
+                }
+                else if indexPath.row == 0
+                {
+                    //use wallet (section = 0, row = 0)
+                    if useWallet
+                    {
+                        if walletAvailableBalance >= exactToatlAmt
+                        {
+                            return 0
+                            
+                        }
+                        else
+                        {
+                            
+                            if selectedPaymetMethod == "PayPal"
+                            {
+                                if adminManagepaypalFlag == true
+                                {
+                                    return 50
+                                }
+                                else
+                                {
+                                    return 0
+                                }
+                            }
+                            else
+                            {
+                                if adminManagepaypalFlag == true
+                                {
+                                    return 50
+                                }
+                                else
+                                {
+                                    return 0
+                                }
+                                
+                            }
+                        }
+                    }
+                    // for non-using wallet(section = 0, row = 0)
+                    else
+                    {
+                        
+                        if selectedPaymetMethod == "PayPal"
+                        {
+                            if adminManagepaypalFlag == true
+                            {
+                                return 50
+                            }
+                            else
+                            {
+                                return 0
+                            }
+                        }
+                        else
+                        {
+                            if adminManagepaypalFlag == true
+                            {
+                                return 50
+                            }
+                            else
+                            {
+                                return 0
+                            }
+                            
+                        }
+                    }
+                }
+                else
+                {
+                    //for using wallet (section = 0, row = 2)
+                    if useWallet
+                    {
+                        if walletAvailableBalance >= exactToatlAmt
+                        {
+                            return 0
+                            
+                        }else
+                        {
+                            
+                            if  selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" // selectedPaymetMethod == "Cash On Delivery"
+                            {
+                                if adminManageCODFlag == true
+                                {
+                                    
+                                    return 50
+                                }
+                                else
+                                {
+                                    return 0
+                                    
+                                }
+                            }
+                            else
+                            {
+                                if adminManageCODFlag == true
+                                {
+                                    return 50
+                                }
+                                else
+                                {
+                                    return 0
+                                }
+                                
+                            }
+                        }
+                    }
+                    //for non using wallet (section = 0, row = 2)
+                    else
+                    {
+                        
+                        if selectedPaymetMethod == "PAYMENT IN CASH" || selectedPaymetMethod == "PAGO EN EFECTIVO" //selectedPaymetMethod == "Cash On Delivery"
+                        {
+                            if adminManageCODFlag == true
+                            {
+                                
+                                return 50
+                            }
+                            else
+                            {
+                                return 0
+                                
+                            }
+                        }
+                        else
+                        {
+                            if adminManageCODFlag == true
+                            {
+                                return 50
+                            }
+                            else
+                            {
+                                return 0
+                            }
+                            
+                        }
+                    }
+                }
+                
+            }
+            else if indexPath.section == 2 // Terms & Conditions Cell
+            {
+                return UITableView.automaticDimension
+            }
+            else if indexPath.section == 3
+            {
+                if self.useCouponOffer == true
+                {
+                    if exactCouponAmt <= exactToatlAmt
+                    {
+                        //changes done here
+                        return 60
+                    }
+                    else
+                    {
+                        return 60
+                    }
+                }
+                else if useWallet && walletAvailableBalance > 0
+                {
+                    //Changes done here
                     return 60
                 }
                 else
                 {
-                return 60
-                }
-            }
-            else if useWallet && walletAvailableBalance > 0
-            {
-              //Changes done here
-              return 60
-            }
-            else
-            {
-            if couponListArray.count > 0
-            {
-            return 60
-            }
-            else
-            {
-            return 0
-            }
-            }
-        }
-        else if indexPath.section == 1
-        {
-            if self.useCouponOffer == true
-            {
-                if exactCouponAmt <= exactToatlAmt
-                {
-                    if walletAvailableBalance > 0
+                    if couponListArray.count > 0
                     {
-                    //changes done here
-                    return 60
+                        return 60
                     }
                     else
                     {
                         return 0
                     }
                 }
-                else
-                {
-                    return 60
-                }
             }
-            else
-            {
-            if walletAvailableBalance > 0
-            {
-                return 60
-            }
-            else
-            {
-                return 0
-            }
-            }
-            
-        }
-        else
-        {
-            if useWallet && self.useCouponOffer == true
-            {
-                return 350
-            }
-            else if useWallet
-            {
-                return 300
-            }
-            else
+            else if indexPath.section == 1
             {
                 if self.useCouponOffer == true
                 {
-                if exactCouponAmt <= exactToatlAmt
-                {
-                    return 300
+                    if exactCouponAmt <= exactToatlAmt
+                    {
+                        if walletAvailableBalance > 0
+                        {
+                            //changes done here
+                            return 60
+                        }
+                        else
+                        {
+                            return 0
+                        }
+                    }
+                    else
+                    {
+                        return 60
+                    }
                 }
                 else
                 {
-                    return 250
+                    if walletAvailableBalance > 0
+                    {
+                        return 60
+                    }
+                    else
+                    {
+                        return 0
+                    }
                 }
-                }
-                else
-                {
-                 return 250
-                }
+                
             }
-            
+            else
+            {
+                return UITableView.automaticDimension
+            }
         }
     }
- }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -1078,26 +1051,26 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             }
             else
             {
-            if couponListArray.count > 0
+                if couponListArray.count > 0
+                {
+                    return couponListArray.count
+                }
+                else
+                {
+                    return 0
+                }
+            }
+        }
+        else
+        {
+            if section == 0
             {
-                return couponListArray.count
+                return 3
             }
             else
             {
-                return 0
+                return 1
             }
-            }
-        }
-        else
-        {
-        if section == 0
-        {
-            return 3
-        }
-        else
-        {
-            return 1
-        }
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -1113,145 +1086,143 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             }
             else
             {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CouponTableViewCell") as? CouponTableViewCell
-            cell?.selectionStyle = .none
-            cell?.applyCouponButton.layer.cornerRadius = 12.5
-            cell?.applyCouponButton.layer.masksToBounds = true
-            
-            cell?.applyCouponButton.setTitle(LanguageDictonary.value(forKey: "apply") as? String, for: .normal)
-            cell?.applyCouponButton.tag = indexPath.row
-            cell?.applyCouponButton.addTarget(self,action:#selector(couponOfferAppliedBtnTapped(sender:)), for: .touchUpInside)
-            
-            cell?.CouponHeaderLbl.text = ((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_name") as? String) ?? ""
-            cell?.CouponTextLbl.text = ((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_desc") as? String) ?? ""
-            cell?.CouponPriceLbl.text = "Price : " + (((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "currency") as? String)!) + " " + (((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_price") as? String) ?? "")
-
-            return cell!
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CouponTableViewCell") as? CouponTableViewCell
+                cell?.selectionStyle = .none
+                cell?.applyCouponButton.layer.cornerRadius = 12.5
+                cell?.applyCouponButton.layer.masksToBounds = true
+                
+                cell?.applyCouponButton.setTitle(LanguageDictonary.value(forKey: "apply") as? String, for: .normal)
+                cell?.applyCouponButton.tag = indexPath.row
+                cell?.applyCouponButton.addTarget(self,action:#selector(couponOfferAppliedBtnTapped(sender:)), for: .touchUpInside)
+                
+                cell?.CouponHeaderLbl.text = ((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_name") as? String) ?? ""
+                cell?.CouponTextLbl.text = ((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_desc") as? String) ?? ""
+                cell?.CouponPriceLbl.text = "Price : " + (((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "currency") as? String)!) + " " + (((self.couponListArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "coupon_price") as? String) ?? "")
+                
+                return cell!
             }
         }
         else
         {
-        if indexPath.section == 0
-        {
-            if indexPath.row == 1 && selectedPaymetMethod == "STRIPE"
+            if indexPath.section == 0
             {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "StripePaymentCell") as? StripePaymentCell
-                cell?.selectionStyle = .none
-                
-                cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
-                cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
-                 cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
-                 cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
-                
-                
-                cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
-                cell?.creditCardNumberTxt.keyboardType = .numberPad
-                cell?.cvvTxt.keyboardType = .numberPad
-                cell?.creditCardNumberTxt.tag = 111
-                cell?.dateTxt.tag = 222
-                cell?.cvvTxt.tag = 333
-                if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
+                if indexPath.row == 1 && selectedPaymetMethod == "STRIPE"
                 {
-                    cell?.selectionImg.isHidden = false
-                    cell?.selectionImg.image = UIImage.init(named: "select_radio")
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "StripePaymentCell") as? StripePaymentCell
+                    cell?.selectionStyle = .none
+                    
+                    cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
+                    cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
+                    cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
+                    cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
+                    
+                    
+                    cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
+                    cell?.creditCardNumberTxt.keyboardType = .numberPad
+                    cell?.cvvTxt.keyboardType = .numberPad
+                    cell?.creditCardNumberTxt.tag = 111
+                    cell?.dateTxt.tag = 222
+                    cell?.cvvTxt.tag = 333
+                    if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "select_radio")
+                    }
+                    else
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
+                        
+                    }
+                    
+                    return cell!
+                }else if indexPath.row == 1 && selectedPaymetMethod == "Raya"
+                {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "StripePaymentCell") as? StripePaymentCell
+                    cell?.selectionStyle = .none
+                    
+                    cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
+                    cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
+                    cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
+                    cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
+                    
+                    
+                    cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
+                    cell?.creditCardNumberTxt.keyboardType = .numberPad
+                    cell?.cvvTxt.keyboardType = .numberPad
+                    cell?.creditCardNumberTxt.tag = 111
+                    cell?.dateTxt.tag = 222
+                    cell?.cvvTxt.tag = 333
+                    if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "select_radio")
+                    }
+                    else
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
+                        
+                    }
+                    
+                    return cell!
                 }
                 else
                 {
-                    cell?.selectionImg.isHidden = false
-                    cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentMethodCell") as? PaymentMethodCell
+                    cell?.selectionStyle = .none
                     
+                    if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "select_radio")
+                    }
+                    else
+                    {
+                        cell?.selectionImg.isHidden = false
+                        cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
+                        
+                    }
+                    cell?.nameLbl.text = paymentMethodsArray[indexPath.row]
+                    return cell!
                 }
-
+            }else if(indexPath.section == 2){
+                let cell = tableView.dequeueReusableCell(withIdentifier: "paymentTermsConditionsCell") as? paymentTermsConditionsCell
+                cell?.nameLbl.text = LanguageDictonary.value(forKey: "byclickingtermsconditions") as? String
+                
+                
+                if termsConditions == "agree"{
+                    cell?.selectionImg.image = UIImage(named: "selectedCheckBox")
+                }else{
+                    cell?.selectionImg.image = UIImage(named: "checkBox")
+                }
+                cell?.selectionStyle = .none
                 return cell!
-            }else if indexPath.row == 1 && selectedPaymetMethod == "Raya"
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "StripePaymentCell") as? StripePaymentCell
+            }
+            else if indexPath.section == 1 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentWalletCell") as? PaymentWalletCell
                 cell?.selectionStyle = .none
-                
-                cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
-                cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
-                cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
-                cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
-                
-                
-                cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
-                cell?.creditCardNumberTxt.keyboardType = .numberPad
-                cell?.cvvTxt.keyboardType = .numberPad
-                cell?.creditCardNumberTxt.tag = 111
-                cell?.dateTxt.tag = 222
-                cell?.cvvTxt.tag = 333
-                if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
-                {
-                    cell?.selectionImg.isHidden = false
-                    cell?.selectionImg.image = UIImage.init(named: "select_radio")
+                cell?.baseView.layer.cornerRadius = 5.0
+                cell?.baseView.clipsToBounds = true
+                cell?.baseView.backgroundColor = AppTranspertantOrange
+                if useWallet{
+                    cell?.selectionImg.image = UIImage(named: "big_select_check")
+                }else{
+                    cell?.selectionImg.image = UIImage(named: "big_check")
                 }
-                else
-                {
-                    cell?.selectionImg.isHidden = false
-                    cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
-                    
-                }
+                cell?.walletAmtLbl.text = String(format: "\(LanguageDictonary.value(forKey: "usewallet") as! String)Use Wallet %@ %.2f", walletCurrency,walletAvailableBalance)
                 
+                return cell!
+            }
+            else if indexPath.section == 3 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ApplyCouponCell") as? ApplyCouponCell
+                cell?.selectionStyle = .none
+                cell?.applyCouponButton.tag = indexPath.row
+                cell?.applyCouponLbl.text = LanguageDictonary.value(forKey: "applyoffer") as? String
+                cell?.applyCouponButton.addTarget(self,action:#selector(applyCouponSectionClicked(sender:)), for: .touchUpInside)
                 return cell!
             }
             else
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentMethodCell") as? PaymentMethodCell
-                cell?.selectionStyle = .none
-                
-                if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
-                {
-                    cell?.selectionImg.isHidden = false
-                    cell?.selectionImg.image = UIImage.init(named: "select_radio")
-                }
-                else
-                {
-                  cell?.selectionImg.isHidden = false
-                  cell?.selectionImg.image = UIImage.init(named: "unSelectRadio")
-
-                }
-                cell?.nameLbl.text = paymentMethodsArray[indexPath.row]
-                return cell!
-            }
-        }else if(indexPath.section == 2){
-            let cell = tableView.dequeueReusableCell(withIdentifier: "paymentTermsConditionsCell") as? paymentTermsConditionsCell
-            cell?.nameLbl.text = LanguageDictonary.value(forKey: "byclickingtermsconditions") as? String
-            
-            
-            if termsConditions == "agree"{
-                cell?.selectionImg.image = UIImage(named: "selectedCheckBox")
-            }else{
-               cell?.selectionImg.image = UIImage(named: "checkBox")
-            }
-            cell?.selectionStyle = .none
-            return cell!
-        }
-        else if indexPath.section == 1 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentWalletCell") as? PaymentWalletCell
-            cell?.selectionStyle = .none
-            cell?.baseView.layer.cornerRadius = 5.0
-            cell?.baseView.clipsToBounds = true
-            cell?.baseView.backgroundColor = AppTranspertantOrange
-            if useWallet{
-                cell?.selectionImg.image = UIImage(named: "big_select_check")
-            }else{
-              cell?.selectionImg.image = UIImage(named: "big_check")
-            }
-            cell?.walletAmtLbl.text = String(format: "\(LanguageDictonary.value(forKey: "usewallet") as! String)Use Wallet %@ %.2f", walletCurrency,walletAvailableBalance)
-
-            return cell!
-        }
-        else if indexPath.section == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ApplyCouponCell") as? ApplyCouponCell
-            cell?.selectionStyle = .none
-            cell?.applyCouponButton.tag = indexPath.row
-           cell?.applyCouponLbl.text = LanguageDictonary.value(forKey: "applyoffer") as? String
-            cell?.applyCouponButton.addTarget(self,action:#selector(applyCouponSectionClicked(sender:)), for: .touchUpInside)
-            return cell!
-        }
-        else
-        {
-            if useWallet && self.useCouponOffer == true
             {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalWithCouponWalletCell") as? CartTotalWithCouponWalletCell
                 cell?.selectionStyle = .none
@@ -1262,362 +1233,49 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
                 cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
                 cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
+                cell?.managementFeeLbl.text = Localization.value(for: "managementFee")
                 cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "pay") as? String, for: .normal)
                 
-                
-                
-                
-                
-                
                 let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
+                let totalAmount = Singleton.sharedInstance.MyCartModel.data.totalCartAmount ?? "0.00"
                 // let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
                 let grandTax = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
                 let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
+                let totalPayAmount = self.finalPayable_amount.isEmpty ? totalAmount : self.finalPayable_amount
+                if let managementFee = Singleton.sharedInstance.MyCartModel.data.managementFee {
+                    cell?.managementFeeAmtLbl.text = String(format: "%@ %@", walletCurrency, managementFee)
+                }
                 cell?.taxValueLbl.text = currency + grandTax
                 cell?.subTotalAmtLbl.text = payingSubTotal
-                
                 cell?.walletAmtLbl.text = String(format: "- %@ %@",walletCurrency, self.finalWallet_Amount)
                 cell?.couponAmtLbl.text = String(format: "- %@ %@",walletCurrency, self.finalCoupon_Amount)
-                cell?.totalValueLbl.text = String (format: "%@ %@", walletCurrency,self.finalPayable_amount)
-
+                cell?.totalValueLbl.text = String (format: "%@ %@", walletCurrency, totalPayAmount)
+                cell?.deliveryAmtlbl.text = walletCurrency + " " + deliveryFee
+                cell?.walletLbl.superview?.isHidden = !useWallet
+                cell?.couponLbl.superview?.isHidden = !useCouponOffer
+                cell?.taxValueLbl.superview?.isHidden = grandTax == "0.00" || grandTax.isEmpty
+                cell?.deliveryAmtlbl.superview?.isHidden = deliveryFee == "0.00" || deliveryFee.isEmpty
                 if pickUpType == "self"
                 {
                     cell?.deliveryAmtlbl.text = "0.00"
                     
                 }
-                else
-                {
-                    cell?.deliveryAmtlbl.text = payingDesliveryFee
-                    
-                }
-                if peakHourFeeStatus == "0"
-                {
-                    cell?.peakHoursFeeBtn.isHidden = true
-                }
-                else
-                {
-                    cell?.peakHoursFeeBtn.isHidden = false
-                    cell?.peakHoursFeeBtn.tag = indexPath.section
-                    cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
-                }
                 
+                cell?.peakHoursFeeBtn.isHidden = peakHourFeeStatus == "0"
                 if self.finalMessage == "No need to pay"
                 {
                     cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "pay") as? String, for: .normal)
                 }
                 else
                 {
-                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@ %@", walletCurrency,self.finalPayable_amount)
+                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@ %@", walletCurrency, totalPayAmount)
                     cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
                 }
                 
                 cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
                 return cell!
-                
-               /* var finalToal = Float()
-                //finalToal = exactToatlAmt - walletAvailableBalance
-                finalToal = remainingAmountCalc
-                
-                let a = finalToal
-                let b = (deliveryFee as NSString).floatValue
-                //let c = (grandTax as NSString).floatValue
-                
-                let minus = a - b
-                
-                
-                if remainingAmountCalc < walletAvailableBalance
-                {
-                    cell?.totalValueLbl.text = String (format: "%@ 0.00", walletCurrency)
-                    cell?.checkOutBtn.setTitle("PAY", for: .normal)
-                    cell?.walletAmtLbl.text = String(format: "- %@ %.2f",walletCurrency, remainingAmountCalc)
-                    
-                }
-                else
-                {
-                    cell?.totalValueLbl.text = String (format: "%@ %.2f", walletCurrency,finalToal)
-                    cell?.walletAmtLbl.text = String(format: "- %@ %.2f",walletCurrency, walletAvailableBalance)
-
-                    if pickUpType == "self"
-                    {
-                        let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,(cell?.totalValueLbl.text)!)
-                        cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    }
-                    else
-                    {
-                        let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,finalToal)
-                        cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                        
-                    }
-                }
-                cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
-                
-                return cell!*/
             }
-            else if useWallet
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalWithWalletCell") as? CartTotalWithWalletCell
-                cell?.selectionStyle = .none
-                
-                cell?.walletLbl.text = LanguageDictonary.value(forKey: "walletused") as? String
-                cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
-                cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
-                cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
-                cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
-                cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
-                
-                
-                
-                
-                
-                let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-                // let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                let grandTax = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
-                let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                cell?.taxValueLbl.text = currency + grandTax
-                cell?.subTotalAmtLbl.text = payingSubTotal
-                cell?.walletAmtLbl.text = String(format: "- %@ %@",walletCurrency, self.finalWallet_Amount)
-                cell?.totalValueLbl.text = String (format: "%@ %@", walletCurrency,self.finalPayable_amount)
-                
-                cell?.totalView.tag = 1001
-                
-                if pickUpType == "self"
-                {
-                    cell?.deliveryAmtlbl.text = "0.00"
-                    
-                }
-                else
-                {
-                    cell?.deliveryAmtlbl.text = payingDesliveryFee
-                    
-                }
-                
-                
-                if peakHourFeeStatus == "0"
-                {
-                    cell?.peakHoursFeeBtn.isHidden = true
-                }
-                else
-                {
-                    cell?.peakHoursFeeBtn.isHidden = false
-                    cell?.peakHoursFeeBtn.tag = indexPath.section
-                    cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
-                }
-                
-                if self.finalMessage == "No need to pay"
-                {
-                  cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "pay") as? String, for: .normal)
-                }
-                else
-                {
-                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@ %@", walletCurrency,self.finalPayable_amount)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                }
-                
-                cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
-                return cell!
-                
-                
-               /* var finalToal = Float()
-                finalToal = exactToatlAmt - walletAvailableBalance
-                
-                let a = finalToal
-                let b = (deliveryFee as NSString).floatValue
-                //let c = (grandTax as NSString).floatValue
-
-                let minus = a - b
-                
-                
-                
-                if exactToatlAmt < walletAvailableBalance
-                {
-                    cell?.totalValueLbl.text = String (format: "%@ 0.00", walletCurrency)
-                    cell?.checkOutBtn.setTitle("PAY", for: .normal)
-                    cell?.walletAmtLbl.text = String(format: "- %@ %.2f",walletCurrency, exactToatlAmt)
-                    remainingAmountCalc = 0.00
-                    
-                }
-                else
-                {
-                    cell?.totalValueLbl.text = String (format: "%@ %.2f", walletCurrency,finalToal)
-                    if pickUpType == "self"
-                    {
-                        let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,(cell?.totalValueLbl.text)!)
-                        cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    }
-                    else
-                    {
-                        let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,finalToal)
-                        cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                        
-                    }
-                    remainingAmountCalc = finalToal
-                }*/
-                
-                
-            }
-            else if self.useCouponOffer == true
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalWithCouponCell") as? CartTotalWithCouponCell
-                cell?.selectionStyle = .none
-                
-                cell?.couponLbl.text = LanguageDictonary.value(forKey: "offerused") as? String
-                cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
-                cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
-                cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
-                cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
-                cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
-                
-                
-                
-                
-                
-                
-                let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-                // let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                
-                cell?.subTotalAmtLbl.text = payingSubTotal
-                
-                cell?.couponAmtLbl.text = String(format: "- %@ %@",walletCurrency, self.finalCoupon_Amount)
-                let grandTax = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
-                let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                cell?.taxValueLbl.text = currency + grandTax
-
-                cell?.totalValueLbl.text = String (format: "%@ %@", walletCurrency,self.finalPayable_amount)
-                
-                cell?.totalView.tag = 1001
-                
-                if pickUpType == "self"
-                {
-                    cell?.deliveryAmtlbl.text = "0.00"
-                    
-                }
-                else
-                {
-                    cell?.deliveryAmtlbl.text = payingDesliveryFee
-                    
-                }
-                
-                if self.finalMessage == "No need to pay"
-                {
-                     cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "pay") as? String, for: .normal)
-                }
-                else
-                {
-                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@ %@", walletCurrency,self.finalPayable_amount)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                }
-                
-                
-                if peakHourFeeStatus == "0"
-                {
-                    cell?.peakHoursFeeBtn.isHidden = true
-                }
-                else
-                {
-                    cell?.peakHoursFeeBtn.isHidden = false
-                    cell?.peakHoursFeeBtn.tag = indexPath.section
-                    cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
-                }
-                
-                cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
-                return cell!
-                
-               /* var finalToal = Float()
-                finalToal = exactToatlAmt - exactCouponAmt
-                
-                let a = finalToal
-                let b = (deliveryFee as NSString).floatValue
-                
-                let minus = a - b
-                
-                if pickUpType == "self"
-                {
-                    //finalToal = minus
-                    cell?.deliveryAmtlbl.text = "0.00"
-                    let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,minus)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    cell?.totalValueLbl.text = String (format: "%@ %.2f", walletCurrency,minus)
-                    remainingAmountCalc = minus
-                    
-                    
-                }else
-                {
-                    cell?.deliveryAmtlbl.text = payingDesliveryFee
-                    let btnTitleStr = String(format: "PAY %@ %.2f", walletCurrency,finalToal)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    cell?.totalValueLbl.text = String (format: "%@ %.2f", walletCurrency,finalToal)
-                    remainingAmountCalc = finalToal
-                }
-                
-                cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
-                return cell!*/
-                
-            }
-            else
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalCell") as? CartTotalCell
-                cell?.selectionStyle = .none
-                
-                cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
-                cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
-                cell?.deliveryFeeLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
-                 cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
-                cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
-                
-                cell?.subTotalValueLbl.text = payingSubTotal
-                let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-                var grandTotal = Singleton.sharedInstance.MyCartModel.data.totalCartAmount as String
-                
-                let grandTax = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
-                let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                cell?.taxValueLbl.text = currency + grandTax
-                
-                grandTotal = grandTotal.replacingOccurrences(of: ",", with: "")
-                let a = (grandTotal as NSString).floatValue
-                let b = (deliveryFee as NSString).floatValue
-                
-                let minus = a - b
-                
-                if pickUpType == "self"
-                {
-                    cell?.deliveryFeeValueLbl.isHidden = false
-                    cell?.deliveryFeeLbl.isHidden = false
-                    cell?.deliveryFeeValueLbl.text = currency + "0.00"
-                    
-                    cell?.totalValueLbl.text = currency + (minus as NSNumber).stringValue
-                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@",(cell?.totalValueLbl.text)!)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    
-                }
-                else
-                {
-                    cell?.deliveryFeeValueLbl.isHidden = false
-                    cell?.deliveryFeeLbl.isHidden = false
-                    cell?.deliveryFeeValueLbl.text = payingDesliveryFee
-                    cell?.totalValueLbl.text = payingTotalAmt
-                    let btnTitleStr = String(format: "\(LanguageDictonary.value(forKey: "pay") as! String) %@",payingTotalAmt)
-                    cell?.checkOutBtn.setTitle(btnTitleStr, for: .normal)
-                    
-                }
-                cell?.totalView.tag = 1001
-                
-                if peakHourFeeStatus == "0"
-                {
-                    cell?.peakHoursFeeBtn.isHidden = true
-                }
-                else
-                {
-                    cell?.peakHoursFeeBtn.isHidden = false
-                    cell?.peakHoursFeeBtn.tag = indexPath.section
-                    cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
-                }
-                
-                cell?.checkOutBtn.addTarget(self, action: #selector(payBtnTapped), for: .touchUpInside)
-                return cell!
-            }
- 
         }
-      }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -1638,68 +1296,40 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         }
         else
         {
-        
-        if indexPath.section == 0 {
-            if !fullAmtPayByWallet{
-                selectedPaymetMethod = paymentMethodsArray[indexPath.row]
-            }
-        }else if indexPath.section == 1{
-            if termsConditions == "agree"
-            {
-                if useWallet
-                {
-                    self.walletUsedStatusForAPI = "0"
-                    self.walletAmountforAPI = ""
-                    useWallet = false
-                    fullAmtPayByWallet = false
-                     self.useWalletAmount()
-                }
-                else
-                {
-                    self.walletUsedStatusForAPI = "1"
-                    useWallet = true
-                    self.useWalletAmount()
-                    
-//                    if self.useCouponOffer == true
-//                    {
-//                      if remainingAmountCalc != 0.00
-//                      {
-//                        if walletAvailableBalance >= remainingAmountCalc
-//                        {
-//                            fullAmtPayByWallet = true
-//                            selectedPaymetMethod = ""
-//                        }
-//                        useWallet = true
-//                      }
-//                      else
-//                      {
-//                        useWallet = false
-//                      }
-//                    }
-//                    else
-//                    {
-//                    if walletAvailableBalance >= exactToatlAmt
-//                    {
-//                        fullAmtPayByWallet = true
-//                        selectedPaymetMethod = ""
-//                    }
-//                    useWallet = true
-//
-//                    //self.useCouponOffer = false
-//                    }
-                }
-            }else{
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseagreetheterms") as! String)
-            }
             
-        }else if indexPath.section == 2{
-            if termsConditions == "agree"{
-                termsConditions = "not agree"
-            }else{
-                termsConditions = "agree"
+            if indexPath.section == 0 {
+                if !fullAmtPayByWallet{
+                    selectedPaymetMethod = paymentMethodsArray[indexPath.row]
+                }
+            }else if indexPath.section == 1{
+                if termsConditions == "agree"
+                {
+                    if useWallet
+                    {
+                        self.walletUsedStatusForAPI = "0"
+                        self.walletAmountforAPI = ""
+                        useWallet = false
+                        fullAmtPayByWallet = false
+                        self.useWalletAmount()
+                    }
+                    else
+                    {
+                        self.walletUsedStatusForAPI = "1"
+                        useWallet = true
+                        self.useWalletAmount()
+                    }
+                }else{
+                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseagreetheterms") as! String)
+                }
+                
+            }else if indexPath.section == 2{
+                if termsConditions == "agree"{
+                    termsConditions = "not agree"
+                }else{
+                    termsConditions = "agree"
+                }
             }
-        }
-        paymentTable.reloadData()
+            paymentTable.reloadData()
         }
     }
     
@@ -1707,36 +1337,36 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     {
         let buttonRow = sender.tag
         print("buttonRow is:",buttonRow)
-
+        
         if termsConditions == "agree"
         {
             
-//            if self.finalMessage == "No need to pay"
-//            {
-//                self.couponGrayView.isHidden = true
-//                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
-//            }
-//            else
-//            {
-              self.couponGrayView.isHidden = false
+            //            if self.finalMessage == "No need to pay"
+            //            {
+            //                self.couponGrayView.isHidden = true
+            //                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
+            //            }
+            //            else
+            //            {
+            self.couponGrayView.isHidden = false
             //}
-
-//            if useWallet
-//            {
-//                if remainingAmountCalc == 0.00
-//                {
-//                self.couponGrayView.isHidden = true
-//                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
-//                }
-//                else
-//                {
-//                 self.couponGrayView.isHidden = false
-//                }
-//            }
-//            else
-//            {
-//                self.couponGrayView.isHidden = false
-//            }
+            
+            //            if useWallet
+            //            {
+            //                if remainingAmountCalc == 0.00
+            //                {
+            //                self.couponGrayView.isHidden = true
+            //                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
+            //                }
+            //                else
+            //                {
+            //                 self.couponGrayView.isHidden = false
+            //                }
+            //            }
+            //            else
+            //            {
+            //                self.couponGrayView.isHidden = false
+            //            }
             
         }
         else
@@ -1767,41 +1397,41 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         let floatCouponAmnt = selectedCouponPrice.replacingOccurrences(of: ",", with: "")
         exactCouponAmt = Float(floatCouponAmnt)!
         print("exactCouponAmt",exactCouponAmt)
-//
-//        if useWallet
-//        {
-//            if exactCouponAmt <= remainingAmountCalc
-//            {
-//                self.couponGrayView.isHidden = true
-//                self.useCouponOffer = true
-//            }
-//            else
-//            {
-//                self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
-//                self.couponGrayView.isHidden = false
-//                self.useCouponOffer = false
-//            }
-//        }
-//        else
-//        {
-//        if exactCouponAmt <= exactToatlAmt
-//        {
-//        self.couponGrayView.isHidden = true
-//        self.useCouponOffer = true
-//        }
-//        else
-//        {
-//            self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
-//            self.couponGrayView.isHidden = false
-//            self.useCouponOffer = false
-//        }
-//        }
-//        self.paymentTable.reloadData()
+        //
+        //        if useWallet
+        //        {
+        //            if exactCouponAmt <= remainingAmountCalc
+        //            {
+        //                self.couponGrayView.isHidden = true
+        //                self.useCouponOffer = true
+        //            }
+        //            else
+        //            {
+        //                self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
+        //                self.couponGrayView.isHidden = false
+        //                self.useCouponOffer = false
+        //            }
+        //        }
+        //        else
+        //        {
+        //        if exactCouponAmt <= exactToatlAmt
+        //        {
+        //        self.couponGrayView.isHidden = true
+        //        self.useCouponOffer = true
+        //        }
+        //        else
+        //        {
+        //            self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
+        //            self.couponGrayView.isHidden = false
+        //            self.useCouponOffer = false
+        //        }
+        //        }
+        //        self.paymentTable.reloadData()
     }
     
     @IBAction func couponPopupCloseBtnAction(_ sender: Any)
     {
-      self.couponGrayView.isHidden = true
+        self.couponGrayView.isHidden = true
     }
     
     @objc func showMonthAndYear(){
@@ -1855,11 +1485,11 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
             
-//            if exactToatlAmt < walletAvailableBalance{
-//                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-//            }else{
-//                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-//            }
+            //            if exactToatlAmt < walletAvailableBalance{
+            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
+            //            }else{
+            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
+            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1879,7 +1509,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         let Parse = CommomParsing()
         
         Parse.cod_paymet(lang: login_session.value(forKey: "Language") as? String ?? "es",ord_self_pickup: self_pickupStr,cus_name: firstName,cus_last_name: lastName,cus_email: emailStr,cus_phone1: mobileNumber,cus_phone2: mobileNo2,cus_address: address,cus_address1:landmark,cus_lat: latStr,cus_long: longStr,use_wallet: walletStr,wallet_amt: walletAmtStr,use_coupon: self.couponisUsed, coupon_id: selectedCouponID, coupon_amount: selectedCouponPrice, onSuccess:
-            {
+                            {
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
@@ -1888,7 +1518,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 isfromPaymentSucessPage = true
                 if self.useCouponOffer == true
                 {
-                self.useCouponOffer = false
+                    self.useCouponOffer = false
                 }
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
@@ -1944,19 +1574,19 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-
-//            if exactToatlAmt < walletAvailableBalance
-//            {
-//                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-//            }
-//            else if exactToatlAmt == walletAvailableBalance
-//            {
-//                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-//            }
-//            else
-//            {
-//                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-//            }
+            
+            //            if exactToatlAmt < walletAvailableBalance
+            //            {
+            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
+            //            }
+            //            else if exactToatlAmt == walletAvailableBalance
+            //            {
+            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
+            //            }
+            //            else
+            //            {
+            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
+            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1985,7 +1615,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     self.useCouponOffer = false
                 }
-
+                
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
@@ -2044,8 +1674,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             let paymentDict = completedPayment.confirmation as NSDictionary
             let responseDict = NSMutableDictionary()
             responseDict.addEntries(from: paymentDict.object(forKey: "response") as! [AnyHashable : Any])
-//            let transaction_Id = responseDict.object(forKey: "id")as! String
-//            print(paymentDict.value(forKeyPath: "response.id") as Any)
+            //            let transaction_Id = responseDict.object(forKey: "id")as! String
+            //            print(paymentDict.value(forKeyPath: "response.id") as Any)
             var transaction_id = String()
             let timestamp = Date().currentTimeMillis()
             transaction_id = String("PAY-\(timestamp ?? 0)")
@@ -2097,12 +1727,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-
-//            if exactToatlAmt < walletAvailableBalance{
-//                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-//            }else{
-//                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-//            }
+            
+            //            if exactToatlAmt < walletAvailableBalance{
+            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
+            //            }else{
+            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
+            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -2130,7 +1760,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     self.useCouponOffer = false
                 }
-
+                
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
@@ -2216,12 +1846,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-
-//            if exactToatlAmt < walletAvailableBalance{
-//                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-//            }else{
-//                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-//            }
+            
+            //            if exactToatlAmt < walletAvailableBalance{
+            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
+            //            }else{
+            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
+            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -2248,12 +1878,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     self.useCouponOffer = false
                 }
-
+                
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
             else{
-                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
             self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in})
@@ -2277,8 +1907,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             login_session.synchronize()
             actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
             actAsBaseTabbar.selectedIndex = 3
-           self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            
         }
         
         let icon = UIImage(named:"success_tick")
@@ -2338,7 +1968,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         let maxLength = 16
         let currentString: NSString = textField.text! as NSString
         let newString: NSString =
-            currentString.replacingCharacters(in: range, with: string) as NSString
+        currentString.replacingCharacters(in: range, with: string) as NSString
         return newString.length <= maxLength
     }
 }

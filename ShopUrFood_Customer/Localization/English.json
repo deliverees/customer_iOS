@@ -309,5 +309,6 @@
     "map_location_alert_title": "Warning",
     "select_address_edit_address_alert_title": "Reminder",
     "select_address_edit_address_alert_message": "Review your delivery address, if you need to modify it, tap on edit (on the right side of the address), add any indications or references for the delivery person to be able to find it easily and make the service of your satisfaction.",
-    "shipping_address_commerce_unavailable": "Shipping to this address is not available for this commerce at this moment, sorry for the inconvenience."
+    "shipping_address_commerce_unavailable": "Shipping to this address is not available for this commerce at this moment, sorry for the inconvenience.",
+    "managementFee": "Management fee"
 }

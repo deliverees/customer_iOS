@@ -308,5 +308,6 @@
     "map_location_alert_title": "Atención",
     "select_address_edit_address_alert_title": "Recordatorio",
     "select_address_edit_address_alert_message": "Revisa la dirección de entrega, si necesitas modificarla, pulsa el botón de editar junto a la dirección, añade cualquier descripción para que el repartidor pueda encontrarla fácilmente y que el servicio sea de su mayor satisfacción",
-    "shipping_address_commerce_unavailable": "En estos momentos el comercio no ofrece entregas en esta localización, disculpe las molestias."
+    "shipping_address_commerce_unavailable": "En estos momentos el comercio no ofrece entregas en esta localización, disculpe las molestias.",
+    "managementFee": "Gastos de gestión"
 }
