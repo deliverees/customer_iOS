@@ -25,7 +25,6 @@
 		227CCAAE22D8A78000D60FA4 /* FilterShowResDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227CCAAD22D8A78000D60FA4 /* FilterShowResDetailsCell.swift */; };
 		227CCAB022D8A7A700D60FA4 /* FilterMostPreferTimeTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227CCAAF22D8A7A700D60FA4 /* FilterMostPreferTimeTitleCell.swift */; };
 		227CCAB222D8A7C300D60FA4 /* FilterMostPreferTimeDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227CCAB122D8A7C300D60FA4 /* FilterMostPreferTimeDetailsCell.swift */; };
-		22B5088A23115E9000369176 /* CartTotalWithCouponCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B5088923115E9000369176 /* CartTotalWithCouponCell.swift */; };
 		22B5088C23115EC800369176 /* CartTotalWithCouponWalletCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B5088B23115EC800369176 /* CartTotalWithCouponWalletCell.swift */; };
 		22D4B4002306962400C61927 /* MyOffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D4B3FF2306962400C61927 /* MyOffersViewController.swift */; };
 		22D4B4022306966100C61927 /* MyOffersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D4B4012306966100C61927 /* MyOffersTableViewCell.swift */; };
@@ -145,7 +144,6 @@
 		243882F2222420D20023D26F /* CartItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243882F1222420D20023D26F /* CartItemCell.swift */; };
 		243882F4222423550023D26F /* CartToppingCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243882F3222423550023D26F /* CartToppingCollectionCell.swift */; };
 		243CC9DE2240C04500909C81 /* PaymentWalletCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243CC9DD2240C04400909C81 /* PaymentWalletCell.swift */; };
-		243CC9E02240D24900909C81 /* CartTotalWithWalletCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243CC9DF2240D24900909C81 /* CartTotalWithWalletCell.swift */; };
 		243DBCF22237D59E005335F5 /* WalletTBCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243DBCF12237D59E005335F5 /* WalletTBCell.swift */; };
 		24424BCA223A8E9E009DD57A /* googleMapStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 24424BC9223A8E9E009DD57A /* googleMapStyle.json */; };
 		2444F87B220C19F700EF1574 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2444F87A220C19F600EF1574 /* BaseViewController.swift */; };
@@ -271,7 +269,6 @@
 		227CCAAD22D8A78000D60FA4 /* FilterShowResDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterShowResDetailsCell.swift; sourceTree = "<group>"; };
 		227CCAAF22D8A7A700D60FA4 /* FilterMostPreferTimeTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMostPreferTimeTitleCell.swift; sourceTree = "<group>"; };
 		227CCAB122D8A7C300D60FA4 /* FilterMostPreferTimeDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterMostPreferTimeDetailsCell.swift; sourceTree = "<group>"; };
-		22B5088923115E9000369176 /* CartTotalWithCouponCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalWithCouponCell.swift; sourceTree = "<group>"; };
 		22B5088B23115EC800369176 /* CartTotalWithCouponWalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalWithCouponWalletCell.swift; sourceTree = "<group>"; };
 		22D4B3FF2306962400C61927 /* MyOffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOffersViewController.swift; sourceTree = "<group>"; };
 		22D4B4012306966100C61927 /* MyOffersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOffersTableViewCell.swift; sourceTree = "<group>"; };
@@ -397,7 +394,6 @@
 		243882F1222420D20023D26F /* CartItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemCell.swift; sourceTree = "<group>"; };
 		243882F3222423550023D26F /* CartToppingCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartToppingCollectionCell.swift; sourceTree = "<group>"; };
 		243CC9DD2240C04400909C81 /* PaymentWalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentWalletCell.swift; sourceTree = "<group>"; };
-		243CC9DF2240D24900909C81 /* CartTotalWithWalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTotalWithWalletCell.swift; sourceTree = "<group>"; };
 		243DBCF12237D59E005335F5 /* WalletTBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTBCell.swift; sourceTree = "<group>"; };
 		24424BC9223A8E9E009DD57A /* googleMapStyle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = googleMapStyle.json; path = "ShopUrFood_Customer/New Group/googleMapStyle.json"; sourceTree = SOURCE_ROOT; };
 		2444F87A220C19F600EF1574 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -810,8 +806,6 @@
 				242AB3F0223F9C4B006ED8CA /* StripePaymentCell.swift */,
 				242AB3F2223FBADB006ED8CA /* paymentTermsConditionsCell.swift */,
 				243CC9DD2240C04400909C81 /* PaymentWalletCell.swift */,
-				243CC9DF2240D24900909C81 /* CartTotalWithWalletCell.swift */,
-				22B5088923115E9000369176 /* CartTotalWithCouponCell.swift */,
 				22B5088B23115EC800369176 /* CartTotalWithCouponWalletCell.swift */,
 				22E3B8F322DF54520091C87E /* ApplyCouponCell.swift */,
 				22D528DE22DF665A006142FF /* CouponTableViewCell.swift */,
@@ -1652,7 +1646,6 @@
 				246CE512229E57C200D6646A /* OrderHistoryTrackingPopUpPage.swift in Sources */,
 				2458B1BF22490FFA0093B29B /* OrderReviewTableViewCell.swift in Sources */,
 				227CCAAA22D8A74700D60FA4 /* FilterCuisinesDetailCell.swift in Sources */,
-				22B5088A23115E9000369176 /* CartTotalWithCouponCell.swift in Sources */,
 				245F37EA22252278003024BC /* AddedItemDetail.swift in Sources */,
 				241A6EC522153DA900667436 /* FeaturedRestaurant.swift in Sources */,
 				2C172DF623C99AB300D02578 /* Datas.swift in Sources */,
@@ -1711,7 +1704,6 @@
 				242745A6220DAD9B00D282C8 /* FoodCollectionCell.swift in Sources */,
 				242D78B7221D1C97004DE1FD /* RestaurantInfoViewController.swift in Sources */,
 				240278AE224377F200BB2544 /* SettingsTBCell.swift in Sources */,
-				243CC9E02240D24900909C81 /* CartTotalWithWalletCell.swift in Sources */,
 				5E40EABB29DF0D620091661E /* CategoriesHome.swift in Sources */,
 				24346FAC22098FF400446252 /* CartViewController.swift in Sources */,
 				24346FA4220973B500446252 /* Constant.swift in Sources */,

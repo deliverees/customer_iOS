@@ -328,6 +328,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             cell?.deliveryFeeLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
             cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
             cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
+            cell?.managementFeeLbl.text = Localization.value(for: "managementFee")
             
             cell?.checkOutBtn.layer.borderWidth = 2
             cell?.checkOutBtn.layer.borderColor = UIColor.red.cgColor
@@ -342,7 +343,11 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
             cell?.deliveryFeeValueLbl.text = currency + " " + deliveryFee
             cell?.totalValueLbl.text = currency + " " + grandTotal
             cell?.taxValueLbl.text = currency + " " + taxTotal
-
+            cell?.taxLbl.superview?.isHidden = taxTotal == "0.00" || taxTotal.isEmpty
+            cell?.deliveryFeeValueLbl.superview?.isHidden = deliveryFee == "0.00" || deliveryFee.isEmpty
+            if let managementFee = Singleton.sharedInstance.MyCartModel.data.managementFee {
+                cell?.managementFeeAmtLbl.text = currency + " " + managementFee
+            }
             cell?.totalView.tag = 1001
             
             peakClickedPopupviewFrame.frame = cell!.frame
