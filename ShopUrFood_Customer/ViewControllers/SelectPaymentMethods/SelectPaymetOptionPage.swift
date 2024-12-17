@@ -330,7 +330,8 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             if response.object(forKey: "code") as! Int == 200{
                 let tempDict = NSMutableDictionary()
                 tempDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
-                self.walletAvailableBalance = (tempDict.object(forKey: "available_balance") as? NSNumber)?.floatValue ?? 0
+                let walletStringValue = tempDict.object(forKey: "available_balance") as? String ?? "0.0"
+                self.walletAvailableBalance = Float(walletStringValue) ?? 0
                 self.walletCurrency = tempDict.object(forKey: "currency_code")as! String
                 self.paymentTable.reloadData()
             }
@@ -781,7 +782,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                         if walletAvailableBalance >= exactToatlAmt
                             
                         {
-                            return 0
+                            return UITableView.automaticDimension
                             
                         }
                         else
@@ -899,7 +900,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     {
                         if walletAvailableBalance >= exactToatlAmt
                         {
-                            return 0
+                            return UITableView.automaticDimension
                             
                         }else
                         {
@@ -1210,7 +1211,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 }else{
                     cell?.selectionImg.image = UIImage(named: "big_check")
                 }
-                cell?.walletAmtLbl.text = String(format: "\(LanguageDictonary.value(forKey: "usewallet") as! String)Use Wallet %@ %.2f", walletCurrency,walletAvailableBalance)
+                cell?.walletAmtLbl.text = String(format: "\(LanguageDictonary.value(forKey: "usewallet") as! String) %@ %.2f", walletCurrency,walletAvailableBalance)
                 
                 return cell!
             }
