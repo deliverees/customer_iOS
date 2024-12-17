@@ -331,7 +331,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 let tempDict = NSMutableDictionary()
                 tempDict.addEntries(from: (response.object(forKey: "data")as! NSDictionary) as! [AnyHashable : Any])
                 let walletStringValue = tempDict.object(forKey: "available_balance") as? String ?? "0.0"
-                self.walletAvailableBalance = Float(walletStringValue) ?? 0
+                let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
+                numberFormatter.decimalSeparator = "."
+                numberFormatter.minimumFractionDigits = 0
+                numberFormatter.maximumFractionDigits = 2
+                self.walletAvailableBalance = numberFormatter.number(from: walletStringValue)?.floatValue ?? 0.0
                 self.walletCurrency = tempDict.object(forKey: "currency_code")as! String
                 self.paymentTable.reloadData()
             }
@@ -782,7 +787,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                         if walletAvailableBalance >= exactToatlAmt
                             
                         {
-                            return UITableView.automaticDimension
+                            return 0
                             
                         }
                         else
@@ -900,7 +905,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     {
                         if walletAvailableBalance >= exactToatlAmt
                         {
-                            return UITableView.automaticDimension
+                            return 0
                             
                         }else
                         {
@@ -969,8 +974,11 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             {
                 return UITableView.automaticDimension
             }
-            else if indexPath.section == 3
+            else if indexPath.section == 3 // Coupon Cell
             {
+                if couponListArray.count == 0 {
+                    return 0
+                }
                 if self.useCouponOffer == true
                 {
                     if exactCouponAmt <= exactToatlAmt
