@@ -18,6 +18,7 @@ class CartData : NSObject, NSCoding{
     var totalCartAmount : String!
     var totalCartCount : Int!
     var cartTaxTotal : String!
+    var managementFee: String?
 
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
@@ -29,7 +30,7 @@ class CartData : NSObject, NSCoding{
         totalCartAmount = dictionary["total_cart_amount"] as? String
         totalCartCount = dictionary["total_cart_count"] as? Int
         cartTaxTotal = dictionary["cart_tax_total"] as? String
-
+        managementFee = dictionary["management_fee"] as? String
         cartDetails = [CartDetail]()
         if let cartDetailsArray = dictionary["cart_details"] as? [[String:Any]]{
             for dic in cartDetailsArray{
@@ -103,6 +104,7 @@ class CartData : NSObject, NSCoding{
         totalCartAmount = aDecoder.decodeObject(forKey: "total_cart_amount") as? String
         totalCartCount = aDecoder.decodeObject(forKey: "total_cart_count") as? Int
         cartTaxTotal = aDecoder.decodeObject(forKey: "cart_tax_total") as? String
+        managementFee = aDecoder.decodeObject(forKey: "management_fee") as? String
     }
 
     /**
@@ -140,6 +142,9 @@ class CartData : NSObject, NSCoding{
         }
         if cartTaxTotal != nil{
             aCoder.encode(cartTaxTotal, forKey: "cart_tax_total")
+        }
+        if let managementFee {
+            aCoder.encode(managementFee, forKey: "management_fee")
         }
     }
 }

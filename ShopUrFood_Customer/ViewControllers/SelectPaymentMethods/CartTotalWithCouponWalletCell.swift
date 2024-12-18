@@ -25,6 +25,8 @@ class CartTotalWithCouponWalletCell: UITableViewCell {
     @IBOutlet weak var couponAmtLbl: UILabel!
     @IBOutlet weak var taxLbl: UILabel!
     @IBOutlet weak var taxValueLbl: UILabel!
+    @IBOutlet weak var managementFeeLbl: UILabel!
+    @IBOutlet weak var managementFeeAmtLbl: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

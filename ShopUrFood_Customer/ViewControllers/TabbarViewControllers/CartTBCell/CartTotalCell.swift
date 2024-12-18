@@ -21,6 +21,8 @@ class CartTotalCell: UITableViewCell {
     @IBOutlet weak var peakHoursFeeBtn: UIButton!
     @IBOutlet weak var taxLbl: UILabel!
     @IBOutlet weak var taxValueLbl: UILabel!
+    @IBOutlet weak var managementFeeLbl: UILabel!
+    @IBOutlet weak var managementFeeAmtLbl: UILabel!
 
 
     
