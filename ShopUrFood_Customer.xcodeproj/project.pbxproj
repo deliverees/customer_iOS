@@ -231,6 +231,8 @@
 		D44E57E02C4A571600FA10B2 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */; };
 		D48955922C6A8F380082A2A7 /* WorkingHoursModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */; };
 		D48955952C6B4DA20082A2A7 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48955942C6B4DA20082A2A7 /* Localization.swift */; };
+		D48D3B932D464DA300A06AD4 /* RestaurantInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D48D3B922D464DA300A06AD4 /* RestaurantInfoHeaderView.xib */; };
+		D48D3B952D46569800A06AD4 /* RestaurantInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D3B942D46569800A06AD4 /* RestaurantInfoHeaderView.swift */; };
 		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
 		D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */; };
@@ -488,6 +490,8 @@
 		D44E57DF2C4A571600FA10B2 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		D48955912C6A8F380082A2A7 /* WorkingHoursModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursModel.swift; sourceTree = "<group>"; };
 		D48955942C6B4DA20082A2A7 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		D48D3B922D464DA300A06AD4 /* RestaurantInfoHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestaurantInfoHeaderView.xib; sourceTree = "<group>"; };
+		D48D3B942D46569800A06AD4 /* RestaurantInfoHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoHeaderView.swift; sourceTree = "<group>"; };
 		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckShippingAddressUseCase.swift; sourceTree = "<group>"; };
@@ -843,6 +847,7 @@
 		242D78B5221D1C11004DE1FD /* RestaurantInfoViewController */ = {
 			isa = PBXGroup;
 			children = (
+				D48D3B912D464D8400A06AD4 /* Views */,
 				242A9C1C221BC660002F4E8E /* CollectionViewCell */,
 				242D78B6221D1C97004DE1FD /* RestaurantInfoViewController.swift */,
 				242D78B8221D1E63004DE1FD /* RestaurantInfoTBCell.swift */,
@@ -1328,6 +1333,15 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		D48D3B912D464D8400A06AD4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D48D3B922D464DA300A06AD4 /* RestaurantInfoHeaderView.xib */,
+				D48D3B942D46569800A06AD4 /* RestaurantInfoHeaderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		D495F03F2C6B5E7A009BC158 /* WorkingHoursTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1355,7 +1369,6 @@
 				24346F6E220972C000446252 /* Sources */,
 				24346F6F220972C000446252 /* Frameworks */,
 				24346F70220972C000446252 /* Resources */,
-				209E77FB235853240061AF01 /* ShellScript */,
 				A132EE4E1D815EF2F9514CDB /* [CP] Embed Pods Frameworks */,
 				631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */,
 			);
@@ -1393,8 +1406,9 @@
 		24346F6A220972C000446252 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1610;
 				ORGANIZATIONNAME = apple4;
 				TargetAttributes = {
 					24346F71220972C000446252 = {
@@ -1471,6 +1485,7 @@
 				24346FE02209C1CD00446252 /* Poppins-Thin.ttf in Resources */,
 				24346F7B220972C000446252 /* Main.storyboard in Resources */,
 				24346FE82209C43000446252 /* TruenoRg.otf in Resources */,
+				D48D3B932D464DA300A06AD4 /* RestaurantInfoHeaderView.xib in Resources */,
 				24346FD62209C1CD00446252 /* Poppins-ExtraLight.ttf in Resources */,
 				24346FD12209C1CD00446252 /* Poppins-BlackItalic.ttf in Resources */,
 				24424BCA223A8E9E009DD57A /* googleMapStyle.json in Resources */,
@@ -1512,23 +1527,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		209E77FB235853240061AF01 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n\n";
-		};
 		631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1548,7 +1546,7 @@
 		};
 		A132EE4E1D815EF2F9514CDB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -1666,6 +1664,7 @@
 				227CCAB222D8A7C300D60FA4 /* FilterMostPreferTimeDetailsCell.swift in Sources */,
 				24FCAAD0222FFBD100CFF631 /* Invoice_Item_cell.swift in Sources */,
 				240278B22243815600BB2544 /* AboutPageViewController.swift in Sources */,
+				D48D3B952D46569800A06AD4 /* RestaurantInfoHeaderView.swift in Sources */,
 				24F003B9222EB46D0093189D /* InvoiceViewController.swift in Sources */,
 				2C172DF123C985A100D02578 /* GoogleApiHelper.swift in Sources */,
 				24496AD3221FCDE90021DDC8 /* RelatedItemsCollectionCell.swift in Sources */,
@@ -1838,6 +1837,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1849,6 +1849,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1866,7 +1867,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1900,6 +1901,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1911,6 +1913,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1944,10 +1947,11 @@
 				CURRENT_PROJECT_VERSION = 1.12;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = ShopUrFood_Customer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1996,10 +2000,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.12;
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = ShopUrFood_Customer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2039,7 +2044,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E2C8AFDCF309F4E301F401D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VYF2Z948FZ;
@@ -2067,7 +2071,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BD0F1C3A5E1EB376DD3139B2 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VYF2Z948FZ;

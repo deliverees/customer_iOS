@@ -13,8 +13,6 @@ import GooglePlaces
 import Lottie
 import Alamofire
 
-
-
 class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource  {
     
     typealias SelectedLocationCompletionHandler = ((ChangeAddressDTO) -> Void)

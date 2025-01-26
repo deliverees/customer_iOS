@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '13.0'
+platform :ios, '16.6'
 
 target 'ShopUrFood_Customer' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -35,7 +35,6 @@ pod 'CRRefresh'
 pod 'ScrollableSegmentedControl', '~> 1.4.0'
 pod 'lottie-ios'
 pod 'MarqueeLabel/Swift'
-pod 'AFNetworking'
 pod 'ListPlaceholder'
 pod 'SCLAlertView'
 pod 'PayPal-iOS-SDK', :git => 'https://github.com/paypal/PayPal-iOS-SDK.git'
@@ -47,12 +46,12 @@ pod 'Segmentio', '~> 3.3'
 pod 'Popover'
 pod 'AMPopTip'
 pod 'BetterSegmentedControl', '~> 1.0'
-pod 'Fabric'
 pod 'Crashlytics'
 pod 'Firebase/Auth', '9.6.0'
 pod 'Firebase/Core', '9.6.0'
 pod 'Firebase/Functions', '9.6.0'
 pod 'Firebase/Messaging', '9.6.0'
+pod 'Firebase/Crashlytics'
 
 post_install do |installer|
   installer.pods_project.build_configurations.each do |config|
@@ -61,7 +60,7 @@ post_install do |installer|
   
   installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "13.0"
+        config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "16.6"
         config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
       end
   end

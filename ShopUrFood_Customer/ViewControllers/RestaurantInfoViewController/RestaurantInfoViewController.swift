@@ -20,7 +20,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
     @IBOutlet weak var NavigationTitlelbl: UILabel!
     @IBOutlet weak var segmentedControl: ScrollableSegmentedControl!
     @IBOutlet weak var noItemsLbl: UILabel!
-    
+    @IBOutlet weak var restaurantInfoHeaderView: RestaurantInfoHeaderView!
     var showIndex = Int()
     
     var rest_id = String()
@@ -329,7 +329,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         
         
         Parse.restaurantDetails(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, review_page_no: "1", search_text: "", sort_by: "", item_type: "", search_halal: "", search_combo: "", orderBy_spl_offer: "", orderBy_top_offers: "", available_time: "", page_no: 1, initial_loading: "", onSuccess:
-                                {
+                                    {
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
@@ -460,7 +460,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                             self.itemsArray.addObjects(from: ((response.object(forKey: "data")as! NSDictionary).object(forKey: "item_list") as! NSArray) as! [Any])
                         }
                         
-                        self.InfoTable.reloadSections(IndexSet(integer: 1), with: .none)
+                        self.InfoTable.reloadData()
                         
                     }
                     
@@ -745,7 +745,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         {
             let Parse = CommomParsing()
             Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: "", sub_category_id: "", sort_by: sortByStr, search_text: nameStr, page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                                        {
+                                            {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200{
@@ -776,7 +776,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
             let Parse = CommomParsing()
             
             Parse.getCategoryBasedItems(lang: login_session.value(forKey: "Language") as? String ?? "es", restaurant_id: rest_id, main_category_id: main_category_id.stringValue, sub_category_id: sub_category_id.stringValue, sort_by: sortByStr, search_text: nameStr, page_no: pagingIndex, all: allcategoryItemsStr, item_type: vegNonVegIDArray, search_halal: search_halal, search_combo: search_combo, orderBy_spl_offer: orderBy_splOffers, orderBy_top_offers: orderBy_topOffers, available_time: morePreferTimeIDArray, onSuccess:
-                                        {
+                                            {
                 response in
                 print (response)
                 if response.object(forKey: "code") as! Int == 200{
@@ -830,7 +830,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         }
         else
         {
-            return 2
+            return 1
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
@@ -841,17 +841,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         }
         else
         {
-            if indexPath.section == 0
-            {
-                if allcategoryItemsStr == "1"{
-                    return 210
-                }
-                return 270
-            }
-            else
-            {
-                return 265
-            }
+            return 265
         }
     }
     
@@ -878,9 +868,9 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         else
         {
             
-            if section == 0{
-                return 1
-            }else{
+//            if section == 0{
+//                return 1
+//            }else{
                 
                 if itemsArray.count == 1
                 {
@@ -902,7 +892,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                 }
                 
             }
-        }
+//        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -998,58 +988,58 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         
         else
         {
-            if indexPath.section == 0
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantInfoTBCell") as? RestaurantInfoTBCell
-                cell?.selectionStyle = .none
-                
-                
-                
-                
-                if responseDict.object(forKey: "category_list") != nil
-                {
-                    if (responseDict.object(forKey: "category_list") as? NSArray)?.count != 0
-                    {
-                        cell?.getCategoryData(result: responseDict)
-                        cell?.delegate = self
-                    }
-                    
-                    if allcategoryItemsStr == "1"
-                    {
-                        cell?.subCategoryBtn.isHidden = true
-                        cell?.subCategoryBtn.isUserInteractionEnabled = false
-                        cell?.subCategoryDropDown.isHidden = true
-                        cell?.subCategoryLineView.isHidden = true
-                    }
-                    else
-                    {
-                        cell?.subCategoryBtn.isHidden = false
-                        cell?.subCategoryBtn.isUserInteractionEnabled = true
-                        cell?.subCategoryDropDown.isHidden = false
-                        cell?.subCategoryLineView.isHidden = false
-                    }
-                    
-                    
-                    
-                    cell?.dishNameTxt.placeholder = LanguageDictonary.value(forKey: "enterdishname") as? String
-                    if self.selAvailableTimeBool == true
-                    {
-                        cell?.preferableItemTextLbl.isHidden = false
-                        let Str = (self.responseDict.object(forKey: "sel_available_time") as! Int)
-                        
-                        let PreferableText = LanguageDictonary.value(forKey: "preferableitems") as! String
-                        
-                        cell?.preferableItemTextLbl.text = PreferableText + " " + mostPreTimeNameArray[Str - 1]
-                    }
-                    else
-                    {
-                        cell?.preferableItemTextLbl.isHidden = true
-                    }
-                }
-                return cell!
-            }
-            else
-            {
+//            if indexPath.section == 0
+//            {
+//                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantInfoTBCell") as? RestaurantInfoTBCell
+//                cell?.selectionStyle = .none
+//                
+//                
+//                
+//                
+//                if responseDict.object(forKey: "category_list") != nil
+//                {
+//                    if (responseDict.object(forKey: "category_list") as? NSArray)?.count != 0
+//                    {
+//                        cell?.getCategoryData(result: responseDict)
+//                        cell?.delegate = self
+//                    }
+//                    
+//                    if allcategoryItemsStr == "1"
+//                    {
+//                        cell?.subCategoryBtn.isHidden = true
+//                        cell?.subCategoryBtn.isUserInteractionEnabled = false
+//                        cell?.subCategoryDropDown.isHidden = true
+//                        cell?.subCategoryLineView.isHidden = true
+//                    }
+//                    else
+//                    {
+//                        cell?.subCategoryBtn.isHidden = false
+//                        cell?.subCategoryBtn.isUserInteractionEnabled = true
+//                        cell?.subCategoryDropDown.isHidden = false
+//                        cell?.subCategoryLineView.isHidden = false
+//                    }
+//                    
+//                    
+//                    
+//                    cell?.dishNameTxt.placeholder = LanguageDictonary.value(forKey: "enterdishname") as? String
+//                    if self.selAvailableTimeBool == true
+//                    {
+//                        cell?.preferableItemTextLbl.isHidden = false
+//                        let Str = (self.responseDict.object(forKey: "sel_available_time") as! Int)
+//                        
+//                        let PreferableText = LanguageDictonary.value(forKey: "preferableitems") as! String
+//                        
+//                        cell?.preferableItemTextLbl.text = PreferableText + " " + mostPreTimeNameArray[Str - 1]
+//                    }
+//                    else
+//                    {
+//                        cell?.preferableItemTextLbl.isHidden = true
+//                    }
+//                }
+//                return cell!
+//            }
+//            else
+//            {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
                 cell?.selectionStyle = .none
                 cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
@@ -1114,7 +1104,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                 return cell!
                 
             }
-        }
+//        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
