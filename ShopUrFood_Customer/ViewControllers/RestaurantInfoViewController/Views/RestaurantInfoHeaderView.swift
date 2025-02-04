@@ -175,12 +175,12 @@ extension UIImage {
 class SimpleLabelCell: UICollectionViewCell {
     class PaddingLabel: UILabel {
         var padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) // Puedes ajustar el padding aquí
-
+        
         override func drawText(in rect: CGRect) {
             let paddedRect = rect.inset(by: padding)
             super.drawText(in: paddedRect)
         }
-
+        
         override var intrinsicContentSize: CGSize {
             let originalContentSize = super.intrinsicContentSize
             let width = originalContentSize.width + padding.left + padding.right
@@ -213,14 +213,14 @@ class SimpleLabelCell: UICollectionViewCell {
     }
     
     override var isSelected: Bool {
-            didSet {
-                if isSelected {
-                    label.backgroundColor = AppLightOrange
-                    label.textColor = .white
-                } else {
-                    label.backgroundColor = .white
-                    label.textColor = .darkText
-                }
+        didSet {
+            if isSelected {
+                label.backgroundColor = AppLightOrange
+                label.textColor = .white
+            } else {
+                label.backgroundColor = .white
+                label.textColor = .darkText
             }
         }
+    }
 }
