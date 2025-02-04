@@ -20,7 +20,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
     @IBOutlet weak var NavigationTitlelbl: UILabel!
     @IBOutlet weak var segmentedControl: ScrollableSegmentedControl!
     @IBOutlet weak var noItemsLbl: UILabel!
-    @IBOutlet weak var restaurantInfoHeaderView: RestaurantInfoHeaderView!
+    private var restaurantInfoHeaderView: RestaurantInfoHeaderView?
     var showIndex = Int()
     
     var rest_id = String()
@@ -82,6 +82,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
     var mostPreTimeNameArray = [String]()
     var commonSearchArray = [String]()
     
+    private var headerConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,6 +162,19 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         topNavigationView.layer.shadowOpacity = 0.6
         topNavigationView.layer.shadowRadius = 3.0
         topNavigationView.layer.shadowColor = UIColor.lightGray.cgColor
+        
+        InfoTable.delegate = self
+        let header = RestaurantInfoHeaderView()
+        InfoTable.tableHeaderView = header
+        header.translatesAutoresizingMaskIntoConstraints = false
+        header.delegate = self
+        headerConstraint = header.categoriesCollectionView.topAnchor.constraint(equalTo: topNavigationView.bottomAnchor)
+        
+        NSLayoutConstraint.activate([
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
+        ])
+        self.restaurantInfoHeaderView = header
     }
     
     @IBAction func topCartBtnAction(_ sender: Any) {
@@ -341,11 +355,10 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                     let subCateArray = (StrmutableArray.object(at: 0)as! NSDictionary).object(forKey: "sub_category_list")as! NSArray
                     let subCategoryArray = subCateArray.value(forKey: "sub_category_id") as! NSArray
                     sub_category_id = subCategoryArray.object(at: 0)as! NSNumber
-                    
-                    // let Str = (self.responseDict.object(forKey: "sel_available_time") as! NSNumber).stringValue
+
                     getRestaurentID = self.rest_id
                     let Str = self.responseDict.object(forKey: "sel_available_time")
-                    
+                    self.restaurantInfoHeaderView?.setCategoryData(result: self.responseDict)
                     if Str as? String != nil
                     {
                         if Str as? String == ""
@@ -867,32 +880,26 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
         }
         else
         {
-            
-//            if section == 0{
-//                return 1
-//            }else{
+            if itemsArray.count == 1
+            {
+                noOfRows = 1
+                return 1
                 
-                if itemsArray.count == 1
-                {
-                    noOfRows = 1
-                    return 1
-                    
-                }else if itemsArray.count == 0{
-                    noOfRows = 0
-                    return 1
-                }
-                else if itemsArray.count % 2 == 0{
-                    noOfRows = itemsArray.count/2
-                    return itemsArray.count/2
-                }
-                else{
-                    let temp  = itemsArray.count/2 + itemsArray.count % 2
-                    noOfRows = temp
-                    return temp
-                }
-                
+            }else if itemsArray.count == 0{
+                noOfRows = 0
+                return 1
             }
-//        }
+            else if itemsArray.count % 2 == 0{
+                noOfRows = itemsArray.count/2
+                return itemsArray.count/2
+            }
+            else{
+                let temp  = itemsArray.count/2 + itemsArray.count % 2
+                noOfRows = temp
+                return temp
+            }
+            
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -983,128 +990,71 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                 }
                 
             }
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
+            cell?.selectionStyle = .none
+            cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+            cell?.addOneBtn.layer.borderWidth = 2
+            cell?.addOneBtn.layer.borderColor = UIColor.red.cgColor
+            cell?.addOneBtn.setTitleColor(UIColor.red, for: .normal)
+            cell?.addOneBtn.layer.backgroundColor = UIColor.white.cgColor
             
-        }
-        
-        else
-        {
-//            if indexPath.section == 0
-//            {
-//                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantInfoTBCell") as? RestaurantInfoTBCell
-//                cell?.selectionStyle = .none
-//                
-//                
-//                
-//                
-//                if responseDict.object(forKey: "category_list") != nil
-//                {
-//                    if (responseDict.object(forKey: "category_list") as? NSArray)?.count != 0
-//                    {
-//                        cell?.getCategoryData(result: responseDict)
-//                        cell?.delegate = self
-//                    }
-//                    
-//                    if allcategoryItemsStr == "1"
-//                    {
-//                        cell?.subCategoryBtn.isHidden = true
-//                        cell?.subCategoryBtn.isUserInteractionEnabled = false
-//                        cell?.subCategoryDropDown.isHidden = true
-//                        cell?.subCategoryLineView.isHidden = true
-//                    }
-//                    else
-//                    {
-//                        cell?.subCategoryBtn.isHidden = false
-//                        cell?.subCategoryBtn.isUserInteractionEnabled = true
-//                        cell?.subCategoryDropDown.isHidden = false
-//                        cell?.subCategoryLineView.isHidden = false
-//                    }
-//                    
-//                    
-//                    
-//                    cell?.dishNameTxt.placeholder = LanguageDictonary.value(forKey: "enterdishname") as? String
-//                    if self.selAvailableTimeBool == true
-//                    {
-//                        cell?.preferableItemTextLbl.isHidden = false
-//                        let Str = (self.responseDict.object(forKey: "sel_available_time") as! Int)
-//                        
-//                        let PreferableText = LanguageDictonary.value(forKey: "preferableitems") as! String
-//                        
-//                        cell?.preferableItemTextLbl.text = PreferableText + " " + mostPreTimeNameArray[Str - 1]
-//                    }
-//                    else
-//                    {
-//                        cell?.preferableItemTextLbl.isHidden = true
-//                    }
-//                }
-//                return cell!
-//            }
-//            else
-//            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantTwoFoodCell") as? RestaurantTwoFoodCell
-                cell?.selectionStyle = .none
-                cell?.addOneBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
-                cell?.addOneBtn.layer.borderWidth = 2
-                cell?.addOneBtn.layer.borderColor = UIColor.red.cgColor
-                cell?.addOneBtn.setTitleColor(UIColor.red, for: .normal)
-                cell?.addOneBtn.layer.backgroundColor = UIColor.white.cgColor
+            let image3 = UIImage(named: "add")
+            
+            cell?.addOneBtn.setImage(image3, for: .normal)
+            cell?.addOneBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+            
+            cell?.firstAddBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
+            cell?.firstAddBtn.layer.borderWidth = 2
+            cell?.firstAddBtn.layer.borderColor = UIColor.red.cgColor
+            cell?.firstAddBtn.setTitleColor(UIColor.red, for: .normal)
+            cell?.firstAddBtn.layer.backgroundColor = UIColor.white.cgColor
+            
+            cell?.firstAddBtn.setImage(image3, for: .normal)
+            cell?.firstAddBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+            cell?.NoItemsFound.text = LanguageDictonary.value(forKey: "norecordsfound") as? String
+            if itemsArray.count > 0
+            {
+                cell?.firstView.isHidden = false
+                cell?.secondView.isHidden = false
+                cell?.NoItemsFound.isHidden = true
                 
-                let image3 = UIImage(named: "add")
-                
-                cell?.addOneBtn.setImage(image3, for: .normal)
-                cell?.addOneBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                
-                
-                cell?.firstAddBtn.setTitle(LanguageDictonary.value(forKey: "add") as? String, for: .normal)
-                cell?.firstAddBtn.layer.borderWidth = 2
-                cell?.firstAddBtn.layer.borderColor = UIColor.red.cgColor
-                cell?.firstAddBtn.setTitleColor(UIColor.red, for: .normal)
-                cell?.firstAddBtn.layer.backgroundColor = UIColor.white.cgColor
-                
-                cell?.firstAddBtn.setImage(image3, for: .normal)
-                cell?.firstAddBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                
-                cell?.NoItemsFound.text = LanguageDictonary.value(forKey: "norecordsfound") as? String
-                if itemsArray.count > 0
-                {
-                    cell?.firstView.isHidden = false
+                let actualIndex = indexPath.row + indexPath.row
+                cell?.loadFirstFoodItems(item: itemsArray.object(at: actualIndex)as! NSDictionary)
+                cell?.secondView.isHidden = true
+                if actualIndex+1 < itemsArray.count{
+                    cell?.loadSecondFoodItems(item: itemsArray.object(at: actualIndex+1)as! NSDictionary)
                     cell?.secondView.isHidden = false
-                    cell?.NoItemsFound.isHidden = true
-                    
-                    let actualIndex = indexPath.row + indexPath.row
-                    cell?.loadFirstFoodItems(item: itemsArray.object(at: actualIndex)as! NSDictionary)
-                    cell?.secondView.isHidden = true
-                    if actualIndex+1 < itemsArray.count{
-                        cell?.loadSecondFoodItems(item: itemsArray.object(at: actualIndex+1)as! NSDictionary)
-                        cell?.secondView.isHidden = false
-                    }
-                    cell?.firstView.tag = actualIndex
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.gestureTap(_:)))
-                    cell?.firstView.addGestureRecognizer(tap)
-                    cell?.firstView.isUserInteractionEnabled = true
-                    cell?.addOneBtn.tag = actualIndex
-                    cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
-                    
-                    
-                    
-                    cell?.secondView.tag = actualIndex + 1
-                    let firsttap = UITapGestureRecognizer(target: self, action: #selector(self.firstgestureTap(_:)))
-                    cell?.secondView.addGestureRecognizer(firsttap)
-                    cell?.secondView.isUserInteractionEnabled = true
-                    cell?.firstAddBtn.tag = actualIndex + 1
-                    cell?.firstAddBtn.addTarget(self, action: #selector(firstAddBtnTapped), for: .touchUpInside)
-                    
                 }
-                else
-                {
-                    cell?.firstView.isHidden = true
-                    cell?.secondView.isHidden = true
-                    cell?.NoItemsFound.isHidden = false
-                }
+                cell?.firstView.tag = actualIndex
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.gestureTap(_:)))
+                cell?.firstView.addGestureRecognizer(tap)
+                cell?.firstView.isUserInteractionEnabled = true
+                cell?.addOneBtn.tag = actualIndex
+                cell?.addOneBtn.addTarget(self, action: #selector(addOneBtnTapped), for: .touchUpInside)
                 
-                return cell!
+                
+                
+                cell?.secondView.tag = actualIndex + 1
+                let firsttap = UITapGestureRecognizer(target: self, action: #selector(self.firstgestureTap(_:)))
+                cell?.secondView.addGestureRecognizer(firsttap)
+                cell?.secondView.isUserInteractionEnabled = true
+                cell?.firstAddBtn.tag = actualIndex + 1
+                cell?.firstAddBtn.addTarget(self, action: #selector(firstAddBtnTapped), for: .touchUpInside)
                 
             }
-//        }
+            else
+            {
+                cell?.firstView.isHidden = true
+                cell?.secondView.isHidden = true
+                cell?.NoItemsFound.isHidden = false
+            }
+            
+            return cell!
+            
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -1467,4 +1417,36 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
     }
 }
 
+extension RestaurantInfoViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == InfoTable {
+            guard let restaurantInfoHeaderView else { return }
+            let offset = scrollView.contentOffset.y
+            let headerFrame = restaurantInfoHeaderView.frame
+            let segmentControlFrame = restaurantInfoHeaderView.categoriesCollectionView.frame
+            if offset <= headerFrame.height - segmentControlFrame.height {
+                headerConstraint?.isActive = false
+                restaurantInfoHeaderView.backgroundColor = .clear
+            } else {
+                headerConstraint?.isActive = true
+                restaurantInfoHeaderView.backgroundColor = .lightGray.withAlphaComponent(0.6)
+            }
+        }
+    }
+}
 
+extension RestaurantInfoViewController: RestaurantInfoHeaderViewDelegate {
+    func restaurantInfoHeaderView(_ view: RestaurantInfoHeaderView, didSelectCategory: RestaurantInfoCategoryData) {
+        main_category_id = Int(didSelectCategory.id) as? NSNumber ?? 1
+        if main_category_id == 0 {
+            allcategoryItemsStr = "1"
+        } else {
+            allcategoryItemsStr = "0"
+        }
+        showItemsBasedOnCategory()
+    }
+
+    func restaurantInfoHeaderView(_ view: RestaurantInfoHeaderView, didChangeSearchText: String?) {
+        showItemBasedOnName(nameStr: didChangeSearchText ?? "")
+    }
+}
