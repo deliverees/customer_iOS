@@ -100,7 +100,6 @@
 		242CA173221AEA3C0004485E /* RestaurantReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242CA16D221AEA3C0004485E /* RestaurantReview.swift */; };
 		242CA174221AEA3C0004485E /* RestaurantDetailsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242CA16E221AEA3C0004485E /* RestaurantDetailsData.swift */; };
 		242D78B7221D1C97004DE1FD /* RestaurantInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242D78B6221D1C97004DE1FD /* RestaurantInfoViewController.swift */; };
-		242D78B9221D1E63004DE1FD /* RestaurantInfoTBCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242D78B8221D1E63004DE1FD /* RestaurantInfoTBCell.swift */; };
 		242D78BC221D425B004DE1FD /* RestaurantTwoFoodCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242D78BB221D425B004DE1FD /* RestaurantTwoFoodCell.swift */; };
 		24346F76220972C000446252 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F75220972C000446252 /* AppDelegate.swift */; };
 		24346F78220972C000446252 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24346F77220972C000446252 /* ViewController.swift */; };
@@ -346,7 +345,6 @@
 		242CA16D221AEA3C0004485E /* RestaurantReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantReview.swift; sourceTree = "<group>"; };
 		242CA16E221AEA3C0004485E /* RestaurantDetailsData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailsData.swift; sourceTree = "<group>"; };
 		242D78B6221D1C97004DE1FD /* RestaurantInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoViewController.swift; sourceTree = "<group>"; };
-		242D78B8221D1E63004DE1FD /* RestaurantInfoTBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoTBCell.swift; sourceTree = "<group>"; };
 		242D78BB221D425B004DE1FD /* RestaurantTwoFoodCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantTwoFoodCell.swift; sourceTree = "<group>"; };
 		24346F72220972C000446252 /* ShopUrFood_Customer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShopUrFood_Customer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24346F75220972C000446252 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -850,7 +848,6 @@
 				D48D3B912D464D8400A06AD4 /* Views */,
 				242A9C1C221BC660002F4E8E /* CollectionViewCell */,
 				242D78B6221D1C97004DE1FD /* RestaurantInfoViewController.swift */,
-				242D78B8221D1E63004DE1FD /* RestaurantInfoTBCell.swift */,
 				242D78BB221D425B004DE1FD /* RestaurantTwoFoodCell.swift */,
 			);
 			path = RestaurantInfoViewController;
@@ -1652,7 +1649,6 @@
 				221089E02302BEB000881390 /* MyRewardsViewController.swift in Sources */,
 				240278B722439A2C00BB2544 /* PaymentTitleTBCell.swift in Sources */,
 				A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */,
-				242D78B9221D1E63004DE1FD /* RestaurantInfoTBCell.swift in Sources */,
 				24496ADE2220156B0021DDC8 /* itemDetailModel.swift in Sources */,
 				227CCAB022D8A7A700D60FA4 /* FilterMostPreferTimeTitleCell.swift in Sources */,
 				24E9010F2215A3B90003F7B9 /* ViewAllDetailsCell.swift in Sources */,
