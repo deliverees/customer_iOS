@@ -345,6 +345,7 @@ class RestaurantInfoViewController: BaseViewController, UITableViewDelegate, UIT
                     getRestaurentID = self.rest_id
                     let Str = self.responseDict.object(forKey: "sel_available_time")
                     self.restaurantInfoHeaderView?.setCategoryData(result: self.responseDict)
+                    self.storeDict = self.responseDict
                     if Str as? String != nil
                     {
                         if Str as? String == ""
