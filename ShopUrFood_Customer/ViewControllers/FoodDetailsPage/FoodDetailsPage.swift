@@ -18,7 +18,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     let appColor:UIColor = UIColor(red: 254/255, green: 106/255, blue: 15/255, alpha: 1.0)
 
     @IBOutlet weak var baseViewBottom: NSLayoutConstraint!
-    //@IBOutlet weak var relatedTitleLblHeight: NSLayoutConstraint!
     
     @IBOutlet weak var itemsCountLbl: UILabel!
     
@@ -33,8 +32,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var sliderCollectionView: UICollectionView!
     @IBOutlet weak var baseScroll: UIScrollView!
-    @IBOutlet weak var topsViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var topinsLblHeight: NSLayoutConstraint!
     @IBOutlet weak var topinsTableHeight: NSLayoutConstraint!
     @IBOutlet weak var extraDescLbl: UILabel!
     @IBOutlet weak var extraTitleLbl: UILabel!
@@ -61,7 +58,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     @IBOutlet weak var quantityLbl: UILabel!
     
     @IBOutlet weak var baseView: UIView!
-    @IBOutlet weak var toppingsTitleLbl: UILabel!
     @IBOutlet weak var toppingsTable: UITableView!
     
     @IBOutlet weak var specialInstructionTitleLbl: UILabel!
@@ -106,7 +102,9 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     var countdownTimer = Timer()
     var releaseDateString = String()
     
-    var selectedChoiceIdArray  = NSMutableArray()
+    var selectedChoiceIdArray  = Set<Int>()
+    var selectedChoiceTwoArray = Set<Int>()
+    var selectedChoiceThreeArray = Set<Int>()
     var oldChoiceIdArray  = NSMutableArray()
     var resultDict = NSMutableDictionary()
     var resultDict1 = NSMutableDictionary()
@@ -154,17 +152,24 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         self.specialInstructionTitleLbl.text =  LanguageDictonary.value(forKey: "specialinstruction") as? String
         self.relatedItemsTitleLbl.text = LanguageDictonary.value(forKey: "relatedfood") as? String
         self.viewcartLbl.text = LanguageDictonary.value(forKey: "viewcart") as? String
-        self.toppingsTitleLbl.text = LanguageDictonary.value(forKey: "toppings") as? String
+        self.toppingsTable.isScrollEnabled = false
+        self.toppingsTable.sectionHeaderHeight = UITableView.automaticDimension
+        self.toppingsTable.estimatedSectionHeaderHeight = 50
+        self.toppingsTable.sectionFooterHeight = 0
+        contentSizeObservation = toppingsTable.observe(\.contentSize) { [weak self] tableView, _ in
+            self?.topinsTableHeight.constant = tableView.contentSize.height
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool)
-    {
+    var contentSizeObservation: NSKeyValueObservation?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.loadingInitData()
         self.getCartData()
-
     }
     
-    func loadingInitData(){
+    func loadingInitData() {
         navigationTitleLbl.text = itemName
         actualQuantity = 1
         toppingsPrice = 0
@@ -172,15 +177,17 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         self.getData()
     }
     
-    
-    override func viewDidDisappear(_ animated: Bool)
-    {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         countdownTimer.invalidate()
     }
     
+    deinit {
+        contentSizeObservation?.invalidate()
+        contentSizeObservation = nil
+    }
     
-    func getCartData()
-    {
+    func getCartData() {
         self.showLoadingIndicator(senderVC: self)
         let Parse = CommomParsing()
         Parse.getMyCartData(lang: login_session.value(forKey: "Language") as? String ?? "es", onSuccess: {
@@ -206,125 +213,61 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         }, onFailure: {errorResponse in})
     }
     
+    private func continueAddToCart() {
+        self.showLoadingIndicator(senderVC: self)
+        let Parse = CommomParsing()
+        Parse.itemAddToCart(lang: login_session.value(forKey: "Language") as? String ?? "es",
+                            item_id: item_id,
+                            st_id: restaurant_id,
+                            quantity: String(actualQuantity),
+                            choices_id: Array(selectedChoiceIdArray),
+                            choicesTwo_id: Array(selectedChoiceTwoArray),
+                            choicesThree_id: Array(selectedChoiceThreeArray),
+                            special_notes: notesText.text!, force_update: "", onSuccess: {
+            response in
+            print (response)
+            if response.object(forKey: "code") as! Int == 200{
+                //self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
+                let cartCount = ((response.object(forKey: "data")as! NSDictionary).object(forKey: "total_cart_count")as! NSNumber).stringValue
+                login_session.setValue(cartCount, forKey: "userCartCount")
+                login_session.synchronize()
+                self.newCartView.isHidden = true
+                self.AddCartViewHeight.constant = 50
+                self.baseScrollBottomSpace.constant = 50
+                self.getData()
+                UIView.animate(withDuration: 0.5) {
+                    self.view.layoutIfNeeded()
+                }
+            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
+                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+            }else{
+                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message") as! String)
+            }
+            self.stopLoadingIndicator(senderVC: self)
+        }, onFailure: {errorResponse in})
+    }
     
     @IBAction func newCartBtnAction(_ sender: Any) {
         
-        if self.store_id == ""
-        {
-            self.showLoadingIndicator(senderVC: self)
-            var sendChoiceIds = [Int]()
-            if selectedChoiceIdArray.count != 0{
-                for choiceId in selectedChoiceIdArray{
-                    sendChoiceIds.append(choiceId as! Int)
-                }
-            }
+        if !store_id.isEmpty && store_id != restaurant_id {
+            let refreshAlert = UIAlertController(title: Appname,
+                                                 message: Localization.value(for: "yourcartstartfresh"),
+                                                 preferredStyle: UIAlertController.Style.alert)
             
-            let Parse = CommomParsing()
-            Parse.itemAddToCart(lang: login_session.value(forKey: "Language") as? String ?? "es",item_id: item_id,st_id: restaurant_id,quantity: String(actualQuantity),choices_id: sendChoiceIds,special_notes: notesText.text!, force_update: "", onSuccess: {
-                response in
-                print (response)
-                if response.object(forKey: "code") as! Int == 200{
-                    //self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
-                    let cartCount = ((response.object(forKey: "data")as! NSDictionary).object(forKey: "total_cart_count")as! NSNumber).stringValue
-                    login_session.setValue(cartCount, forKey: "userCartCount")
-                    login_session.synchronize()
-                    self.newCartView.isHidden = true
-                    self.AddCartViewHeight.constant = 50
-                    self.baseScrollBottomSpace.constant = 50
-                    self.getData()
-                    UIView.animate(withDuration: 0.5) {
-                        self.view.layoutIfNeeded()
-                    }
-                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                }else{
-                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message") as! String)
-                }
-                self.stopLoadingIndicator(senderVC: self)
-            }, onFailure: {errorResponse in})
-        }
-        else
-        {
-        if self.store_id != restaurant_id
-        {
-            let refreshAlert = UIAlertController(title: Appname, message: LanguageDictonary.object(forKey: "yourcartstartfresh") as! String, preferredStyle: UIAlertController.Style.alert)
-            
-            refreshAlert.addAction(UIAlertAction(title: LanguageDictonary.object(forKey: "yesfreash") as! String, style: .default, handler: { (action: UIAlertAction!) in
-                self.showLoadingIndicator(senderVC: self)
-                var sendChoiceIds = [Int]()
-                if self.selectedChoiceIdArray.count != 0{
-                    for choiceId in self.selectedChoiceIdArray{
-                        sendChoiceIds.append(choiceId as! Int)
-                    }
-                }
-                
-                let Parse = CommomParsing()
-                Parse.itemAddToCart(lang: login_session.value(forKey: "Language") as? String ?? "es",item_id: self.item_id,st_id: self.restaurant_id,quantity: String(self.actualQuantity),choices_id: sendChoiceIds,special_notes: self.notesText.text!, force_update: "", onSuccess: {
-                    response in
-                    print (response)
-                    if response.object(forKey: "code") as! Int == 200{
-                        //self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
-                        let cartCount = ((response.object(forKey: "data")as! NSDictionary).object(forKey: "total_cart_count")as! NSNumber).stringValue
-                        login_session.setValue(cartCount, forKey: "userCartCount")
-                        login_session.synchronize()
-                        self.newCartView.isHidden = true
-                        self.AddCartViewHeight.constant = 50
-                        self.baseScrollBottomSpace.constant = 50
-                        self.getData()
-                        UIView.animate(withDuration: 0.5) {
-                            self.view.layoutIfNeeded()
-                        }
-                    }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                        self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                    }else{
-                        self.showFailurePopUp(msgStr: response.object(forKey: "message") as! String)
-                    }
-                    self.stopLoadingIndicator(senderVC: self)
-                }, onFailure: {errorResponse in})            }))
+            refreshAlert.addAction(UIAlertAction(title: Localization.value(for: "yesfreash"),
+                                                 style: .default, handler: { _ in
+                self.continueAddToCart()
+            }))
             
             refreshAlert.addAction(UIAlertAction(title: "No", style: .default, handler: { (action: UIAlertAction!) in
                 refreshAlert .dismiss(animated: true, completion: nil)
             }))
             
             present(refreshAlert, animated: true, completion: nil)
-        }
-        else
-        {
-            self.showLoadingIndicator(senderVC: self)
-            var sendChoiceIds = [Int]()
-            if selectedChoiceIdArray.count != 0{
-                for choiceId in selectedChoiceIdArray{
-                    sendChoiceIds.append(choiceId as! Int)
-                }
-            }
-        
-            let Parse = CommomParsing()
-        Parse.itemAddToCart(lang: login_session.value(forKey: "Language") as? String ?? "es",item_id: item_id,st_id: restaurant_id,quantity: String(actualQuantity),choices_id: sendChoiceIds,special_notes: notesText.text!, force_update: "", onSuccess: {
-                response in
-                print (response)
-                if response.object(forKey: "code") as! Int == 200{
-                    //self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
-                    let cartCount = ((response.object(forKey: "data")as! NSDictionary).object(forKey: "total_cart_count")as! NSNumber).stringValue
-                    login_session.setValue(cartCount, forKey: "userCartCount")
-                    login_session.synchronize()
-                    self.newCartView.isHidden = true
-                    self.AddCartViewHeight.constant = 50
-                    self.baseScrollBottomSpace.constant = 50
-                    self.getData()
-                    UIView.animate(withDuration: 0.5) {
-                        self.view.layoutIfNeeded()
-                    }
-                }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-                }else{
-                    self.showFailurePopUp(msgStr: response.object(forKey: "message") as! String)
-                }
-                self.stopLoadingIndicator(senderVC: self)
-            }, onFailure: {errorResponse in})
-        }
+        } else {
+            continueAddToCart()
         }
     }
-    
     
     @IBAction func topInfoBtnAction(_ sender: Any) {
         if (resultDict.object(forKey: "item_reviews")as! NSArray).count == 0 {
@@ -387,7 +330,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     }
     
     @objc func updateTime() {
-        
         let currentDate = Date()
         let calendar = Calendar.current
         
@@ -397,13 +339,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         offerTillCountDownLabel2.text = "\(diffDateComponents.hour ?? 0)"
         offerTillCountDownLabel3.text = "\(diffDateComponents.minute ?? 0)"
         offerTillCountDownLabel4.text = "\(diffDateComponents.second ?? 0)"
-        
-       // offerTillCountDownLabel.text = "\(diffDateComponents.day ?? 0) Days, \(diffDateComponents.hour ?? 0) Hrs, \(diffDateComponents.minute ?? 0) Min, \(diffDateComponents.second ?? 0) Sec"
-        
-        //print("Printing Countdown : ",countdown)
-        
-        
-        
     }
     
     @IBAction func priceBtnAction(_ sender: Any){
@@ -417,48 +352,7 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     }
     
     @IBAction func addToCartBtnAction(_ sender: Any) {
-       // self.productAddToCart()
-    }
-    
-    func productAddToCart()
-    {
-        self.showLoadingIndicator(senderVC: self)
-        var sendChoiceIds = [Int]()
-        var updateStr = String()
-        updateStr = ""
-        if selectedChoiceIdArray.count != 0{
-            for choiceId in selectedChoiceIdArray{
-                sendChoiceIds.append(choiceId as! Int)
-            }
-        }
-        
-        var newChoiceId = String()
-        var oldChoiceId = String()
-        newChoiceId = selectedChoiceIdArray.componentsJoined(by: ",")
-        oldChoiceId = oldChoiceIdArray.componentsJoined(by: ",")
-        var tempQuantity = String()
-       updateStr = ""
-        tempQuantity = String(actualQuantity)
-        
-        let Parse = CommomParsing()
-        Parse.itemAddToCart(lang: login_session.value(forKey: "Language") as? String ?? "es",item_id: item_id,st_id: restaurant_id,quantity: tempQuantity,choices_id: sendChoiceIds,special_notes: notesText.text!, force_update: updateStr, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200{
-                //self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
-                let cartCount = ((response.object(forKey: "data")as! NSDictionary).object(forKey: "total_cart_count")as! NSNumber).stringValue
-                login_session.setValue(cartCount, forKey: "userCartCount")
-                login_session.synchronize()
-                self.getData()
-               // self.showSuccessPopUp(msgStr: response.object(forKey: "message")as! String)
-                //self.getData()
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                self.showFailurePopUp(msgStr: response.object(forKey: "message") as! String)
-            }
-            self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
+        continueAddToCart()
     }
     
     func showSuccessPopUp(msgStr:String){
@@ -480,9 +374,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         }
         
         _ = alert.showCustom(LanguageDictonary.object(forKey: "success") as! String, subTitle: msgStr, color: color, icon: icon!, timeout: SCLAlertView.SCLTimeoutConfiguration(timeoutValue: timeoutValue, timeoutAction: timeoutAction), circleIconImage: icon!)
-        let count = login_session.object(forKey: "userCartCount") as! String
-//        self.cartBatchLbl.text = count
-//        self.cartBatchLbl.isHidden = false
     }
     
     
@@ -593,7 +484,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             
             let attributeString: NSMutableAttributedString =  NSMutableAttributedString(string: "\(Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemCurrency ?? "") \(Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemOriginalPrice ?? "")")
             attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeString.length))
-           // discountPriceLbl.attributedText = attributeString
             
             if Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemHasTax as String == "Yes"
             {
@@ -610,17 +500,12 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
                 discountPriceLbl.text = ""
             }
             
-//            let tax = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemTax as String
-//            priceLbl.text = "\(currency) \(price) \(" + ") \(tax)"
-            
-            
             offerLbl.layer.cornerRadius = 30.0
             offerLbl.clipsToBounds = true
             var CartPrice = resultDict.object(forKey: "cart_amt")as! String
             CartPrice = CartPrice.replacingOccurrences(of: ",", with: "")
             finalPrice = Float(CartPrice)!
 
-            //self.priceBtn.setTitle("\(currency) \(price)", for: .normal)
             if resultDict.object(forKey: "cart_quantity")as! Int != 0 {
                 selectedQuantityLbl.text = "\(actualQuantity)"
                 let tempQuantity = (resultDict.object(forKey: "cart_quantity")as! Int)
@@ -629,16 +514,16 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
                 AddCartViewHeight.constant = 50
                 if resultDict.object(forKey: "exist_in_cart")as! String == "Yes"{
                     newCartView.isHidden = true
-                }else{
+                } else {
                     newCartView.isHidden = false
                 }
-            }else{
+            } else {
                 self.itemsCountLbl.text = "1 \(LanguageDictonary.value(forKey: "items") as! String) | \(currency)\(price)"
                 baseScrollBottomSpace.constant = 20
                 AddCartViewHeight.constant = 0
                 newCartView.isHidden = false
             }
-        }else{
+        } else {
             offerWidth.constant = 0
             let price = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemOriginalPrice as String
             let currency = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemCurrency as String
@@ -679,32 +564,21 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
                 AddCartViewHeight.constant = 0
                 newCartView.isHidden = false
             }
-            
-            
         }
         
         if Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemQuantity == 0{
-            quantityLbl.text = LanguageDictonary.object(forKey: "sold") as! String
+            quantityLbl.text = Localization.value(for: "sold")
             quantityLbl.textColor = UIColor.red
         }else{
-            quantityLbl.text = String (Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemQuantity as Int) + "\(LanguageDictonary.object(forKey: "itemavailable") as! String)"
+            quantityLbl.text = String (Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemQuantity as Int) + Localization.value(for:"itemavailable")
             quantityLbl.textColor = AppLightOrange
         }
-        
 
-        
-        
-        
-        if Singleton.sharedInstance.ItemDetailModel.data.choices.count != 0{
-            topinsLblHeight.constant = 40
-            topinsTableHeight.constant = CGFloat(Singleton.sharedInstance.ItemDetailModel.data.choices.count * 30) + 5
-            topsViewHeight.constant = topinsTableHeight.constant+40
-            toppingsTable.reloadData()
-        }else{
-            topinsLblHeight.constant = 0
+        if Singleton.sharedInstance.ItemDetailModel.data.sectionedChoices.isEmpty {
             topinsTableHeight.constant = 0
-            topsViewHeight.constant = 0
         }
+        
+        toppingsTable.reloadData()
         relatedCollectionView.reloadData()
         sliderCollectionView.reloadData()
         pageControl.numberOfPages = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemImages.count
@@ -714,12 +588,8 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         if Singleton.sharedInstance.ItemDetailModel.data.relatedItems.count == 0 {
             relatedItemsTitleLbl.isHidden = true
             relatedCollectionView.isHidden = true
-            //relatedTitleLblHeight.constant = 0
-            //relatedFoodCollectionViewHeight.constant = 0
             baseViewBottom.constant = 10
-        }else{
-            //relatedTitleLblHeight.constant = 21.0
-            //relatedFoodCollectionViewHeight.constant = 250.0
+        }else {
             relatedItemsTitleLbl.isHidden = false
             relatedCollectionView.isHidden = false
             baseViewBottom.constant = 330.33
@@ -774,7 +644,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         }
         
     }
-    
     
     @objc func RelatedProductlikeBtnTapped(sender:UIButton){
         if Singleton.sharedInstance.ItemDetailModel.data.relatedItems[sender.tag].itemAvailablity != "Out of stock"{
@@ -847,60 +716,20 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     @IBAction func quantityLessBtnAction(_ sender: Any) {
         if actualQuantity != 1 {
             actualQuantity = actualQuantity - 1
-            self.productAddToCart()
-        }else{
-            
+            continueAddToCart()
         }
         selectedQuantityLbl.text = "\(actualQuantity)"
-//        let currency = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemCurrency as String
-//        if Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemHasDiscount == "Yes"{
-//            var CartPrice = resultDict.object(forKey: "cart_amt")as! String
-//            CartPrice = CartPrice.replacingOccurrences(of: ",", with: "")
-//            finalPrice = Float(CartPrice)!
-//        }else{
-//            var CartPrice = resultDict.object(forKey: "cart_amt")as! String
-//            CartPrice = CartPrice.replacingOccurrences(of: ",", with: "")
-//            finalPrice = Float(CartPrice)!
-//        }
-//        UIView.transition(with: priceBtn, duration: 0.5, options: .transitionCrossDissolve, animations: {
-////            self.priceBtn.setTitle("\(currency) \(self.finalPrice)", for: .normal)
-////            self.addToCartBtn.setTitle("Add \(self.actualQuantity) to cart", for: .normal)
-//            if self.actualQuantity == 1{
-//              self.itemsCountLbl.text = "\(self.actualQuantity) Item | \(currency) \(self.finalPrice)"
-//            }else{
-//                self.itemsCountLbl.text = "\(self.actualQuantity) Items | \(currency) \(self.finalPrice)"
-//            }
-//
-//
-//        }, completion: nil)
     }
     
     @IBAction func quantityAddBtnAction(_ sender: Any) {
         let avaiableQty = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemQuantity as Int
         if avaiableQty > Int(actualQuantity){
             actualQuantity = actualQuantity + 1
-            self.productAddToCart()
-        }else{
+            continueAddToCart()
+        }else {
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "productisoutofstock") as! String)
         }
          selectedQuantityLbl.text = "\(actualQuantity)"
-//        let currency = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemCurrency as String
-//
-//        if Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemHasDiscount == "Yes"{
-//            let price = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemDiscountPrice as String
-//            finalPrice = Float(price)! * Float(actualQuantity)
-//            finalPrice = finalPrice + toppingsPrice
-//        }else{
-//            let price = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemOriginalPrice as String
-//            finalPrice = Float(price)! * Float(actualQuantity)
-//            finalPrice = finalPrice + toppingsPrice
-//        }
-//        UIView.transition(with: priceBtn, duration: 0.5, options: .transitionCrossDissolve, animations: {
-////            self.priceBtn.setTitle("\(currency) \(self.finalPrice)", for: .normal)
-////            self.addToCartBtn.setTitle("Add \(self.actualQuantity) to cart", for: .normal)
-//            self.itemsCountLbl.text = "\(self.actualQuantity) Items | \(currency) \(self.finalPrice)"
-//
-//        }, completion: nil)
     }
     
     func updateCartQutity(){
@@ -920,31 +749,41 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         self.showLoadingIndicator(senderVC: self)
     }
     
+    private var currentItemDetailModel: itemDetailModel? {
+        Singleton.sharedInstance.ItemDetailModel
+    }
     
     //MARK:- Tableview Delegate & DataSource Methods
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        currentItemDetailModel?.data.sectionedChoices.count ?? 0
     }
      func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if Singleton.sharedInstance.ItemDetailModel != nil {
-            return Singleton.sharedInstance.ItemDetailModel.data.choices.count
-        }else{
-            return 0
-        }
+        currentItemDetailModel?.data.sectionedChoices[section].count ?? 0
+    }
+    
+    private var choicesSectioned: [Set<Int>] {
+        [selectedChoiceIdArray, selectedChoiceTwoArray, selectedChoiceThreeArray]
+    }
+    
+    private func isChoiceSelected(for section: Int, id: Int) -> Bool {
+        choicesSectioned[section].contains(id)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToppingTBCell") as? ToppingTBCell
         cell?.selectionStyle = .none
-        cell?.toppingsFoodNameLbl.text = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choiceName
-        let currency = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choiceCurrency as String
-        let price = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choicePrice as String
-        let selected_id = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choiceId
-        if selectedChoiceIdArray.contains(selected_id as Any){
+        guard let choice: Choice = currentItemDetailModel?.data.choice(for: indexPath.section, row: indexPath.row) else {
+            return cell!
+        }
+        cell?.toppingsFoodNameLbl.text = choice.choiceName
+        let currency = choice.choiceCurrency as String
+        let price = choice.choicePrice as String
+        let selected_id = choice.choiceId!
+        if isChoiceSelected(for: indexPath.section, id: selected_id) {
             cell?.selectionImg.image = UIImage(imageLiteralResourceName: "selectedCheckBox")
         }else{
              cell?.selectionImg.image = UIImage(imageLiteralResourceName: "checkBox")
@@ -953,29 +792,111 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
         return cell!
     }
     
+    private func removeChoice(for section: Int, id: Int) {
+        switch section {
+        case 0:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choices.isEmpty {
+                selectedChoiceIdArray.remove(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesTwo.isEmpty {
+                selectedChoiceTwoArray.remove(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.remove(id)
+            }
+        case 1:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choicesTwo.isEmpty {
+                selectedChoiceTwoArray.remove(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.remove(id)
+            }
+        case 2:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.remove(id)
+            }
+        default: break
+        }
+    }
+    
+    private func addChoice(for section: Int, id: Int) {
+        switch section {
+        case 0:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choices.isEmpty {
+                selectedChoiceIdArray.insert(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesTwo.isEmpty {
+                selectedChoiceTwoArray.insert(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.insert(id)
+            }
+        case 1:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choicesTwo.isEmpty {
+                selectedChoiceTwoArray.insert(id)
+            } else if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.insert(id)
+            }
+        case 2:
+            if !Singleton.sharedInstance.ItemDetailModel.data.choicesThree.isEmpty {
+                selectedChoiceThreeArray.insert(id)
+            }
+        default: break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        nil
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let choice = currentItemDetailModel?.data.sectionedChoices[section].first else {
+            return nil
+        }
+        let header = UIView()
+        header.backgroundColor = UIColor.groupTableViewBackground
+        let label = UILabel()
+        label.text = choice.choiceTitle
+        label.textColor = UIColor.black
+        label.font = UIFont.truenoFont(size: 18)
+        header.addSubview(label)
+        header.frame = CGRect()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 12),
+            label.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -12),
+            label.topAnchor.constraint(equalTo: header.topAnchor, constant: 10),
+            label.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -10),
+            label.widthAnchor.constraint(equalToConstant: tableView.frame.width - 20)
+        ])
+        return header
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selected_id = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choiceId
-        let choicePrice = Float(Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choicePrice)
-        let currency = Singleton.sharedInstance.ItemDetailModel.data.choices[indexPath.row].choiceCurrency as String
-        if selectedChoiceIdArray.contains(selected_id as Any){
-            selectedChoiceIdArray.remove(selected_id as Any)
-            finalPrice = finalPrice - choicePrice!
-            toppingsPrice = toppingsPrice - choicePrice!
+        guard let selectedChoice = currentItemDetailModel?.data.choice(for: indexPath.section, row: indexPath.row) else {
+            return
+        }
+        let selected_id = selectedChoice.choiceId!
+        let choicePrice = Float(selectedChoice.choicePrice)!
+        let currency = selectedChoice.choiceCurrency! as String
+        if isChoiceSelected(for: indexPath.section, id: selected_id) {
+            removeChoice(for: indexPath.section, id: selected_id)
+            finalPrice = finalPrice - choicePrice
+            toppingsPrice = toppingsPrice - choicePrice
 
         }else{
-            selectedChoiceIdArray.add(selected_id as Any)
-            finalPrice = finalPrice + choicePrice!
-            toppingsPrice = toppingsPrice + choicePrice!
+            addChoice(for: indexPath.section, id: selected_id)
+            finalPrice = finalPrice + choicePrice
+            toppingsPrice = toppingsPrice + choicePrice
         }
-        print(finalPrice)
         toppingsTable.reloadData()
-        
         self.checkExistCart()
     }
     
     func checkExistCart(){
         let Parse = CommomParsing()
-        Parse.checkExistCart(lang: login_session.value(forKey: "Language") as? String ?? "es", item_id: Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemId, st_id: getRestaurentID, choices_id: selectedChoiceIdArray, onSuccess: {
+        Parse.checkExistCart(lang: login_session.value(forKey: "Language") as? String ?? "es",
+                             item_id: Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemId,
+                             st_id: getRestaurentID,
+                             choices_id: Array(selectedChoiceIdArray),
+                             choicesTwo_id: Array(selectedChoiceTwoArray),
+                             choicesThree_id: Array(selectedChoiceThreeArray),
+                             onSuccess: {
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200
@@ -1046,7 +967,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             let itemPrice = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemOriginalPrice as String
             cell.priceLbl.text = "\(currency)\(itemPrice)"
             cell.descpLbl.text = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemtDesc as String
-            //cell.addBtn.layer.cornerRadius = 10.0
             cell.foodNameLbl.text = Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemName as String
             if Singleton.sharedInstance.ItemDetailModel.data.relatedItems[indexPath.row].itemIsFavourite == "Favourite" {
                 cell.likeBtn.setImage(UIImage.init(imageLiteralResourceName: "liked_heart"), for: .normal)

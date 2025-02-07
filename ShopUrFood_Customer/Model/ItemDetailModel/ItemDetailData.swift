@@ -8,11 +8,20 @@ import Foundation
 
 class ItemDetailData : NSObject, NSCoding{
 
-    var choices : [Choice]!
+    var choices : [Choice] = []
+    var choicesTwo: [Choice] = []
+    var choicesThree: [Choice] = []
     var itemReviews : [AnyObject]!
     var itemtInfo : ItemtInfo!
     var relatedItems : [RelatedItem]!
 
+    var sectionedChoices: [[Choice]] {
+        [choices, choicesTwo, choicesThree]
+    }
+    
+    func choice(for section: Int, row: Int) -> Choice {
+        sectionedChoices[section][row]
+    }
 
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
@@ -21,18 +30,30 @@ class ItemDetailData : NSObject, NSCoding{
         if let itemtInfoData = dictionary["itemt_info"] as? [String:Any]{
             itemtInfo = ItemtInfo(fromDictionary: itemtInfoData)
         }
-        choices = [Choice]()
+        relatedItems = [RelatedItem]()
+        if let relatedItemsArray = dictionary["related_items"] as? [[String:Any]]{
+            for dic in relatedItemsArray{
+                let value = RelatedItem(fromDictionary: dic)
+                relatedItems.append(value)
+            }
+        }
+        choices = []
+        choicesTwo = []
+        choicesThree = []
         if let choicesArray = dictionary["choices"] as? [[String:Any]]{
             for dic in choicesArray{
                 let value = Choice(fromDictionary: dic)
                 choices.append(value)
             }
         }
-        relatedItems = [RelatedItem]()
-        if let relatedItemsArray = dictionary["related_items"] as? [[String:Any]]{
-            for dic in relatedItemsArray{
-                let value = RelatedItem(fromDictionary: dic)
-                relatedItems.append(value)
+        if let choicesTwoArray = dictionary["choicesTwo"] as? [[String:Any]] {
+            for dict in choicesTwoArray {
+                choicesTwo.append(Choice(fromDictionary: dict))
+            }
+        }
+        if let choicesThreeArray = dictionary["choicesThree"] as? [[String:Any]] {
+            for dict in choicesThreeArray {
+                choicesThree.append(Choice(fromDictionary: dict))
             }
         }
     }
@@ -69,7 +90,9 @@ class ItemDetailData : NSObject, NSCoding{
      */
     @objc required init(coder aDecoder: NSCoder)
     {
-        choices = aDecoder.decodeObject(forKey: "choices") as? [Choice]
+        choices = aDecoder.decodeObject(forKey: "choices") as? [Choice] ?? []
+        choicesTwo = aDecoder.decodeObject(forKey: "choicesTwo") as? [Choice] ?? []
+        choicesThree = aDecoder.decodeObject(forKey: "choicesThree") as? [Choice] ?? []
         itemReviews = aDecoder.decodeObject(forKey: "item_reviews") as? [AnyObject]
         itemtInfo = aDecoder.decodeObject(forKey: "itemt_info") as? ItemtInfo
         relatedItems = aDecoder.decodeObject(forKey: "related_items") as? [RelatedItem]
@@ -81,9 +104,9 @@ class ItemDetailData : NSObject, NSCoding{
      */
     @objc func encode(with aCoder: NSCoder)
     {
-        if choices != nil{
-            aCoder.encode(choices, forKey: "choices")
-        }
+        aCoder.encode(choices, forKey: "choices")
+        aCoder.encode(choicesTwo, forKey: "choicesTwo")
+        aCoder.encode(choicesThree, forKey: "choicesThree")
         if itemReviews != nil{
             aCoder.encode(itemReviews, forKey: "item_reviews")
         }

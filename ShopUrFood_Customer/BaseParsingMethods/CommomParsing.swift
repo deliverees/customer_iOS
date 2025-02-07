@@ -452,21 +452,29 @@ class CommomParsing: BaseParsing {
     }
     
     //Get Item Add To Cart
-    public func itemAddToCart(lang:String,item_id:String,st_id:String,quantity:String,choices_id:[Int],special_notes:String,force_update:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func itemAddToCart(lang:String,
+                              item_id:String,
+                              st_id:String,
+                              quantity:String,
+                              choices_id:[Int],
+                              choicesTwo_id:[Int],
+                              choicesThree_id:[Int],
+                              special_notes:String,
+                              force_update:String,
+                              onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
-        
-        let emptyChoiceArray = NSMutableArray()
         
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(item_id, forKey: "item_id")
         requestDict.setValue(st_id, forKey: "st_id")
         requestDict.setValue(quantity, forKey: "quantity")
-        if choices_id.count == 0 {
-            requestDict.setValue([0], forKey: "choices_id")
-        }else{
-            requestDict.setValue(choices_id, forKey: "choices_id")
-        }
+        requestDict.setValue(choices_id.map{"\($0)"}.joined(separator: ","),
+                             forKey: "choices_id")
+        requestDict.setValue(choicesTwo_id.map{"\($0)"}.joined(separator: ","),
+                             forKey: "choicesTwo_id")
+        requestDict.setValue(choicesThree_id.map{"\($0)"}.joined(separator: ","),
+                             forKey: "choicesThree_id")
         
         requestDict.setValue(special_notes, forKey: "special_notes")
         requestDict.setValue(force_update, forKey: "force_update")
@@ -679,13 +687,22 @@ class CommomParsing: BaseParsing {
     }
     
     //Use Offer Amount methods
-    public func checkExistCart(lang:String,item_id:Any,st_id:Any,choices_id:Any,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func checkExistCart(lang:String,
+                               item_id:Any,
+                               st_id:Any,
+                               choices_id:[Int],
+                               choicesTwo_id:[Int],
+                               choicesThree_id:[Int],
+                               onSuccess success: @escaping (NSDictionary) -> Void,
+                               onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(item_id, forKey: "item_id")
         requestDict.setValue(st_id, forKey: "st_id")
-        requestDict.setValue(choices_id, forKey: "choices_id")
+        requestDict.setValue(choices_id.map({"\($0)"}).joined(separator: ","), forKey: "choices_id")
+        requestDict.setValue(choicesTwo_id.map({"\($0)"}).joined(separator: ","), forKey: "choicesTwo_id")
+        requestDict.setValue(choicesThree_id.map({"\($0)"}).joined(separator: ","), forKey: "choicesThree_id")
         
         guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
             failure(NSError(domain: "anonymous", code: -1))
