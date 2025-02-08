@@ -234,6 +234,7 @@
 		D48D3B952D46569800A06AD4 /* RestaurantInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D3B942D46569800A06AD4 /* RestaurantInfoHeaderView.swift */; };
 		D495F0412C6B5E91009BC158 /* WorkingHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */; };
 		D4BC13392D57D1A600195919 /* UIFont+Trueno.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC13382D57D1A100195919 /* UIFont+Trueno.swift */; };
+		D4BC133C2D57E92400195919 /* CartItemChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC133B2D57E91A00195919 /* CartItemChoiceView.swift */; };
 		D4BCFBBF2C3D30CB005352FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */; };
 		D4BE924C2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */; };
 		D4BE924E2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */; };
@@ -493,6 +494,7 @@
 		D48D3B942D46569800A06AD4 /* RestaurantInfoHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoHeaderView.swift; sourceTree = "<group>"; };
 		D495F0402C6B5E91009BC158 /* WorkingHoursTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHoursTests.swift; sourceTree = "<group>"; };
 		D4BC13382D57D1A100195919 /* UIFont+Trueno.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Trueno.swift"; sourceTree = "<group>"; };
+		D4BC133B2D57E91A00195919 /* CartItemChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemChoiceView.swift; sourceTree = "<group>"; };
 		D4BCFBBE2C3D30CB005352FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D4BE924B2CC2A56C00F72A4F /* CheckShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckShippingAddressUseCase.swift; sourceTree = "<group>"; };
 		D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCartShippingAddressUseCase.swift; sourceTree = "<group>"; };
@@ -965,6 +967,7 @@
 				24FA11AB2212A55000599AB9 /* ForgetPassword */,
 				2444F879220C197400EF1574 /* BaseViewController */,
 				24346FB72209B97200446252 /* LoginViewController */,
+				D4BC133A2D57E8FE00195919 /* Cart */,
 				24346FA822098F9300446252 /* TabbarViewControllers */,
 				2403BCD72214015A00EBAD62 /* LocationOptionPage.swift */,
 				2465F28F224212330093D8BE /* ShopUrFood_Customer-Bridging-Header.h */,
@@ -977,11 +980,9 @@
 		24346FA822098F9300446252 /* TabbarViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				243882EE222420980023D26F /* CartTBCell */,
 				2444F883220C77B700EF1574 /* HomeCollectionViewCells */,
 				24346FA922098FC100446252 /* HomeViewController.swift */,
 				22E3B8EE22DEF8BD0091C87E /* HomeSearchTableViewCells */,
-				24346FAB22098FF400446252 /* CartViewController.swift */,
 				24346FAD2209900E00446252 /* LikedViewControllers.swift */,
 				24346FAF2209902800446252 /* TrackViewController.swift */,
 				24346FB12209903D00446252 /* WalletViewController.swift */,
@@ -1350,6 +1351,16 @@
 			path = WorkingHoursTests;
 			sourceTree = "<group>";
 		};
+		D4BC133A2D57E8FE00195919 /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				243882EE222420980023D26F /* CartTBCell */,
+				D4BC133B2D57E91A00195919 /* CartItemChoiceView.swift */,
+				24346FAB22098FF400446252 /* CartViewController.swift */,
+			);
+			path = Cart;
+			sourceTree = "<group>";
+		};
 		D4CE865D2CB93B6F00AB1AEE /* Push Notifications Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1716,6 +1727,7 @@
 				2405EAB422424020003F4766 /* SambagTimePickerViewController.swift in Sources */,
 				240C7CB12216BD1200D29068 /* SideBarMidCell.swift in Sources */,
 				2405EAAC22424020003F4766 /* SambagDatePickerResult.swift in Sources */,
+				D4BC133C2D57E92400195919 /* CartItemChoiceView.swift in Sources */,
 				242745A2220D6E1800D282C8 /* BaseParsing.swift in Sources */,
 				240278B922439A5E00BB2544 /* PaymentDetailFirstCell.swift in Sources */,
 				240C7CBF2216EF1B00D29068 /* ProfileData.swift in Sources */,

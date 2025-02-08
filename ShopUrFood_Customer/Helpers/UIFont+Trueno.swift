@@ -29,4 +29,11 @@ extension UIFont {
         }
         return font
     }
+    
+    static func poppinsLight(size: CGFloat) -> UIFont {
+        guard let font = UIFont(name: "Poppins-Light", size: size) else {
+            fatalError("Failed to load the font Poppins-Light. Make sure it's added to the project and the Info.plist.")
+        }
+        return font
+    }
 }

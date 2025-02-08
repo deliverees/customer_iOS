@@ -8,18 +8,24 @@ import Foundation
 
 class CartChoice : NSObject, NSCoding{
 
-    var choiceAmount : String!
-    var choiceId : Int!
-    var choiceName : String!
+    var choiceAmount : String = ""
+    var choiceId : Int = -1
+    var choiceName : String = ""
 
 
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
      */
     init(fromDictionary dictionary: [String:Any]){
-        choiceAmount = dictionary["choice_amount"] as? String
-        choiceId = dictionary["choice_id"] as? Int
-        choiceName = dictionary["choice_name"] as? String
+        if let choiceAmountString = dictionary["choice_amount"] as? String {
+            choiceAmount = choiceAmountString
+        } else if let choiceAmountInt = dictionary["choice_amount"] as? Int {
+            choiceAmount = "\(choiceAmountInt)"
+        } else {
+            choiceAmount = ""
+        }
+        choiceId = dictionary["choice_id"] as? Int ?? -1
+        choiceName = dictionary["choice_name"] as? String ?? ""
     }
 
     /**
@@ -28,13 +34,13 @@ class CartChoice : NSObject, NSCoding{
     func toDictionary() -> [String:Any]
     {
         var dictionary = [String:Any]()
-        if choiceAmount != nil{
+        if !choiceAmount.isEmpty {
             dictionary["choice_amount"] = choiceAmount
         }
-        if choiceId != nil{
+        if choiceId != -1 {
             dictionary["choice_id"] = choiceId
         }
-        if choiceName != nil{
+        if !choiceName.isEmpty {
             dictionary["choice_name"] = choiceName
         }
         return dictionary
@@ -46,9 +52,9 @@ class CartChoice : NSObject, NSCoding{
      */
     @objc required init(coder aDecoder: NSCoder)
     {
-        choiceAmount = aDecoder.decodeObject(forKey: "choice_amount") as? String
-        choiceId = aDecoder.decodeObject(forKey: "choice_id") as? Int
-        choiceName = aDecoder.decodeObject(forKey: "choice_name") as? String
+        choiceAmount = aDecoder.decodeObject(forKey: "choice_amount") as? String ?? ""
+        choiceId = aDecoder.decodeObject(forKey: "choice_id") as? Int ?? -1
+        choiceName = aDecoder.decodeObject(forKey: "choice_name") as? String ?? ""
     }
 
     /**
@@ -57,13 +63,13 @@ class CartChoice : NSObject, NSCoding{
      */
     @objc func encode(with aCoder: NSCoder)
     {
-        if choiceAmount != nil{
+        if !choiceAmount.isEmpty {
             aCoder.encode(choiceAmount, forKey: "choice_amount")
         }
-        if choiceId != nil{
+        if choiceId != -1 {
             aCoder.encode(choiceId, forKey: "choice_id")
         }
-        if choiceName != nil{
+        if !choiceName.isEmpty {
             aCoder.encode(choiceName, forKey: "choice_name")
         }
     }

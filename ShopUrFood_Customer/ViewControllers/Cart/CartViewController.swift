@@ -96,6 +96,7 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
         emptyCartView = self.setCornorShadowEffects(sender: emptyCartView)
         emptyCartView.layer.cornerRadius = 5.0
         cartTable.estimatedRowHeight = 105
+        cartTable.rowHeight = UITableView.automaticDimension
         
         if revealViewController() != nil {
             self.revealViewController().rearViewRevealWidth = self.view.frame.width-80
@@ -787,6 +788,10 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
     //MARK:- Delegate Method For when the Choice remove
     func showBGLoader() {
         self.showLoadingIndicator(senderVC: self)
+    }
+    
+    func hideBGLoader() {
+        self.stopLoadingIndicator(senderVC: self)
     }
     
     func reloadCartData() {

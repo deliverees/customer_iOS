@@ -9,11 +9,12 @@
 import UIKit
 protocol delegateForChoiceRemoveFromCart {
     func showBGLoader()
+    func hideBGLoader()
     func reloadCartData()
 }
 
-class CartItemCell: UITableViewCell,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITextFieldDelegate {
-
+class CartItemCell: UITableViewCell, UITextFieldDelegate {
+    
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var quantityView: UIView!
     @IBOutlet weak var quantityLbl: UILabel!
@@ -23,19 +24,15 @@ class CartItemCell: UITableViewCell,UICollectionViewDelegate,UICollectionViewDat
     @IBOutlet weak var lessBtn: UIButton!
     @IBOutlet weak var removeFromCartBtn: UIButton!
     @IBOutlet weak var priceLbl: UILabel!
+    @IBOutlet weak var choicesStackView: UIStackView!
+    
     var choiceArray = NSMutableArray()
     var mainSection = Int()
     var mainIndex = Int()
     var delegate : delegateForChoiceRemoveFromCart?
-
     
-    
-    
-    @IBOutlet weak var toppingCollectionView: UICollectionView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.toppingCollectionView.delegate = self
-        self.toppingCollectionView.dataSource = self
         self.quantityView.layer.borderWidth = 0.2
         self.quantityView.layer.borderColor = UIColor.lightGray.cgColor
         self.quantityView.layer.cornerRadius = 5.0
@@ -45,17 +42,17 @@ class CartItemCell: UITableViewCell,UICollectionViewDelegate,UICollectionViewDat
         self.baseView.layer.borderWidth = 0.2
         self.baseView.layer.borderColor = UIColor.lightGray.cgColor
         self.baseView.layer.cornerRadius = 5.0
-    
+        self.choicesStackView.subviews.forEach({ $0.removeFromSuperview() })
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
-    func configData(index:Int,section:Int)
+    func configData(index:Int, section:Int)
     {
         mainSection = section
         mainIndex = index
@@ -66,64 +63,50 @@ class CartItemCell: UITableViewCell,UICollectionViewDelegate,UICollectionViewDat
         let currency = Singleton.sharedInstance.MyCartModel.data.cartDetails[section].addedItemDetails[index].cartCurrency as String
         let price = Singleton.sharedInstance.MyCartModel.data.cartDetails[section].addedItemDetails[index].cartSubTotal as String
         priceLbl.text = "\(currency) \(price)"
+        setupAllChoices()
         self.tag = section
-       
-        toppingCollectionView.reloadData()
     }
     
-    
-    //MARK:- ColloectionView Delegate & DataSource Methods
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-            return 1
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        choicesStackView.subviews.forEach { $0.removeFromSuperview() }
     }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartHasChoice == "Yes"{
-            return Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartChoices.count
+    
+    private func setupAllChoices() {
+        let itemCartChoices: [CartItemChoice] = Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartChoices.map {
+            CartItemChoice(name: $0.choiceName,
+                           price: Double($0.choiceAmount) ?? 0,
+                           id: $0.choiceId,
+                           type: .one)
         }
-        return 0
+        itemCartChoices.forEach { cartItemChoice in
+            let view = CartItemChoiceView(frame: .zero)
+            view.choice = cartItemChoice
+            view.onTap = { [weak self] cartItemChoice in
+                self?.removeChoice(choice: cartItemChoice)
+            }
+            choicesStackView.addArrangedSubview(view)
+        }
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CartToppingCollectionCell", for: indexPath) as! CartToppingCollectionCell
-        cell.choiceNameLbl.text = Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartChoices[indexPath.row].choiceName
-        cell.choice_closeBtn.tag = (mainIndex*100)+indexPath.row
-        cell.choice_closeBtn.addTarget(self, action: #selector(choiceClosedBtnTapped), for: .touchUpInside)
-
-         return cell
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let categoryStr = Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartChoices[indexPath.row].choiceName
-        var size = categoryStr!.size(withAttributes: nil)
-        size.width = size.width + 40
-        size.height = 30
-        return size
-    }
-    @objc func choiceClosedBtnTapped(sender:UIButton){
+    
+    private func removeChoice(choice: CartItemChoice) {
         let HeaderSection = self.tag
-        let section = sender.tag / 100
-        let row = sender.tag % 100
-        print (section)
-        print (row)
-        print (HeaderSection)
+        let section = mainIndex
         self.delegate?.showBGLoader()
-        var choiceIdArray = [Int]()
-         let categoryStr = Singleton.sharedInstance.MyCartModel.data.cartDetails[HeaderSection].addedItemDetails[section].cartChoices[row].choiceId
         let cartId =  String(Singleton.sharedInstance.MyCartModel.data.cartDetails[HeaderSection].addedItemDetails[section].cartId)
         let productId = String(Singleton.sharedInstance.MyCartModel.data.cartDetails[HeaderSection].addedItemDetails[section].productId)
-
-        choiceIdArray.append(categoryStr!)
-
+        
         let Parse = CommomParsing()
-        Parse.removeChoiceFromCart(lang: login_session.value(forKey: "Language") as? String ?? "es", cart_id: cartId,product_id: productId, choice_id: choiceIdArray, onSuccess: {
-            response in
+        Parse.removeChoiceFromCart(lang: login_session.value(forKey: "Language") as? String ?? "es", cart_id: cartId,product_id: productId, choice_id: [choice.id], onSuccess: { [weak self] response in
             print (response)
+            self?.delegate?.hideBGLoader()
             if response.object(forKey: "code") as! Int == 200{
-                self.delegate?.reloadCartData()
+                self?.delegate?.reloadCartData()
             }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
                 //self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }else{
                 
             }
         }, onFailure: {errorResponse in})
-
     }
 }
