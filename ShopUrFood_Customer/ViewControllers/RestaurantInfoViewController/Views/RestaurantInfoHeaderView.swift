@@ -151,15 +151,6 @@ extension RestaurantInfoHeaderView: UICollectionViewDelegate, UICollectionViewDa
     }
 }
 
-extension UIFont {
-    static func truenoFont(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "TruenoSBd", size: size) else {
-            fatalError("Failed to load the font TruenoSBd. Make sure it's added to the project and the Info.plist.")
-        }
-        return font
-    }
-}
-
 extension UIImage {
     static func imageWithColor(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
         let rect = CGRect(origin: .zero, size: size)
