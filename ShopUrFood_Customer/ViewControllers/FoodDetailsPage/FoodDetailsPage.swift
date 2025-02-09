@@ -504,14 +504,17 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             self.itemsCountLbl.text = "\(tempQuantity) \(LanguageDictonary.value(forKey: "items") as! String) | \(currency)\(CartPrice)"
             baseScrollBottomSpace.constant = 40
             AddCartViewHeight.constant = 50
-            if let qty = resultDict.object(forKey: "exist_item_cart_qty") as? Int {
-                self.actualQuantity = qty
-                selectedQuantityLbl.text = "\(qty)"
-            }
                 
             if resultDict.object(forKey: "exist_in_cart")as! String == "Yes"{
                 newCartView.isHidden = true
             } else {
+                newCartView.isHidden = false
+            }
+            if let qty = resultDict.object(forKey: "exist_item_cart_qty") as? Int, qty > 0 {
+                self.actualQuantity = qty
+                selectedQuantityLbl.text = "\(qty)"
+            } else {
+                self.actualQuantity = 1
                 newCartView.isHidden = false
             }
         } else {
@@ -685,23 +688,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "productisoutofstock") as! String)
         }
         selectedQuantityLbl.text = "\(actualQuantity)"
-    }
-    
-    func updateCartQutity(){
-        let Parse = CommomParsing()
-        let cart_id = resultDict.object(forKey: "cart_id")as! String
-        let quantity = String(actualQuantity)
-        Parse.updateCart(lang: login_session.value(forKey: "Language") as? String ?? "es", cart_id: cart_id,quantity: quantity, onSuccess: {
-            response in
-            print (response)
-            if response.object(forKey: "code") as! Int == 200{
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "code")as! String == "" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                self.showToastAlert(senderVC: self, messageStr: response.value(forKey: "message") as! String)
-            }
-        }, onFailure: {errorResponse in})
-        self.showLoadingIndicator(senderVC: self)
     }
     
     private var currentItemDetailModel: itemDetailModel? {

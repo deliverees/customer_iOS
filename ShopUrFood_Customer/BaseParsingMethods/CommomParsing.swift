@@ -469,11 +469,11 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(item_id, forKey: "item_id")
         requestDict.setValue(st_id, forKey: "st_id")
         requestDict.setValue(quantity, forKey: "quantity")
-        requestDict.setValue(choices_id.map{"\($0)"}.joined(separator: ","),
+        requestDict.setValue(choices_id.map{"\($0)"},
                              forKey: "choices_id")
-        requestDict.setValue(choicesTwo_id.map{"\($0)"}.joined(separator: ","),
+        requestDict.setValue(choicesTwo_id.map{"\($0)"},
                              forKey: "choicesTwo_id")
-        requestDict.setValue(choicesThree_id.map{"\($0)"}.joined(separator: ","),
+        requestDict.setValue(choicesThree_id.map{"\($0)"},
                              forKey: "choicesThree_id")
         
         requestDict.setValue(special_notes, forKey: "special_notes")
@@ -537,13 +537,22 @@ class CommomParsing: BaseParsing {
     }
     
     //Remove choice from Cart
-    public func removeChoiceFromCart(lang:String,cart_id:String,product_id:String,choice_id:[Int],onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func removeChoiceFromCart(lang: String,
+                                     cart_id: String,
+                                     product_id: String,
+                                     choice_id: [Int],
+                                     choiceTwo_id: [Int],
+                                     choiceThree_id: [Int],
+                                     onSuccess success: @escaping (NSDictionary) -> Void,
+                                     onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
         requestDict.setValue(product_id, forKey: "product_id")
-        requestDict.setValue(choice_id, forKey: "choice_id")
+        requestDict.setValue(choice_id.map({ "\($0)" }), forKey: "choice_id")
+        requestDict.setValue(choiceTwo_id.map({ "\($0)" }), forKey: "choiceTwo_id")
+        requestDict.setValue(choiceThree_id.map({ "\($0)" }), forKey: "choiceThree_id")
         
         
         
@@ -700,9 +709,9 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(item_id, forKey: "item_id")
         requestDict.setValue(st_id, forKey: "st_id")
-        requestDict.setValue(choices_id.map({"\($0)"}).joined(separator: ","), forKey: "choices_id")
-        requestDict.setValue(choicesTwo_id.map({"\($0)"}).joined(separator: ","), forKey: "choicesTwo_id")
-        requestDict.setValue(choicesThree_id.map({"\($0)"}).joined(separator: ","), forKey: "choicesThree_id")
+        requestDict.setValue(choices_id.map({"\($0)"}), forKey: "choices_id")
+        requestDict.setValue(choicesTwo_id.map({"\($0)"}), forKey: "choicesTwo_id")
+        requestDict.setValue(choicesThree_id.map({"\($0)"}), forKey: "choicesThree_id")
         
         guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
             failure(NSError(domain: "anonymous", code: -1))

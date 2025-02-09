@@ -7,10 +7,11 @@
 //
 
 import UIKit
-protocol delegateForChoiceRemoveFromCart {
+protocol DelegateForChoiceRemoveFromCart {
     func showBGLoader()
     func hideBGLoader()
     func reloadCartData()
+    func showError(message: String?)
 }
 
 class CartItemCell: UITableViewCell, UITextFieldDelegate {
@@ -29,7 +30,7 @@ class CartItemCell: UITableViewCell, UITextFieldDelegate {
     var choiceArray = NSMutableArray()
     var mainSection = Int()
     var mainIndex = Int()
-    var delegate : delegateForChoiceRemoveFromCart?
+    var delegate : DelegateForChoiceRemoveFromCart?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -73,11 +74,11 @@ class CartItemCell: UITableViewCell, UITextFieldDelegate {
     }
     
     private func setupAllChoices() {
-        let itemCartChoices: [CartItemChoice] = Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].cartChoices.map {
+        let itemCartChoices: [CartItemChoice] = Singleton.sharedInstance.MyCartModel.data.cartDetails[mainSection].addedItemDetails[mainIndex].allChoices().map {
             CartItemChoice(name: $0.choiceName,
                            price: Double($0.choiceAmount) ?? 0,
                            id: $0.choiceId,
-                           type: .one)
+                           type: $0.choiceType.toCartItemChoiceType)
         }
         itemCartChoices.forEach { cartItemChoice in
             let view = CartItemChoiceView(frame: .zero)
@@ -95,18 +96,36 @@ class CartItemCell: UITableViewCell, UITextFieldDelegate {
         self.delegate?.showBGLoader()
         let cartId =  String(Singleton.sharedInstance.MyCartModel.data.cartDetails[HeaderSection].addedItemDetails[section].cartId)
         let productId = String(Singleton.sharedInstance.MyCartModel.data.cartDetails[HeaderSection].addedItemDetails[section].productId)
+        var choicesId: [Int] = []
+        var choicesTwo: [Int] = []
+        var choicesThree: [Int] = []
+        switch choice.type {
+        case .one: choicesId.append(choice.id)
+        case .two: choicesTwo.append(choice.id)
+        case .three: choicesThree.append(choice.id)
+        }
         
         let Parse = CommomParsing()
-        Parse.removeChoiceFromCart(lang: login_session.value(forKey: "Language") as? String ?? "es", cart_id: cartId,product_id: productId, choice_id: [choice.id], onSuccess: { [weak self] response in
+        Parse.removeChoiceFromCart(lang: login_session.value(forKey: "Language") as? String ?? "es",
+                                   cart_id: cartId,
+                                   product_id: productId,
+                                   choice_id: choicesId,
+                                   choiceTwo_id: choicesTwo,
+                                   choiceThree_id: choicesThree,
+                                   onSuccess: { [weak self] response in
             print (response)
             self?.delegate?.hideBGLoader()
-            if response.object(forKey: "code") as! Int == 200{
+            if response.object(forKey: "code") as! Int == 200 {
                 self?.delegate?.reloadCartData()
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                //self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-                
+            } else if response.object(forKey: "code")as! Int == 400,
+                     let message = response.object(forKey: "message") as? String {
+                self?.delegate?.showError(message: message)
+            } else {
+                self?.delegate?.showError(message: response.object(forKey: "message") as? String)
             }
-        }, onFailure: {errorResponse in})
+        }, onFailure: { [weak self] errorResponse in
+            self?.delegate?.hideBGLoader()
+            self?.delegate?.showError(message: errorResponse as? String)
+        })
     }
 }

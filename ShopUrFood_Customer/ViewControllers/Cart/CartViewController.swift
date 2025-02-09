@@ -16,7 +16,7 @@ import QuartzCore
 
 
 @available(iOS 11.0, *)
-class CartViewController: BaseViewController,UITableViewDelegate,UITableViewDataSource,DateTimePickerDelegate,delegateForChoiceRemoveFromCart {
+class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource, DateTimePickerDelegate {
     
     
     @IBOutlet weak var transpertantView: UIView!
@@ -784,20 +784,6 @@ class CartViewController: BaseViewController,UITableViewDelegate,UITableViewData
         }, onFailure: {errorResponse in})
     }
     
-    
-    //MARK:- Delegate Method For when the Choice remove
-    func showBGLoader() {
-        self.showLoadingIndicator(senderVC: self)
-    }
-    
-    func hideBGLoader() {
-        self.stopLoadingIndicator(senderVC: self)
-    }
-    
-    func reloadCartData() {
-        self.getCartData()
-    }
-    
     @IBAction func popUpUpdateBtnAction(_ sender: UIButton) {
         transpertantView.isHidden = true
         self.showLoadingIndicator(senderVC: self)
@@ -850,5 +836,26 @@ extension PopTipDirection {
         case .autoVertical:
             return .none
         }
+    }
+}
+
+//MARK:- Delegate Method For when the Choice remove
+
+extension CartViewController: DelegateForChoiceRemoveFromCart {
+    func showError(message: String?) {
+        guard let message else { return }
+        self.showTokenExpiredPopUp(msgStr: message)
+    }
+
+    func showBGLoader() {
+        self.showLoadingIndicator(senderVC: self)
+    }
+    
+    func hideBGLoader() {
+        self.stopLoadingIndicator(senderVC: self)
+    }
+    
+    func reloadCartData() {
+        self.getCartData()
     }
 }
