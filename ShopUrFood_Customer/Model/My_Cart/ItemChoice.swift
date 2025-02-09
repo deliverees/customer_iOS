@@ -19,12 +19,17 @@ class ItemChoice : NSObject, NSCoding{
      * Instantiate the instance using the passed dictionary values to set the properties values
      */
     init(fromDictionary dictionary: [String:Any]){
-        choiceAmount = dictionary["choice_amount"] as? String
+        if let amountString = dictionary["choice_amount"] as? String {
+            choiceAmount = amountString
+        } else if let amountInt = dictionary["choice_amount"] as? Int {
+            choiceAmount = String(amountInt)
+        } else {
+            choiceAmount = "0.00"
+        }
         choiceId = dictionary["choice_id"] as? Int
         choiceName = dictionary["choice_name"] as? String
         choicePrice = dictionary["choice_price"] as? String
         choiceCurrency = dictionary["choice_currency"] as? String
-
     }
 
     /**

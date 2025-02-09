@@ -1584,12 +1584,9 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
         requestDict.setValue(product_id, forKey: "product_id")
-        requestDict.setValue(choice_id, forKey: "choice_id")
+        requestDict.setValue(choice_id.map { "\($0)" }, forKey: "choice_id")
         requestDict.setValue(special_request, forKey: "special_request")
-        
-        
-        
-        
+  
         guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
             failure(NSError(domain: "anonymous", code: -1))
             return

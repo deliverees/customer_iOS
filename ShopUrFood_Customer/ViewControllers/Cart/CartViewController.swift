@@ -20,27 +20,17 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     
     
     @IBOutlet weak var transpertantView: UIView!
-    @IBOutlet weak var popUpViewItemsBtn: UIButton!
-    @IBOutlet weak var popUpUpdateBtn: UIButton!
-    @IBOutlet weak var extrasTable: UITableView!
-    @IBOutlet weak var popUpNotesTxt: UITextField!
-    @IBOutlet weak var popUpItemPriceLbl: UILabel!
-    @IBOutlet weak var popUpCloseBtn: UIButton!
-    @IBOutlet weak var popUpItemName: UILabel!
-    @IBOutlet weak var extrasTableviewHeight: NSLayoutConstraint!
+    @IBOutlet weak var updateItemInfoView: EditCartItemView!
+    @IBOutlet weak var updateItemInfoHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var baseContentView: UIView!
     @IBOutlet weak var emptyCartBtn: UIButton!
     @IBOutlet weak var cartTable: UITableView!
     @IBOutlet weak var emptyCartView: UIView!
     @IBOutlet weak var navigationPriceLbl: UILabel!
     @IBOutlet weak var navigationTitleLbl: UILabel!
-    @IBOutlet weak var taxTitleLbl: UILabel!
-    @IBOutlet weak var taxValueLbl: UILabel!
     
     @IBOutlet weak var iamemptyLbl: UILabel!
     
-    @IBOutlet weak var specialInstructionLbl: UILabel!
-    @IBOutlet weak var itemAmountLbl: UILabel!
     @IBOutlet weak var cartEmptyLbl: UILabel!
     //PROMOTIONAL OFFERS VIEW
     @IBOutlet weak var promotionalOfferBGView: UIView!
@@ -83,10 +73,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         self.iamemptyLbl.text = LanguageDictonary.value(forKey: "iamempty") as? String
         self.cartEmptyLbl.text = LanguageDictonary.value(forKey: "yourcartempty") as? String
         self.emptyCartBtn.setTitle(LanguageDictonary.value(forKey: "addsomefood") as? String, for: .normal)
-        self.itemAmountLbl.text = LanguageDictonary.value(forKey: "itemamount") as? String
-        self.specialInstructionLbl.text = LanguageDictonary.value(forKey: "specialinstruction") as? String
-        self.popUpUpdateBtn.setTitle(LanguageDictonary.value(forKey: "updatecart") as? String, for: .normal)
-        self.popUpViewItemsBtn.setTitle(LanguageDictonary.value(forKey: "viewitem") as? String, for: .normal)
         self.promotionalOfferOkayButton.setTitle(LanguageDictonary.value(forKey: "okaygotit") as? String, for: .normal)
         
         // add shadow effect to scroll
@@ -120,16 +106,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         popTip.bubbleOffset = 0
         popTip.edgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         popTip.bubbleColor = UIColor.black
-        
-        /*
-         Other customization:
-         */
-        //    popTip.borderWidth = 2
-        //    popTip.borderColor = UIColor.blue
-        //    popTip.shadowOpacity = 0.4
-        //    popTip.shadowRadius = 3
-        //    popTip.shadowOffset = CGSize(width: 1, height: 1)
-        //    popTip.shadowColor = .black
         
         popTip.actionAnimation = .bounce(8)
         
@@ -255,7 +231,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
                 login_session.synchronize()
             }
             DispatchQueue.main.async {
-                self.extrasTable.reloadData()
                 self.cartTable.reloadData()
                 self.stopLoadingIndicator(senderVC: self)
             }
@@ -267,9 +242,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     //MARK:- Tableview Delegate & DataSource Methods
     func numberOfSections(in tableView: UITableView) -> Int {
         if Singleton.sharedInstance.MyCartModel != nil{
-            if tableView == extrasTable{
-                return 1
-            }
             return Singleton.sharedInstance.MyCartModel.data.cartDetails.count + 1
         }else{
             return 0
@@ -279,9 +251,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
         if section == Singleton.sharedInstance.MyCartModel.data.cartDetails.count{
             return 1
         }else{
-            if tableView == extrasTable{
-                return Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices.count + 1
-            }
             return Singleton.sharedInstance.MyCartModel.data.cartDetails[section].addedItemDetails.count + 1
         }
         
@@ -290,241 +259,171 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        if tableView == extrasTable{
-            if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartChoicesTitleCell") as? CartChoicesTitleCell
-                cell?.selectionStyle = .none
-                cell?.choicelbl.text = LanguageDictonary.value(forKey: "choice") as? String
-                return cell!
-            }else{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartChoicesCell") as? CartChoicesCell
-                cell?.selectionStyle = .none
-                let nameStr = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices[indexPath.row-1].choiceName
-                cell?.toppingNameLbl.text = nameStr
-                let currency = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices[indexPath.row-1].choiceCurrency
-                let price = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices[indexPath.row-1].choicePrice
-                cell?.toppingPriceLbl.text = "\(currency ?? "")\(price ?? "")"
-                if selectedCartChoiceArray.count != 0 {
-                    let tempArray = selectedCartChoiceArray.value(forKey: "choice_name")as! NSArray
-                    if tempArray.contains(nameStr as Any){
-                        cell?.selectionImg.image = UIImage(named: "selectedCheckBox")
-                    }else{
-                        cell?.selectionImg.image = UIImage(named: "checkBox")
-                    }
-                }else{
-                    cell?.selectionImg.image = UIImage(named: "checkBox")
-                }
-                
-                return cell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == Singleton.sharedInstance.MyCartModel.data.cartDetails.count {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalCell") as? CartTotalCell
+            cell?.selectionStyle = .none
+            
+            cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
+            cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
+            cell?.deliveryFeeLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
+            cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
+            cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
+            cell?.managementFeeLbl.text = Localization.value(for: "managementFee")
+            
+            cell?.checkOutBtn.layer.borderWidth = 2
+            cell?.checkOutBtn.layer.borderColor = UIColor.red.cgColor
+            
+            let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
+            let subTotal = Singleton.sharedInstance.MyCartModel.data.cartSubTotal as String
+            let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
+            let grandTotal = Singleton.sharedInstance.MyCartModel.data.totalCartAmount as String
+            let taxTotal = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
+            
+            cell?.subTotalValueLbl.text = currency + " " + subTotal
+            cell?.deliveryFeeValueLbl.text = currency + " " + deliveryFee
+            cell?.totalValueLbl.text = currency + " " + grandTotal
+            cell?.taxValueLbl.text = currency + " " + taxTotal
+            cell?.taxLbl.superview?.isHidden = taxTotal == "0.00" || taxTotal.isEmpty
+            cell?.deliveryFeeValueLbl.superview?.isHidden = deliveryFee == "0.00" || deliveryFee.isEmpty
+            if let managementFee = Singleton.sharedInstance.MyCartModel.data.managementFee {
+                cell?.managementFeeAmtLbl.text = currency + " " + managementFee
             }
-        }else {
-            if indexPath.section == Singleton.sharedInstance.MyCartModel.data.cartDetails.count{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CartTotalCell") as? CartTotalCell
+            cell?.totalView.tag = 1001
+            
+            peakClickedPopupviewFrame.frame = cell!.frame
+            
+            if peakHourFeeStatus == "0"
+            {
+                cell?.peakHoursFeeBtn.isHidden = true
+            }
+            else
+            {
+                cell?.peakHoursFeeBtn.isHidden = false
+                cell?.peakHoursFeeBtn.tag = indexPath.row
+            }
+            cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
+            
+            cell?.checkOutBtn.addTarget(self, action: #selector(checkOutBtnTapped), for: .touchUpInside)
+            
+            return cell!
+        }else{
+            if indexPath.row == 0{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CartHeaderCell") as? CartHeaderCell
                 cell?.selectionStyle = .none
-                
-                cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
-                cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
-                cell?.deliveryFeeLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
-                cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
-                cell?.checkOutBtn.setTitle(LanguageDictonary.value(forKey: "checkout") as? String, for: .normal)
-                cell?.managementFeeLbl.text = Localization.value(for: "managementFee")
-                
-                cell?.checkOutBtn.layer.borderWidth = 2
-                cell?.checkOutBtn.layer.borderColor = UIColor.red.cgColor
-                
-                let currency = Singleton.sharedInstance.MyCartModel.data.currencyCode as String
-                let subTotal = Singleton.sharedInstance.MyCartModel.data.cartSubTotal as String
-                let deliveryFee = Singleton.sharedInstance.MyCartModel.data.deliveryFee as String
-                let grandTotal = Singleton.sharedInstance.MyCartModel.data.totalCartAmount as String
-                let taxTotal = Singleton.sharedInstance.MyCartModel.data.cartTaxTotal as String
-                
-                cell?.subTotalValueLbl.text = currency + " " + subTotal
-                cell?.deliveryFeeValueLbl.text = currency + " " + deliveryFee
-                cell?.totalValueLbl.text = currency + " " + grandTotal
-                cell?.taxValueLbl.text = currency + " " + taxTotal
-                cell?.taxLbl.superview?.isHidden = taxTotal == "0.00" || taxTotal.isEmpty
-                cell?.deliveryFeeValueLbl.superview?.isHidden = deliveryFee == "0.00" || deliveryFee.isEmpty
-                if let managementFee = Singleton.sharedInstance.MyCartModel.data.managementFee {
-                    cell?.managementFeeAmtLbl.text = currency + " " + managementFee
-                }
-                cell?.totalView.tag = 1001
-                
-                peakClickedPopupviewFrame.frame = cell!.frame
-                
-                if peakHourFeeStatus == "0"
-                {
-                    cell?.peakHoursFeeBtn.isHidden = true
-                }
-                else
-                {
-                    cell?.peakHoursFeeBtn.isHidden = false
-                    cell?.peakHoursFeeBtn.tag = indexPath.row
-                }
-                cell?.peakHoursFeeBtn.addTarget(self,action:#selector(peakHoursBtnClicked(sender:)), for: .touchUpInside)
-                
-                cell?.checkOutBtn.addTarget(self, action: #selector(checkOutBtnTapped), for: .touchUpInside)
-                
-                return cell!
-            }else{
-                if indexPath.row == 0{
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "CartHeaderCell") as? CartHeaderCell
-                    cell?.selectionStyle = .none
-                    cell?.restaurantNameLbl.text = Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].storeName
-                    if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].preOrderStatus == "Available"{
-                        cell?.preOrderBtn.isHidden = false
-                        cell?.preOrderImg.isHidden = false
-                        cell?.preOrderLbl.isHidden = false
-                        cell?.preOrderBtn.tag = indexPath.section
-                        cell?.preOrderBtn.addTarget(self, action: #selector(DateAndTimePickerTapped), for: .touchUpInside)
-                        
-                        cell?.closePreOrderBtn.addTarget(self, action: #selector(removePreOrderButtonTapped), for: .touchUpInside)
-                        
-                        if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder != ""
-                        {
-                            if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder == "0000-00-00 00:00:00"
-                            {
-                                cell?.preOrderLbl.text = LanguageDictonary.value(forKey: "preorder") as? String
-                                cell?.closePreOrderButtonWidth.constant = 0
-                                cell?.closePreOrderBtn.isHidden = true
-                            }
-                            else
-                            {
-                                let dateStr = self.changeToHoursFormat(getDate: Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder)
-                                cell?.preOrderLbl.text = dateStr
-                                cell?.closePreOrderButtonWidth.constant = 28
-                                cell?.closePreOrderBtn.isHidden = false
-                            }
-                        }
-                        else
+                cell?.restaurantNameLbl.text = Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].storeName
+                if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].preOrderStatus == "Available"{
+                    cell?.preOrderBtn.isHidden = false
+                    cell?.preOrderImg.isHidden = false
+                    cell?.preOrderLbl.isHidden = false
+                    cell?.preOrderBtn.tag = indexPath.section
+                    cell?.preOrderBtn.addTarget(self, action: #selector(DateAndTimePickerTapped), for: .touchUpInside)
+                    
+                    cell?.closePreOrderBtn.addTarget(self, action: #selector(removePreOrderButtonTapped), for: .touchUpInside)
+                    
+                    if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder != ""
+                    {
+                        if Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder == "0000-00-00 00:00:00"
                         {
                             cell?.preOrderLbl.text = LanguageDictonary.value(forKey: "preorder") as? String
                             cell?.closePreOrderButtonWidth.constant = 0
                             cell?.closePreOrderBtn.isHidden = true
                         }
-                    }else
-                    {
-                        cell?.preOrderBtn.isHidden = true
-                        cell?.preOrderImg.isHidden = true
-                        cell?.preOrderLbl.isHidden = true
+                        else
+                        {
+                            let dateStr = self.changeToHoursFormat(getDate: Singleton.sharedInstance.MyCartModel.data.cartDetails[indexPath.section].addedItemDetails[0].cartPreOrder)
+                            cell?.preOrderLbl.text = dateStr
+                            cell?.closePreOrderButtonWidth.constant = 28
+                            cell?.closePreOrderBtn.isHidden = false
+                        }
                     }
-                    return cell!
-                }else{
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "CartItemCell") as? CartItemCell
-                    cell?.selectionStyle = .none
-                    cell?.configData(index: indexPath.row-1, section: indexPath.section)
-                    cell?.plusBtn.addTarget(self, action: #selector(QuantityPlusBtnTapped), for: .touchUpInside)
-                    let tempIndex = indexPath.row - 1
-                    cell!.plusBtn.tag = (indexPath.section*100)+tempIndex
-                    cell?.lessBtn.tag = (indexPath.section*100)+tempIndex
-                    cell?.lessBtn.addTarget(self, action: #selector(lessBtnTapped), for: .touchUpInside)
-                    cell?.removeFromCartBtn.tag = (indexPath.section*100)+tempIndex
-                    cell?.removeFromCartBtn.addTarget(self, action: #selector(removeFromCartBtnTapped), for: .touchUpInside)
-                    cell?.foodImg.tag = (indexPath.section*100)+tempIndex
-                    let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-                    cell?.foodImg.isUserInteractionEnabled = true
-                    cell?.foodImg.addGestureRecognizer(tapGestureRecognizer)
-                    cell?.delegate = self
-                    return cell!
+                    else
+                    {
+                        cell?.preOrderLbl.text = LanguageDictonary.value(forKey: "preorder") as? String
+                        cell?.closePreOrderButtonWidth.constant = 0
+                        cell?.closePreOrderBtn.isHidden = true
+                    }
+                }else
+                {
+                    cell?.preOrderBtn.isHidden = true
+                    cell?.preOrderImg.isHidden = true
+                    cell?.preOrderLbl.isHidden = true
                 }
+                return cell!
+            }else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CartItemCell") as? CartItemCell
+                cell?.selectionStyle = .none
+                cell?.configData(index: indexPath.row-1, section: indexPath.section)
+                cell?.plusBtn.addTarget(self, action: #selector(QuantityPlusBtnTapped), for: .touchUpInside)
+                let tempIndex = indexPath.row - 1
+                cell!.plusBtn.tag = (indexPath.section*100)+tempIndex
+                cell?.lessBtn.tag = (indexPath.section*100)+tempIndex
+                cell?.lessBtn.addTarget(self, action: #selector(lessBtnTapped), for: .touchUpInside)
+                cell?.removeFromCartBtn.tag = (indexPath.section*100)+tempIndex
+                cell?.removeFromCartBtn.addTarget(self, action: #selector(removeFromCartBtnTapped), for: .touchUpInside)
+                cell?.foodImg.tag = (indexPath.section*100)+tempIndex
+                let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+                cell?.foodImg.isUserInteractionEnabled = true
+                cell?.foodImg.addGestureRecognizer(tapGestureRecognizer)
+                cell?.delegate = self
+                return cell!
             }
-            
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView == extrasTable{
-            let selectedName = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices[indexPath.row-1].choiceName
-            let selectedId = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices[indexPath.row-1].choiceId
-            if selectedCartChoiceArray.count != 0{
-                let tempArray = selectedCartChoiceArray.value(forKey: "choice_name")as! NSArray
-                if tempArray.contains(selectedName as Any){
-                    let particularIndex = tempArray.index(of: selectedName as Any)
-                    selectedCartChoiceArray.removeObject(at: particularIndex)
-                }else{
-                    let tempDict = NSMutableDictionary()
-                    tempDict.setValue(selectedName, forKey: "choice_name")
-                    tempDict.setValue(selectedId, forKey: "choice_id")
-                    selectedCartChoiceArray.add(tempDict)
-                }
-            }else{
-                let tempDict = NSMutableDictionary()
-                tempDict.setValue(selectedName, forKey: "choice_name")
-                tempDict.setValue(selectedId, forKey: "choice_id")
-                selectedCartChoiceArray.add(tempDict)
-            }
-            extrasTable.reloadData()
+        if indexPath.section == Singleton.sharedInstance.MyCartModel.data.cartDetails.count{
+            return
         }else{
-            if indexPath.section == Singleton.sharedInstance.MyCartModel.data.cartDetails.count{
-                
-            }else{
-                if indexPath.row != 0{
-                    EditExtrasSection = indexPath.section
-                    EditExtrasRow = indexPath.row-1
-                    self.showToppingsView()
-                }
+            if indexPath.row != 0{
+                let editExtrasSection = indexPath.section
+                let editExtrasRow = indexPath.row - 1
+                self.showToppingsView(editRow: editExtrasRow, editSection: editExtrasSection)
             }
         }
         
     }
     
     //Mark:- Food Image tapped Action
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
-    {
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
-        EditExtrasSection = tappedImage.tag / 100
-        EditExtrasRow = tappedImage.tag % 100
-        self.showToppingsView()
+        let editExtrasSection = tappedImage.tag / 100
+        let editExtrasRow = tappedImage.tag % 100
         
-        
+        self.showToppingsView(editRow: editExtrasRow, editSection: editExtrasSection)
     }
-    func showToppingsView(){
-        popUpCloseBtn.addTarget(self, action: #selector(popCloseBtnAction), for: .touchUpInside)
+    
+    func showToppingsView(editRow: Int, editSection: Int) {
+        let addedItemDetails = Singleton.sharedInstance.MyCartModel.data.cartDetails[editSection].addedItemDetails[editRow]
+        updateItemInfoView.configure(itemDetail: addedItemDetails)
+        updateItemInfoHeightConstraint.constant = updateItemInfoView.choicesTableView.contentSize.height + 250
         transpertantView.backgroundColor = BlackTranspertantColor
         transpertantView.isHidden = false
-        popUpItemName.text = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].productName
-        let currency = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].cartCurrency as String
-        let total = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].cartUnitPrice as String
-        popUpItemPriceLbl.text = currency + total
-        
-        let taxTotal = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].cartTax as String
-        taxValueLbl.text = currency + taxTotal
-        
-        
-        let Notes = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].cartSplRequest
-        popUpNotesTxt.text = Notes
-        let toppingCount = Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].itemChoices.count
-        selectedCartChoiceArray.removeAllObjects()
-        if toppingCount == 0 {
-            extrasTableviewHeight.constant = 0
-        }else{
-            if toppingCount <= 3
-            {
-                extrasTableviewHeight.constant = CGFloat(toppingCount*60)
-            }
-            else
-            {
-                extrasTableviewHeight.constant = 180
-            }
-            let tempCart_details = resultDict.object(forKey: "cart_details")as! NSArray
-            let cartDetailsArray = tempCart_details.mutableCopy() as! NSMutableArray
-            let itemDict = NSMutableDictionary()
-            itemDict.addEntries(from: cartDetailsArray.object(at: EditExtrasSection) as! [AnyHashable : Any])
-            let tempAddedArray = itemDict.object(forKey: "added_item_details")as! NSArray
-            let addedItemArray = tempAddedArray.mutableCopy() as! NSMutableArray
-            let cartChoiceDict = NSMutableDictionary()
-            cartChoiceDict.addEntries(from: (addedItemArray.object(at: EditExtrasRow)as! NSDictionary) as! [AnyHashable : Any])
-            selectedCartChoiceArray.addObjects(from: (cartChoiceDict.object(forKey: "cart_choices")as! NSArray) as! [Any])
+        updateItemInfoView.closeAction = { [weak self] in
+            self?.transpertantView.isHidden = true
         }
-        extrasTable.reloadData()
-        popUpUpdateBtn.layer.cornerRadius = 17.5
-        popUpViewItemsBtn.layer.cornerRadius = 17.5
+        
+        updateItemInfoView.loadingAction = { [weak self] loading in
+            guard let self else { return }
+            if loading {
+                self.showLoadingIndicator(senderVC: self)
+            } else {
+                self.stopLoadingIndicator(senderVC: self)
+            }
+        }
+           
+        updateItemInfoView.errorAction = { [weak self] message in
+            self?.showToastAlert(senderVC: self!, messageStr: message ?? "")
+        }
+        
+        updateItemInfoView.updateItemAction = { [weak self] in
+            self?.transpertantView.isHidden = true
+            self?.getCartData()
+        }
     }
     
     @objc func popCloseBtnAction(){
         transpertantView.isHidden = true
-        
     }
     
     
@@ -736,21 +635,11 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     }
     
     
-    func dateTimePicker(_ picker: DateTimePicker, didSelectDate: Date) {
-        
-    }
+    func dateTimePicker(_ picker: DateTimePicker, didSelectDate: Date) { }
     
     //MARK:- 24 hours format change to 12 hours format
     func changeToHoursFormat(getDate:String) -> String
     {
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm z"
-        //        let dateFrom = dateFormatter.date(from: getDate)
-        //        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        //        // set locale to reliable US_POSIX
-        //        let dateStr = dateFormatter.string(from: dateFrom!)
-        
-        
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.locale = Locale(identifier:"en_US_POSIX")
@@ -783,37 +672,6 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             
         }, onFailure: {errorResponse in})
     }
-    
-    @IBAction func popUpUpdateBtnAction(_ sender: UIButton) {
-        transpertantView.isHidden = true
-        self.showLoadingIndicator(senderVC: self)
-        let cartId = String(Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].cartId)
-        let productId = String(Singleton.sharedInstance.MyCartModel.data.cartDetails[EditExtrasSection].addedItemDetails[EditExtrasRow].productId)
-        var choiceId = [Int]()
-        if selectedCartChoiceArray.count != 0{
-            let tempIds = selectedCartChoiceArray.value(forKey: "choice_id")as! NSArray
-            for choice in tempIds{
-                choiceId.append(choice as! Int)
-            }
-        }
-        
-        let Parse = CommomParsing()
-        Parse.updateCartWithChoice(lang: login_session.value(forKey: "Language") as? String ?? "es",cart_id: cartId,product_id: productId,choice_id: choiceId,special_request:popUpNotesTxt.text!, onSuccess: {
-            response in
-            if response.object(forKey: "code") as! Int == 200{
-                self.getCartData()
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
-            }else{
-            }
-            self.stopLoadingIndicator(senderVC: self)
-        }, onFailure: {errorResponse in})
-        
-    }
-    
-    @IBAction func popUpViewItemsBtnAction(_ sender: Any) {
-    }
-    
 }
 
 extension PopTipDirection {
