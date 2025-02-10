@@ -396,7 +396,10 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
     func showToppingsView(editRow: Int, editSection: Int) {
         let addedItemDetails = Singleton.sharedInstance.MyCartModel.data.cartDetails[editSection].addedItemDetails[editRow]
         updateItemInfoView.configure(itemDetail: addedItemDetails)
-        updateItemInfoHeightConstraint.constant = updateItemInfoView.choicesTableView.contentSize.height + 250
+        let size = updateItemInfoView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize,
+                                                              withHorizontalFittingPriority: .required,
+                                                              verticalFittingPriority: .fittingSizeLevel)
+        updateItemInfoHeightConstraint.constant = size.height
         transpertantView.backgroundColor = BlackTranspertantColor
         transpertantView.isHidden = false
         updateItemInfoView.closeAction = { [weak self] in

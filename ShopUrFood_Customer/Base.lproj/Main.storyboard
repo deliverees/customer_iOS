@@ -9467,10 +9467,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6eO-TM-XLD" customClass="EditCartItemView" customModule="ShopUrFood_Customer" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="64" width="280" height="350"/>
+                                        <rect key="frame" x="20" y="64" width="280" height="440"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" priority="250" constant="350" id="cZ9-t6-bzq"/>
+                                            <constraint firstAttribute="height" constant="440" id="xfY-hU-8u0"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -9483,7 +9483,8 @@
                                 <constraints>
                                     <constraint firstItem="6eO-TM-XLD" firstAttribute="leading" secondItem="VCZ-ZM-zNd" secondAttribute="leading" constant="20" id="4fp-Hn-0tk"/>
                                     <constraint firstAttribute="trailing" secondItem="6eO-TM-XLD" secondAttribute="trailing" constant="20" id="4vz-fe-d75"/>
-                                    <constraint firstItem="6eO-TM-XLD" firstAttribute="top" secondItem="VCZ-ZM-zNd" secondAttribute="top" constant="64" id="Vhx-Zw-8L2"/>
+                                    <constraint firstItem="6eO-TM-XLD" firstAttribute="centerY" secondItem="VCZ-ZM-zNd" secondAttribute="centerY" id="LvF-mu-Kye"/>
+                                    <constraint firstItem="6eO-TM-XLD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VCZ-ZM-zNd" secondAttribute="top" constant="64" id="Vhx-Zw-8L2"/>
                                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6eO-TM-XLD" secondAttribute="bottom" constant="64" id="dui-Mb-VcP"/>
                                 </constraints>
                             </view>
@@ -9648,7 +9649,7 @@
                         <outlet property="promotionalOfferTxtLbl" destination="NyK-ao-Ahw" id="2mx-V6-OGf"/>
                         <outlet property="topNavigationView" destination="GEe-7J-luz" id="7hJ-eJ-C5t"/>
                         <outlet property="transpertantView" destination="VCZ-ZM-zNd" id="WkP-sK-Sxq"/>
-                        <outlet property="updateItemInfoHeightConstraint" destination="cZ9-t6-bzq" id="nIx-VY-uj0"/>
+                        <outlet property="updateItemInfoHeightConstraint" destination="xfY-hU-8u0" id="wnJ-zF-xdM"/>
                         <outlet property="updateItemInfoView" destination="6eO-TM-XLD" id="OSX-KZ-0dg"/>
                     </connections>
                 </viewController>

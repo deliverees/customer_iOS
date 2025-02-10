@@ -13,6 +13,8 @@ class AddedItemDetail : NSObject, NSCoding{
     var cartChoicesTwo: [CartChoice] = []
     var cartChoicesThree: [CartChoice] = []
     var itemChoices : [ItemChoice]!
+    var itemTwoChoices: [ItemChoice] = []
+    var itemThreeChoices: [ItemChoice] = []
     var cartCurrency : String!
     var cartHasChoice : String!
     var cartId : Int!
@@ -69,10 +71,24 @@ class AddedItemDetail : NSObject, NSCoding{
         }
         
         itemChoices = [ItemChoice]()
-        if let itemChoicesArray = dictionary["item_choices"] as? [[String:Any]]{
+        if let itemChoicesArray = dictionary["item_choices"] as? [[String:Any]] {
             for dic in itemChoicesArray{
                 let value = ItemChoice(fromDictionary: dic)
                 itemChoices.append(value)
+            }
+        }
+        itemTwoChoices = [ItemChoice]()
+        if let itemTwoChoicesArray = dictionary["item_choicesTwo"] as? [[String:Any]] {
+            for dic in itemTwoChoicesArray{
+                let value = ItemChoice(fromDictionary: dic)
+                itemTwoChoices.append(value)
+            }
+        }
+        itemThreeChoices = [ItemChoice]()
+        if let itemThreeChoicesArray = dictionary["item_choicesThree"] as? [[String:Any]] {
+            for dic in itemThreeChoicesArray{
+                let value = ItemChoice(fromDictionary: dic)
+                itemThreeChoices.append(value)
             }
         }
     }
@@ -142,14 +158,20 @@ class AddedItemDetail : NSObject, NSCoding{
             for cartChoicesElement in cartChoicesThree {
                 dictionaryElements.append(cartChoicesElement.toDictionary())
             }
-            dictionary["cartChoicesThree"] = dictionaryElements
+            dictionary["cart_choicesThree"] = dictionaryElements
         }
         if itemChoices != nil{
             var dictionaryElements = [[String:Any]]()
             for itemChoicesElement in itemChoices {
                 dictionaryElements.append(itemChoicesElement.toDictionary())
             }
-            dictionary["itemChoices"] = dictionaryElements
+            dictionary["item_choices"] = dictionaryElements
+        }
+        if !itemTwoChoices.isEmpty {
+            dictionary["item_choicesTwo"] = itemTwoChoices.map { $0.toDictionary() }
+        }
+        if !itemThreeChoices.isEmpty {
+            dictionary["item_choicesThree"] = itemThreeChoices.map { $0.toDictionary() }
         }
         return dictionary
     }

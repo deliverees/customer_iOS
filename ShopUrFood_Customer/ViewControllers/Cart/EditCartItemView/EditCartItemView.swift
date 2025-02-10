@@ -30,6 +30,7 @@ final class EditCartItemView: UIView {
     var errorAction: ((String?) -> Void)?
     var updateItemAction: (() -> Void)?
     var seeItemAction: (() -> Void)?
+    private var sectionedItemChoices: [[ItemChoice]] = []
     
     // MARK: - Initializers
     required init?(coder: NSCoder) {
@@ -67,6 +68,11 @@ final class EditCartItemView: UIView {
         choicesTableView.delegate = self
         choicesTableView.register(UINib(nibName: "CartChoicesCell", bundle: nil), forCellReuseIdentifier: "CartChoicesCell")
         heightObserver = choicesTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            if tableView.numberOfSections == 0 {
+                self?.tableViewHeightConstraint.constant = 100
+                self?.tableViewHeightConstraint.priority = .defaultLow
+                return
+            }
             self?.tableViewHeightConstraint.constant = tableView.contentSize.height
         }
         updateItemButton.addTarget(self, action: #selector(updateTap), for: .touchUpInside)
@@ -83,6 +89,12 @@ final class EditCartItemView: UIView {
     
     func configure(itemDetail: AddedItemDetail) {
         self.itemDetail = itemDetail
+        selectedChoices.removeAll()
+        sectionedItemChoices.removeAll()
+        self.sectionedItemChoices = [itemDetail.itemChoices,
+                                     itemDetail.itemTwoChoices,
+                                     itemDetail.itemThreeChoices]
+            .filter({ !$0.isEmpty })
         itemNameLabel.text = itemDetail.productName
         itemPriceLabel.text = itemDetail.cartCurrency + itemDetail.cartUnitPrice + " x" + "\(itemDetail.cartQuantity ?? 1)"
         if itemDetail.cartTax.isEmpty || itemDetail.cartTax == "0" {
@@ -94,7 +106,9 @@ final class EditCartItemView: UIView {
         itemSpecialInstructionsTextView.text = itemDetail.cartSplRequest
         choicesTableView.reloadData()
         if itemDetail.itemChoices.isEmpty {
-            choicesTableView.isHidden = true
+            choicesTableView.alpha = 0
+        } else {
+            choicesTableView.alpha = 1
         }
         itemDetail.cartChoices.forEach { choice in
             selectedChoices.append(SelectedCartChoice(choiceId: choice.choiceId, choiceType: .one))
@@ -128,14 +142,17 @@ final class EditCartItemView: UIView {
         let cartId = "\(itemDetail.cartId ?? -1)"
         let productId = "\(itemDetail.productId ?? -1)"
         let specialRequest = itemSpecialInstructionsTextView.text ?? ""
-        var choiceId = [Int]()
-        let selectedChoices: [Int] = selectedChoices.filter({ $0.choiceType == .one }).map(\.choiceId)
+        let selectedChoicesId: [Int] = selectedChoices.filter({ $0.choiceType == .one }).map(\.choiceId)
+        let selectedTwoChoicesId: [Int] = selectedChoices.filter({ $0.choiceType == .two }).map(\.choiceId)
+        let selectedThreeChoicesId: [Int] = selectedChoices.filter({ $0.choiceType == .three }).map(\.choiceId)
         
         let Parse = CommomParsing()
         Parse.updateCartWithChoice(lang: login_session.value(forKey: "Language") as? String ?? "es",
                                    cart_id: cartId,
                                    product_id: productId,
-                                   choice_id: selectedChoices,
+                                   choice_id: selectedChoicesId,
+                                   choiceTwo_id: selectedTwoChoicesId,
+                                   choiceThree_id: selectedThreeChoicesId,
                                    special_request: specialRequest,
                                    onSuccess: { [weak self] response in
             self?.loadingAction?(false)
@@ -163,8 +180,12 @@ final class EditCartItemView: UIView {
 }
 
 extension EditCartItemView: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        sectionedItemChoices.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        itemDetail?.itemChoices.count ?? 0
+        sectionedItemChoices[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,28 +193,25 @@ extension EditCartItemView: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         cell.selectionStyle = .none
-        guard let choice = itemDetail?.itemChoices[indexPath.row] else {
-            return UITableViewCell()
-        }
+        let choice = sectionedItemChoices[indexPath.section][indexPath.row]
+        let selectedChoiceType: SelectedCartChoice.ChoiceType = choice.choiceType == .one ? .one : choice.choiceType == .two ? .two : .three
         let nameStr = choice.choiceName
         cell.toppingNameLbl.text = nameStr
         let currency = choice.choiceCurrency
         let price = choice.choicePrice
         cell.toppingPriceLbl.text = "\(currency ?? "")\(price ?? "")"
-        let selected = selectedChoices.contains(where: { $0.choiceId == choice.choiceId })
+        let selected = selectedChoices.contains(where: { $0.choiceId == choice.choiceId && $0.choiceType == selectedChoiceType })
         let image = selected ? UIImage(named: "selectedCheckBox") : UIImage(named: "checkBox")
         cell.selectionImg.image = image
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let choice = itemDetail?.itemChoices.first else {
-            return UITableViewCell()
-        }
+        guard let choice = sectionedItemChoices[section].first else { return nil }
         let header = UIView()
         header.backgroundColor = UIColor.groupTableViewBackground
         let label = UILabel()
-        label.text = "Toppings"
+        label.text = choice.titleChoice
         label.textColor = UIColor.black
         label.font = UIFont.truenoRegular(size: 14)
         header.addSubview(label)
@@ -211,13 +229,12 @@ extension EditCartItemView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let choice = itemDetail?.itemChoices[indexPath.row] else {
-            return
-        }
-        if selectedChoices.filter({ $0.choiceId == choice.choiceId }).contains(where: { $0.choiceId == choice.choiceId }) {
-            selectedChoices.removeAll(where: { $0.choiceType == .one && $0.choiceId == choice.choiceId })
+        let choice = sectionedItemChoices[indexPath.section][indexPath.row]
+        let selectedChoiceType: SelectedCartChoice.ChoiceType = choice.choiceType == .one ? .one : choice.choiceType == .two ? .two : .three
+        if selectedChoices.filter({ $0.choiceType == selectedChoiceType }).contains(where: { $0.choiceId == choice.choiceId }) {
+            selectedChoices.removeAll(where: { $0.choiceType == selectedChoiceType && $0.choiceId == choice.choiceId })
         } else {
-            selectedChoices.append(SelectedCartChoice(choiceId: choice.choiceId, choiceType: .one))
+            selectedChoices.append(SelectedCartChoice(choiceId: choice.choiceId, choiceType: selectedChoiceType))
         }
         tableView.reloadData()
     }

@@ -1578,13 +1578,23 @@ class CommomParsing: BaseParsing {
     
     
     //Update the choice In Cart
-    public func updateCartWithChoice(lang:String,cart_id:String,product_id:String,choice_id:[Int],special_request:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    public func updateCartWithChoice(lang: String,
+                                     cart_id: String,
+                                     product_id: String,
+                                     choice_id: [Int],
+                                     choiceTwo_id: [Int],
+                                     choiceThree_id: [Int],
+                                     special_request: String,
+                                     onSuccess success: @escaping (NSDictionary) -> Void,
+                                     onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(cart_id, forKey: "cart_id")
         requestDict.setValue(product_id, forKey: "product_id")
         requestDict.setValue(choice_id.map { "\($0)" }, forKey: "choice_id")
+        requestDict.setValue(choiceTwo_id.map { "\($0)" }, forKey: "choiceTwo_id")
+        requestDict.setValue(choiceThree_id.map { "\($0)" }, forKey: "choiceThree_id")
         requestDict.setValue(special_request, forKey: "special_request")
   
         guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
