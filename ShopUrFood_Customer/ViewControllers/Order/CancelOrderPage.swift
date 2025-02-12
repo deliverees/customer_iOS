@@ -21,7 +21,7 @@ class CancelOrderPage: BottomPopupViewController,UITextViewDelegate {
     var shouldDismissInteractivelty: Bool?
     var dataDict = NSMutableDictionary()
     var OrderId = String()
-
+    
     @IBOutlet weak var closeBtn: UIButton!
     @IBOutlet weak var cancelOrderBtn: UIButton!
     @IBOutlet weak var msgTxt: UITextView!
@@ -29,12 +29,12 @@ class CancelOrderPage: BottomPopupViewController,UITextViewDelegate {
     @IBOutlet weak var restaurantNameLbl: UILabel!
     @IBOutlet weak var BaseView: UIView!
     var  CancelLoadingIndicator = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 36), type: .ballPulse, color: UIColor.white, padding: 0)
-
+    
     
     @IBOutlet weak var buttonIndicatorView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         print(dataDict)
         restaurantNameLbl.text = (dataDict.object(forKey: "restaurant_name")as! String)
         dishNameLbl.text = (dataDict.object(forKey: "item_name")as! String)
@@ -44,11 +44,11 @@ class CancelOrderPage: BottomPopupViewController,UITextViewDelegate {
         closeBtn.addTarget(self, action: #selector(closeBtnTapped), for: .touchUpInside)
         cancelOrderBtn.addTarget(self, action: #selector(cancelOrderBtnTapped), for: .touchUpInside)
         buttonIndicatorView.addSubview(CancelLoadingIndicator)
-
+        
     }
     
     @objc func closeBtnTapped(sender:UIButton){
-       self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func cancelOrderBtnTapped(sender:UIButton){
@@ -80,7 +80,7 @@ class CancelOrderPage: BottomPopupViewController,UITextViewDelegate {
         
     }
     
-  
+    
     
     
     func textViewDidBeginEditing(_ textView: UITextView) {

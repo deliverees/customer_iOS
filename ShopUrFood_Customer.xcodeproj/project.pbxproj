@@ -191,7 +191,6 @@
 		24F4D844224CA00A006E77BB /* AllReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4D843224CA00A006E77BB /* AllReviewViewController.swift */; };
 		24F4D846224CA214006E77BB /* AllReviewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4D845224CA214006E77BB /* AllReviewsTableViewCell.swift */; };
 		24F67FA5222CF6F9002AD641 /* OrderDetailsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F67FA4222CF6F9002AD641 /* OrderDetailsPage.swift */; };
-		24F67FA9222D3298002AD641 /* OrderDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F67FA8222D3297002AD641 /* OrderDetailsCell.swift */; };
 		24F67FAB222D36EB002AD641 /* OrderDetailsTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F67FAA222D36EB002AD641 /* OrderDetailsTitleCell.swift */; };
 		24F72360222692EE001D2BCA /* AllRestaurantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F7235F222692ED001D2BCA /* AllRestaurantViewController.swift */; };
 		24F90C17224E3452009AD2FD /* empty-box.json in Resources */ = {isa = PBXBuildFile; fileRef = 24F90C16224E344E009AD2FD /* empty-box.json */; };
@@ -449,7 +448,6 @@
 		24F4D843224CA00A006E77BB /* AllReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReviewViewController.swift; sourceTree = "<group>"; };
 		24F4D845224CA214006E77BB /* AllReviewsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReviewsTableViewCell.swift; sourceTree = "<group>"; };
 		24F67FA4222CF6F9002AD641 /* OrderDetailsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsPage.swift; sourceTree = "<group>"; };
-		24F67FA8222D3297002AD641 /* OrderDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsCell.swift; sourceTree = "<group>"; };
 		24F67FAA222D36EB002AD641 /* OrderDetailsTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsTitleCell.swift; sourceTree = "<group>"; };
 		24F7235F222692ED001D2BCA /* AllRestaurantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRestaurantViewController.swift; sourceTree = "<group>"; };
 		24F90C16224E344E009AD2FD /* empty-box.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-box.json"; sourceTree = "<group>"; };
@@ -1227,7 +1225,6 @@
 			isa = PBXGroup;
 			children = (
 				24211B3D22293E85002BFB4A /* OrderHistoryCell.swift */,
-				24F67FA8222D3297002AD641 /* OrderDetailsCell.swift */,
 				24F67FAA222D36EB002AD641 /* OrderDetailsTitleCell.swift */,
 				24F003B6222E8F840093189D /* OrderDetailsTBCell.swift */,
 				24FCAAC9222F9AC400CFF631 /* Invoice_addressCell.swift */,
@@ -1795,7 +1792,6 @@
 				242AB3ED223F7E9B006ED8CA /* SelectPaymetOptionPage.swift in Sources */,
 				D42A98B22CC04FF800A73909 /* ChangeAddress.swift in Sources */,
 				24FA11B02212A59E00599AB9 /* SignUpViewController.swift in Sources */,
-				24F67FA9222D3298002AD641 /* OrderDetailsCell.swift in Sources */,
 				D4BE924E2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift in Sources */,
 				D48955922C6A8F380082A2A7 /* WorkingHoursModel.swift in Sources */,
 				24346FB92209B99B00446252 /* LoginViewController.swift in Sources */,
