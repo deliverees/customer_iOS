@@ -334,8 +334,12 @@ class OrderDetailsPage: BaseViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard finalArray.count > 0 else { return nil }
         if section == 0 {
-            guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "OrderDetailsTitleCell") as? OrderDetailsTitleCell else { return nil }
+            guard let view = UINib(nibName: "OrderDetailsTitleCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as? OrderDetailsTitleCell
+            else {
+                return nil
+            }
             let restaurantName = ((finalArray.object(at: 0) as? NSDictionary)?.object(forKey: "restaurant_name") as? String)
             view.titleLbl.text = restaurantName
             view.trackBtn.setTitle(Localization.value(for: "track"), for: .normal)
@@ -362,6 +366,7 @@ class OrderDetailsPage: BaseViewController, UITableViewDelegate, UITableViewData
                 view.infoBtn.isHidden = true
                 view.addStoreReviewBtn.isHidden = true
             }
+            view.frame.size.width = tableView.frame.size.width
             return view
         }
         return nil

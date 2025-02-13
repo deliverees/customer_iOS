@@ -8,10 +8,8 @@
 
 import UIKit
 
-class OrderDetailsTitleCell: UITableViewHeaderFooterView {
+class OrderDetailsTitleCell: UIView {
     
-    override var reuseIdentifier: String? { "OrderDetailsTitleCell" }
-
     @IBOutlet weak var addStoreReviewBtn: UIButton!
     @IBOutlet weak var infoBtn: UIButton!
     @IBOutlet weak var trackBtn: UIButton!
