@@ -397,6 +397,17 @@ class OrderDetailsPage: BaseViewController, UITableViewDelegate, UITableViewData
             cell?.order_Cancel.tag = indexPath.row - 1
             cell?.order_Cancel.isHidden = false
             
+            // Choices
+            let dict = (finalArray.object(at: indexPath.row) as? NSDictionary)
+            let choices = (dict?.object(forKey: "choice_list") as? [Any] ?? [])
+            let choicesTwo = (dict?.object(forKey: "choiceTwo_list") as? [Any] ?? [])
+            let choicesThree = (dict?.object(forKey: "choiceThree_list") as? [Any] ?? [])
+            
+            let allChoices = choices + choicesTwo + choicesThree
+            cell?.choicesLabel.isHidden = allChoices.count <= 0
+            
+            let choicesNames: [String] = allChoices.compactMap { (($0 as? NSDictionary)?.object(forKey: "choiceName") as? String) ?? (($0 as? NSDictionary)?.object(forKey: "choiceTwoName") as? String) ?? (($0 as? NSDictionary)?.object(forKey: "choiceThreeName") as? String) }
+            cell?.choicesLabel.text = choicesNames.joined(separator: "\n")
             
             if showIndex == 0 {
                 cell?.order_Cancel.isHidden = false
