@@ -423,6 +423,14 @@ class CartViewController: BaseViewController, UITableViewDelegate, UITableViewDa
             self?.transpertantView.isHidden = true
             self?.getCartData()
         }
+        let storeId = Singleton.sharedInstance.MyCartModel.data.cartDetails[editSection].storeId
+        updateItemInfoView.seeItemAction = { [weak self] in
+            self?.transpertantView.isHidden = true
+            AppRouter.shared.presentFoodDetailsPage(from: self,
+                                                    productId: addedItemDetails.productId,
+                                                    restaurantId: storeId!,
+                                                    itemName: addedItemDetails.productName)
+        }
     }
     
     @objc func popCloseBtnAction(){

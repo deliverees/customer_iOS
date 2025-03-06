@@ -510,13 +510,6 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             } else {
                 newCartView.isHidden = false
             }
-            if let qty = resultDict.object(forKey: "exist_item_cart_qty") as? Int, qty > 0 {
-                self.actualQuantity = qty
-                selectedQuantityLbl.text = "\(qty)"
-            } else {
-                self.actualQuantity = 1
-                newCartView.isHidden = false
-            }
         } else {
             self.itemsCountLbl.text = "1 \(LanguageDictonary.value(forKey: "items") as! String) | \(currency)\(price)"
             baseScrollBottomSpace.constant = 20
@@ -881,15 +874,15 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
             print (response)
             if response.object(forKey: "code") as! Int == 200
             {
-                if ((response.object(forKey: "data") as! NSDictionary).value(forKey: "quantity") as! Int) == 0
-                {
-                    self.newCartView.isHidden = false
-                }
-                else
+                if let qty = ((response.object(forKey: "data") as? NSDictionary)?.value(forKey: "quantity") as? Int),
+                   qty > 0
                 {
                     self.newCartView.isHidden = true
                 }
-                self.getData()
+                else
+                {
+                    self.newCartView.isHidden = false
+                }
             }
             else if response.object(forKey: "code")as! Int == 400
             {

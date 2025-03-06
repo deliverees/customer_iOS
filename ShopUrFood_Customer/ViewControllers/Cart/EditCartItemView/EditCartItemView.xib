@@ -149,7 +149,7 @@
                                     <viewLayoutGuide key="contentLayoutGuide" id="aMT-cp-Xbe"/>
                                     <viewLayoutGuide key="frameLayoutGuide" id="Lgv-qf-Po1"/>
                                 </scrollView>
-                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="foJ-py-Do3">
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="foJ-py-Do3">
                                     <rect key="frame" x="0.0" y="392" width="447" height="50"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="edb-pc-T2K">
