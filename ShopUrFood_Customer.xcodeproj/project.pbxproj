@@ -1976,7 +1976,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.12;
+				CURRENT_PROJECT_VERSION = 1.14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -2030,7 +2030,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.12;
+				CURRENT_PROJECT_VERSION = 1.14;
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
