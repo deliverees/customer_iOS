@@ -9,7 +9,6 @@
 import UIKit
 import DropDown
 import BottomPopup
-import CRRefresh
 import ScrollableSegmentedControl
 
 

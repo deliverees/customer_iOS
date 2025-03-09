@@ -8,7 +8,6 @@
 
 import UIKit
 import SWRevealViewController
-import CRRefresh
 import Lottie
 import BottomPopup
 
@@ -48,12 +47,12 @@ class OrderHistoryPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         self.OrderData()
         
         /// animator: your customize animator, default is NormalHeaderAnimator
-        orderTable.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
-            /// start refresh
-            self?.resultsArray.removeAllObjects()
-            self?.pagingIndex = 1
-            self?.OrderData()
-        }
+//        orderTable.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
+//            /// start refresh
+//            self?.resultsArray.removeAllObjects()
+//            self?.pagingIndex = 1
+//            self?.OrderData()
+//        }
         
         orderHistoryGrayView.isHidden = true
         
@@ -126,8 +125,8 @@ class OrderHistoryPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
             else{
             }
             self.stopLoadingIndicator(senderVC: self)
-            self.orderTable.cr.endHeaderRefresh()
-            self.orderTable.cr.endLoadingMore()
+//            self.orderTable.cr.endHeaderRefresh()
+//            self.orderTable.cr.endLoadingMore()
         }, onFailure: {errorResponse in})
     }
     
