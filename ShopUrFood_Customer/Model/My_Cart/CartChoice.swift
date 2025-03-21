@@ -39,6 +39,14 @@ class CartChoice : NSObject, NSCoding{
             choiceAmount = choiceAmountString
         } else if let choiceAmountInt = dictionary["choice_amount"] as? Int {
             choiceAmount = "\(choiceAmountInt)"
+        } else if let choiceAmountString = dictionary["choiceTwo_amount"] as? String {
+            choiceAmount = choiceAmountString
+        } else if let choiceAmountInt = dictionary["choiceTwo_amount"] as? Int {
+            choiceAmount = "\(choiceAmountInt)"
+        } else if let choiceAmountString = dictionary["choiceThree_amount"] as? String {
+            choiceAmount = choiceAmountString
+        } else if let choiceAmountInt = dictionary["choiceThree_amount"] as? Int {
+            choiceAmount = "\(choiceAmountInt)"
         } else {
             choiceAmount = ""
             assertionFailure("Invalid choice amount kind")

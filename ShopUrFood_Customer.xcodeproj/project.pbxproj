@@ -221,6 +221,8 @@
 		A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37B23C7073800654118 /* TrackingScreen.swift */; };
 		A855D37E23C7075900654118 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37D23C7075900654118 /* BottomSheetViewController.swift */; };
 		C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */; };
+		D4154EE52D8D641C002D2811 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = D4154EE42D8D641C002D2811 /* Stripe */; };
+		D4154EE72D8D67CD002D2811 /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D4154EE62D8D67CD002D2811 /* StripePaymentSheet */; };
 		D42A98B22CC04FF800A73909 /* ChangeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B12CC04FF800A73909 /* ChangeAddress.swift */; };
 		D42A98B52CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */; };
 		D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */; };
@@ -513,8 +515,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4154EE72D8D67CD002D2811 /* StripePaymentSheet in Frameworks */,
 				226F51B122F07D6400035DF3 /* AMPopTip.framework in Frameworks */,
 				5BF8D2A708061C878D834AEA /* Pods_ShopUrFood_Customer.framework in Frameworks */,
+				D4154EE52D8D641C002D2811 /* Stripe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1466,6 +1470,9 @@
 				Base,
 			);
 			mainGroup = 24346F69220972C000446252;
+			packageReferences = (
+				D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
+			);
 			productRefGroup = 24346F73220972C000446252 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2151,6 +2158,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D4154EE42D8D641C002D2811 /* Stripe */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = Stripe;
+		};
+		D4154EE62D8D67CD002D2811 /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 24346F6A220972C000446252 /* Project object */;
 }

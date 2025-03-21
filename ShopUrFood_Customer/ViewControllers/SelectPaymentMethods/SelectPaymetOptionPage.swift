@@ -10,9 +10,11 @@ import UIKit
 import SCLAlertView
 import CCValidator
 import AMPopTip
+import StripePaymentSheet
+import Stripe
 
 @available(iOS 11.0, *)
-class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableViewDataSource,PayPalPaymentDelegate,SambagMonthYearPickerViewControllerDelegate,UITextFieldDelegate {
+class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate,UITableViewDataSource, PayPalPaymentDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var skipBtn: UIButton!
     
@@ -260,30 +262,14 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         {
             
             self.payByPaypal()
-            login_session.setValue("0", forKey: "userCartCount")
         }
         else if selectedPaymetMethod == "STRIPE" || selectedPaymetMethod == "Raya"
         {
             if userAllowedToPay
             {
-                let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
-                let tempExp = self.paymentTable.viewWithTag(222)as? UITextField
-                let tempCvv = self.paymentTable.viewWithTag(333)as? UITextField
-                if tempCard?.text == "" || tempCard?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-                }else if tempExp?.text == "" || tempExp?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
-                }else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-                }else{
-                    let commonDateStr = tempExp?.text
-                    let dateArray = commonDateStr?.components(separatedBy: "-")
-                    let expMonth = self.monthConverstion(month: dateArray![0])
-                    let expYear = dateArray![1]
-                    self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
-                    login_session.setValue("0", forKey: "userCartCount")
-                    
-                }
+                guard let cell = self.paymentTable.cellForRow(at: IndexPath(row: 1, section: 0)) as? StripePaymentCell else { return }
+                let paymentCell = cell.cardTextField
+                self.isValidCard(cardField: paymentCell)
             }
             
             
@@ -308,14 +294,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 }
                 
             }
-            //            else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired"
-            //            {
-            //                
-            //            }
-            //            else
-            //            {
-            //                
-            //            }
             self.stopLoadingIndicator(senderVC: self)
         }, onFailure: {errorResponse in})
     }
@@ -712,7 +690,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 {
                     self.cartGrayView.isHidden = true
                     self.payByPaypal()
-                    login_session.setValue("0", forKey: "userCartCount")
                 }
                 else
                 {
@@ -724,25 +701,9 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                 if userAllowedToPay
                 {
                     self.cartGrayView.isHidden = true
-                    
-                    let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
-                    let tempExp = self.paymentTable.viewWithTag(222)as? UITextField
-                    let tempCvv = self.paymentTable.viewWithTag(333)as? UITextField
-                    if tempCard?.text == "" || tempCard?.text?.count == 0 {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-                    }else if tempExp?.text == "" || tempExp?.text?.count == 0 {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
-                    }else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-                    }else{
-                        let commonDateStr = tempExp?.text
-                        let dateArray = commonDateStr?.components(separatedBy: "-")
-                        let expMonth = self.monthConverstion(month: dateArray![0])
-                        let expYear = dateArray![1]
-                        self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
-                        login_session.setValue("0", forKey: "userCartCount")
-                        
-                    }
+                    guard let cell = self.paymentTable.cellForRow(at: IndexPath(row: 1, section: 0)) as? StripePaymentCell else { return }
+                    let paymentCell = cell.cardTextField
+                    self.isValidCard(cardField: paymentCell)
                 }else{
                     self.cartGrayView.isHidden = false
                     
@@ -1121,17 +1082,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     cell?.selectionStyle = .none
                     
                     cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
-                    cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
-                    cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
-                    cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
-                    
-                    
-                    cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
-                    cell?.creditCardNumberTxt.keyboardType = .numberPad
-                    cell?.cvvTxt.keyboardType = .numberPad
-                    cell?.creditCardNumberTxt.tag = 111
-                    cell?.dateTxt.tag = 222
-                    cell?.cvvTxt.tag = 333
                     if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
                     {
                         cell?.selectionImg.isHidden = false
@@ -1151,17 +1101,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
                     cell?.selectionStyle = .none
                     
                     cell?.nameLbl.text =  LanguageDictonary.value(forKey: "stripe") as? String
-                    cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
-                    cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
-                    cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
-                    
-                    
-                    cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
-                    cell?.creditCardNumberTxt.keyboardType = .numberPad
-                    cell?.cvvTxt.keyboardType = .numberPad
-                    cell?.creditCardNumberTxt.tag = 111
-                    cell?.dateTxt.tag = 222
-                    cell?.cvvTxt.tag = 333
                     if paymentMethodsArray[indexPath.row] == selectedPaymetMethod
                     {
                         cell?.selectionImg.isHidden = false
@@ -1349,34 +1288,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         
         if termsConditions == "agree"
         {
-            
-            //            if self.finalMessage == "No need to pay"
-            //            {
-            //                self.couponGrayView.isHidden = true
-            //                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
-            //            }
-            //            else
-            //            {
             self.couponGrayView.isHidden = false
-            //}
-            
-            //            if useWallet
-            //            {
-            //                if remainingAmountCalc == 0.00
-            //                {
-            //                self.couponGrayView.isHidden = true
-            //                self.showToastAlert(senderVC: self, messageStr: "There is no balance amount for apply coupon offers !")
-            //                }
-            //                else
-            //                {
-            //                 self.couponGrayView.isHidden = false
-            //                }
-            //            }
-            //            else
-            //            {
-            //                self.couponGrayView.isHidden = false
-            //            }
-            
         }
         else
         {
@@ -1406,50 +1318,12 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         let floatCouponAmnt = selectedCouponPrice.replacingOccurrences(of: ",", with: "")
         exactCouponAmt = Float(floatCouponAmnt)!
         print("exactCouponAmt",exactCouponAmt)
-        //
-        //        if useWallet
-        //        {
-        //            if exactCouponAmt <= remainingAmountCalc
-        //            {
-        //                self.couponGrayView.isHidden = true
-        //                self.useCouponOffer = true
-        //            }
-        //            else
-        //            {
-        //                self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
-        //                self.couponGrayView.isHidden = false
-        //                self.useCouponOffer = false
-        //            }
-        //        }
-        //        else
-        //        {
-        //        if exactCouponAmt <= exactToatlAmt
-        //        {
-        //        self.couponGrayView.isHidden = true
-        //        self.useCouponOffer = true
-        //        }
-        //        else
-        //        {
-        //            self.showToastAlert(senderVC: self, messageStr: "\("Sorry! This offer is available for purchasing over")\(" ")\(self.walletCurrency)\(exactCouponAmt)")
-        //            self.couponGrayView.isHidden = false
-        //            self.useCouponOffer = false
-        //        }
-        //        }
-        //        self.paymentTable.reloadData()
     }
     
     @IBAction func couponPopupCloseBtnAction(_ sender: Any)
     {
         self.couponGrayView.isHidden = true
     }
-    
-    @objc func showMonthAndYear(){
-        let vc = SambagMonthYearPickerViewController()
-        vc.theme = .light
-        vc.delegate = self
-        present(vc, animated: true, completion: nil)
-    }
-    
     
     //MARK:- PAYMENT TYPES
     func PaymentOnCOD()
@@ -1493,12 +1367,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-            
-            //            if exactToatlAmt < walletAvailableBalance{
-            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-            //            }else{
-            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1522,7 +1390,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             response in
             print (response)
             if response.object(forKey: "code") as! Int == 200{
-                login_session.setValue("0", forKey: "userCartCount")
                 self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
                 isfromPaymentSucessPage = true
                 if self.useCouponOffer == true
@@ -1583,19 +1450,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-            
-            //            if exactToatlAmt < walletAvailableBalance
-            //            {
-            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-            //            }
-            //            else if exactToatlAmt == walletAvailableBalance
-            //            {
-            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-            //            }
-            //            else
-            //            {
-            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1619,7 +1473,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             if response.object(forKey: "code") as! Int == 200{
                 self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
                 isfromPaymentSucessPage = true
-                login_session.setValue("0", forKey: "userCartCount")
                 if self.useCouponOffer == true
                 {
                     self.useCouponOffer = false
@@ -1695,7 +1548,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     
     // MARK:  PayPal transaction Id send to API
     func paypalTransactionIdSendToAPI(trans_id:String){
-        
         self.showLoadingIndicator(senderVC: self)
         var self_pickupStr = String()
         var firstName = String()
@@ -1736,12 +1588,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-            
-            //            if exactToatlAmt < walletAvailableBalance{
-            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-            //            }else{
-            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1782,64 +1628,37 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
     
     
     // MARK: isValidCard
-    func isValidCard(cardNumber:String,ExpMonth:String,ExpYear:String,cvv:String) {
-        let isvalid = CCValidator.validate(creditCardNumber: cardNumber)
-        let month = ExpMonth
-        let year = ExpYear
-        let date = Date()
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
-        let currentyear =  components.year
-        let currentmonth = components.month
-        if isvalid == false  {
+    func isValidCard(cardField: STPPaymentCardTextField) {
+        let cardNumber = cardField.cardNumber ?? ""
+        let month = "\(cardField.expirationMonth)"
+        let year = "\(cardField.expirationYear)"
+        let cvv = cardField.cvc ?? ""
+        let isValid = cardField.isValid
+        let paymentMethodParams = cardField.paymentMethodParams
+        if isValid == false  {
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-        } else if (cvv.count) < 3 || (cvv.count) > 4 {
-            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-        } else if year < String(currentyear!) {
-            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "usevalidcarddetails") as! String)
-        } else if year == String(currentyear!)
-        {
-            if Int(month)! < Int(currentmonth!)
-            {
-                self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "usevalidcarddetails") as! String)
-            }
-            else
-            {
-                self.payByStripe(card_no: cardNumber, ccExpiryMonth: ExpMonth, ccExpiryYear: ExpYear, cvvNumber: cvv)
-            }
-        }
-        else {
-            self.payByStripe(card_no: cardNumber, ccExpiryMonth: ExpMonth, ccExpiryYear: ExpYear, cvvNumber: cvv)
+        } else {
+            self.selectedPaymentParams = paymentMethodParams
+            self.payByStripe(card_no: cardNumber, ccExpiryMonth: month, ccExpiryYear: year, cvvNumber: cvv)
         }
     }
     
     func payByStripe(card_no:String,ccExpiryMonth:String,ccExpiryYear:String,cvvNumber:String)
     {
         self.showLoadingIndicator(senderVC: self)
-        var self_pickupStr = String()
-        var firstName = String()
-        var lastName = String()
-        var emailStr = String()
-        var mobileNumber = String()
-        var mobileNo2 = String()
-        var address = String()
-        var landmark = String()
-        var latStr = String()
-        var longStr = String()
-        var walletStr = String()
-        var walletAmtStr = String()
-        if pickUpType == "self"{
-            self_pickupStr = "1"
-            firstName = ""
-            lastName = ""
-            emailStr = ""
-            mobileNumber = ""
-            mobileNo2 = ""
-            address = ""
-            latStr = ""
-            longStr = ""
-            landmark = ""
-        }else{
+        var self_pickupStr = ""
+        var firstName = ""
+        var lastName = ""
+        var emailStr = ""
+        var mobileNumber = ""
+        var mobileNo2 = ""
+        var address = ""
+        var landmark = ""
+        var latStr = ""
+        var longStr = ""
+        var walletStr = ""
+        var walletAmtStr = ""
+        if pickUpType != "self" {
             self_pickupStr = "0"
             firstName = addressDict.object(forKey: "sh_cus_fname") as! String
             lastName = addressDict.object(forKey: "sh_cus_lname") as! String
@@ -1850,17 +1669,10 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             landmark = addressDict.object(forKey: "sh_location1") as! String
             latStr = addressDict.object(forKey: "sh_latitude") as! String
             longStr = addressDict.object(forKey: "sh_longitude") as! String
-            
         }
         if useWallet{
             walletStr = "1"
             walletAmtStr = self.finalWallet_Amount
-            
-            //            if exactToatlAmt < walletAvailableBalance{
-            //                walletAmtStr = String(format: "%.2f", exactToatlAmt)
-            //            }else{
-            //                walletAmtStr = String(format: "%.2f", walletAvailableBalance)
-            //            }
         }else{
             walletStr = "0"
             walletAmtStr = ""
@@ -1880,18 +1692,23 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         Parse.payByStripe(lang: login_session.value(forKey: "Language") as? String ?? "es",ord_self_pickup: self_pickupStr,cus_name: firstName,cus_last_name: lastName,cus_email: emailStr,cus_phone1: mobileNumber,cus_phone2: mobileNo2,cus_address: address,cus_address1: landmark,cus_lat: latStr,cus_long: longStr,use_wallet: walletStr,wallet_amt: walletAmtStr, card_no: card_no,ccExpiryMonth: ccExpiryMonth,ccExpiryYear: ccExpiryYear,cvvNumber: cvvNumber,use_coupon: self.couponisUsed, coupon_id: selectedCouponID, coupon_amount: selectedCouponPrice,onSuccess: {
             response in
             print (response)
-            if response.object(forKey: "code") as! Int == 200{
-                self.showSuccessPopUp(msgStr: response.object(forKey: "message") as! String)
+            if response.object(forKey: "code") as! Int == 200 {
                 isfromPaymentSucessPage = true
                 if self.useCouponOffer == true
                 {
                     self.useCouponOffer = false
                 }
-                
-            }else if response.object(forKey: "code")as! Int == 400 && response.object(forKey: "message")as! String == "Token is Expired" {
-                self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                guard let data = response.object(forKey: "data") as? NSDictionary,
+                      let clientSecret = data.object(forKey: "client_secret") as? String
+                else {
+                    self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
+                    return
+                }
+                self.paymentSuccessMessage = response.object(forKey: "message") as? String ?? ""
+                self.beginStripePaymentFlow(clientSecret: clientSecret)
             }
-            else{
+            else {
+                self.selectedPaymentParams = nil
                 self.showTokenExpiredPopUp(msgStr: response.object(forKey: "message")as! String)
             }
             self.stopLoadingIndicator(senderVC: self)
@@ -1899,6 +1716,37 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         
     }
     
+    private var paymentSuccessMessage: String?
+    
+    var selectedPaymentParams: STPPaymentMethodParams?
+    
+    func beginStripePaymentFlow(clientSecret: String) {
+        STPAPIClient.shared.publishableKey = stripePublishableKey
+        StripeAPI.defaultPublishableKey = stripePublishableKey
+        guard let paymentParams = selectedPaymentParams else {
+            return
+        }
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        paymentIntentParams.paymentMethodParams = paymentParams
+        let paymentHandler = STPPaymentHandler.shared()
+        paymentHandler.confirmPayment(paymentIntentParams, with: self) { status, _, error in
+            DispatchQueue.main.async {
+                if let error {
+                    self.showTokenExpiredPopUp(msgStr: error.localizedDescription)
+                    return
+                }
+                
+                switch status {
+                case .succeeded:
+                    self.showSuccessPopUp(msgStr: self.paymentSuccessMessage ?? "Payment Success")
+                case .canceled:
+                    break
+                case .failed:
+                    self.showTokenExpiredPopUp(msgStr: "Failed")
+                }
+            }
+        }
+    }
     
     func showSuccessPopUp(msgStr:String){
         let appearance = SCLAlertView.SCLAppearance(
@@ -1916,8 +1764,7 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
             login_session.synchronize()
             actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
             actAsBaseTabbar.selectedIndex = 3
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-            
+            AppRouter.shared.popToRoot()
         }
         
         let icon = UIImage(named:"success_tick")
@@ -1925,53 +1772,6 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
         
         _ = alert.showCustom(LanguageDictonary.object(forKey: "success") as! String, subTitle: msgStr, color: color, icon: icon!, circleIconImage: icon!)
     }
-    
-    
-    func sambagMonthYearPickerDidSet(_ viewController: SambagMonthYearPickerViewController, result: SambagMonthYearPickerResult) {
-        print(result)
-        if let theLabel = self.paymentTable.viewWithTag(222) as? UITextField {
-            theLabel.text =  "\(result)"
-        }
-        viewController.dismiss(animated: true, completion: nil)
-    }
-    
-    func sambagMonthYearPickerDidCancel(_ viewController: SambagMonthYearPickerViewController) {
-        viewController.dismiss(animated: true, completion: nil)
-    }
-    
-    func monthConverstion(month:String) -> String {
-        var convertedMonth = String()
-        switch month {
-        case "JAN":
-            convertedMonth = "1"
-        case "FEB":
-            convertedMonth = "2"
-        case "MAR":
-            convertedMonth = "3"
-        case "APR":
-            convertedMonth = "4"
-        case "MAY":
-            convertedMonth = "5"
-        case "JUN":
-            convertedMonth = "6"
-        case "JUL":
-            convertedMonth = "7"
-        case "AUG":
-            convertedMonth = "8"
-        case "SEP":
-            convertedMonth = "9"
-        case "OCT":
-            convertedMonth = "10"
-        case "NOV":
-            convertedMonth = "11"
-        case "DEC":
-            convertedMonth = "12"
-        default:
-            print("no match")
-        }
-        return convertedMonth
-    }
-    
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let maxLength = 16
@@ -1984,5 +1784,11 @@ class SelectPaymetOptionPage: BaseViewController,UITableViewDelegate,UITableView
 extension Date {
     func currentTimeMillis() -> Int64! {
         return Int64(self.timeIntervalSince1970 * 1000)
+    }
+}
+
+extension SelectPaymetOptionPage: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
     }
 }

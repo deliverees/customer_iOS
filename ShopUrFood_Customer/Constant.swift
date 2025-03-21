@@ -190,3 +190,11 @@ var isRunningTests: Bool {
     ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     || ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil
 }
+
+var stripePublishableKey: String {
+    #if DEBUG
+    return "pk_test_51FN3GdAa2pEXf3KLc3G3hRBKEjTyaRwYNx3IPNcVTzruWKgwWpryXHomKY9eMfJ6cLJVUZuf6NeHVTKdhrZzcQT400nfKPMqdW"
+    #else
+    return "pk_live_Uyd8zUwlVrjMtUPSuiqvKP8N006dj8cXw8"
+    #endif
+}
