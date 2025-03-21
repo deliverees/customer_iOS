@@ -1764,6 +1764,7 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate,UITableVie
             login_session.synchronize()
             actAsBaseTabbar.tabBar.items?[0].badgeValue = nil
             actAsBaseTabbar.selectedIndex = 3
+            self.dismiss(animated: true)
             AppRouter.shared.popToRoot()
         }
         
