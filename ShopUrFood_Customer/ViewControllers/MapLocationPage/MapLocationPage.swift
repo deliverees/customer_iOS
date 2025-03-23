@@ -13,8 +13,6 @@ import GooglePlaces
 import Lottie
 import Alamofire
 
-
-
 class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource  {
     
     typealias SelectedLocationCompletionHandler = ((ChangeAddressDTO) -> Void)
@@ -236,11 +234,11 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     func getAddressFromLatLong(latitude: Double, longitude : Double) {
         let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(googleMapsApiKey)"
         
-        Alamofire.request(url).validate().responseJSON { response in
+        AF.request(url).validate().responseJSON { response in
             switch response.result {
             case .success:
                 
-                guard let responseJson = response.result.value as? NSDictionary else {
+                guard let responseJson = response.result as? NSDictionary else {
                     return
                 }
                 

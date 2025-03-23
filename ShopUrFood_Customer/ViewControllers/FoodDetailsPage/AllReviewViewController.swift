@@ -45,8 +45,9 @@ class AllReviewViewController: BaseViewController,UITableViewDelegate,UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "AllReviewsTableViewCell") as? AllReviewsTableViewCell
         cell?.selectionStyle = .none
         let userImgStr = (reviewArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "review_customer_profile")as! String
-        let imgURL = URL(string: userImgStr)
-        cell?.userImg.setImageWith(imgURL!)
+        if let imgURL = URL(string: userImgStr) {
+            cell?.userImg.kf.setImage(with: .network(imgURL))
+        }
         cell?.userNameLbl.text = ((reviewArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "review_customer_name")as! String)
         cell?.reviewMsgLbl.text = ((reviewArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "review_comments")as! String)
         

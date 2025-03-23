@@ -33,6 +33,10 @@ class ItemReviewPage: BottomPopupViewController,UITextViewDelegate {
     var reviewSelection = Int()
     @IBOutlet weak var buttonIndicatorView: UIView!
     var  CancelLoadingIndicator = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 40), type: .ballPulse, color: UIColor.white, padding: 0)
+    
+    @IBAction func closeBtnAction(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

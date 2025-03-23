@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CRRefresh
 import SWRevealViewController
 import AVFoundation
 
@@ -72,17 +71,17 @@ class MyOffersViewController: BaseViewController,UITableViewDelegate,UITableView
         myOffersData()
         // Do any additional setup after loading the view.
 
-        myOffersTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
-
-            /// start refresh
-
-            self?.myOffersHistoryArray.removeAllObjects()
-
-            self?.pagingIndex = 1
-
-            self?.myOffersData()
-
-        }
+//        myOffersTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
+//
+//            /// start refresh
+//
+//            self?.myOffersHistoryArray.removeAllObjects()
+//
+//            self?.pagingIndex = 1
+//
+//            self?.myOffersData()
+//
+//        }
 
 
         
@@ -152,8 +151,8 @@ class MyOffersViewController: BaseViewController,UITableViewDelegate,UITableView
             }
             self.stopLoadingIndicator(senderVC: self)
                     DispatchQueue.main.async {
-                        self.myOffersTableView.cr.endHeaderRefresh()
-                        self.myOffersTableView.cr.endLoadingMore()
+//                        self.myOffersTableView.cr.endHeaderRefresh()
+//                        self.myOffersTableView.cr.endLoadingMore()
             
                     }
 
@@ -202,8 +201,8 @@ class MyOffersViewController: BaseViewController,UITableViewDelegate,UITableView
         myOffersTableView.reloadData()
         
         DispatchQueue.main.async {
-            self.myOffersTableView.cr.endHeaderRefresh()
-            self.myOffersTableView.cr.endLoadingMore()
+//            self.myOffersTableView.cr.endHeaderRefresh()
+//            self.myOffersTableView.cr.endLoadingMore()
 
         }
 

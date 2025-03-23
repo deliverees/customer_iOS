@@ -8,7 +8,6 @@
 
 import UIKit
 import BetterSegmentedControl
-import CRRefresh
 
 class MyRewardsViewController: BaseViewController,UITableViewDelegate,UITableViewDataSource {
 
@@ -77,29 +76,29 @@ class MyRewardsViewController: BaseViewController,UITableViewDelegate,UITableVie
         totalHistoryWalletData()
         
 
-        earnedPointTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
-
-            /// start refresh
-
-            self?.earnedPointHistoryArray.removeAllObjects()
-
-            self?.pagingIndex = 1
-
-            self?.totalRewardsWalletData()
-
-        }
-        
-        rewardHistoryTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
-            
-            /// start refresh
-            
-            self?.rewardedHistoryArray.removeAllObjects()
-            
-            self?.pagingIndex = 1
-            
-            self?.totalHistoryWalletData()
-            
-        }
+//        earnedPointTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
+//
+//            /// start refresh
+//
+//            self?.earnedPointHistoryArray.removeAllObjects()
+//
+//            self?.pagingIndex = 1
+//
+//            self?.totalRewardsWalletData()
+//
+//        }
+//        
+//        rewardHistoryTableView.cr.addHeadRefresh(animator: FastAnimator()) { [weak self] in
+//            
+//            /// start refresh
+//            
+//            self?.rewardedHistoryArray.removeAllObjects()
+//            
+//            self?.pagingIndex = 1
+//            
+//            self?.totalHistoryWalletData()
+//            
+//        }
 
     }
     
@@ -193,8 +192,8 @@ class MyRewardsViewController: BaseViewController,UITableViewDelegate,UITableVie
      }
      self.stopLoadingIndicator(senderVC: self)
         DispatchQueue.main.async {
-            self.earnedPointTableView.cr.endHeaderRefresh()
-            self.earnedPointTableView.cr.endLoadingMore()
+//            self.earnedPointTableView.cr.endHeaderRefresh()
+//            self.earnedPointTableView.cr.endLoadingMore()
         }
      }, onFailure: {errorResponse in})
      }
@@ -267,8 +266,8 @@ class MyRewardsViewController: BaseViewController,UITableViewDelegate,UITableVie
             }
             self.stopLoadingIndicator(senderVC: self)
             DispatchQueue.main.async {
-                self.rewardHistoryTableView.cr.endHeaderRefresh()
-                self.rewardHistoryTableView.cr.endLoadingMore()
+//                self.rewardHistoryTableView.cr.endHeaderRefresh()
+//                self.rewardHistoryTableView.cr.endLoadingMore()
             }
         }, onFailure: {errorResponse in})
     }

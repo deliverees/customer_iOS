@@ -1,16 +1,20 @@
 //
 //  AddedItemDetail.swift
-//  Model Generated using http://www.jsoncafe.com/ 
+//  Model Generated using http://www.jsoncafe.com/
 //  Created on February 26, 2019
 
 import Foundation
 
 
 class AddedItemDetail : NSObject, NSCoding{
-
+    
     var availableStock : Int!
-    var cartChoices : [CartChoice]!
+    var cartChoices : [CartChoice] = []
+    var cartChoicesTwo: [CartChoice] = []
+    var cartChoicesThree: [CartChoice] = []
     var itemChoices : [ItemChoice]!
+    var itemTwoChoices: [ItemChoice] = []
+    var itemThreeChoices: [ItemChoice] = []
     var cartCurrency : String!
     var cartHasChoice : String!
     var cartId : Int!
@@ -23,8 +27,8 @@ class AddedItemDetail : NSObject, NSCoding{
     var productId : Int!
     var productImage : String!
     var productName : String!
-
-
+    
+    
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
      */
@@ -43,21 +47,52 @@ class AddedItemDetail : NSObject, NSCoding{
         productImage = dictionary["product_image"] as? String
         productName = dictionary["product_name"] as? String
         cartChoices = [CartChoice]()
-        if let cartChoicesArray = dictionary["cart_choices"] as? [[String:Any]]{
+        if let cartChoicesArray = dictionary["cart_choices"] as? [[String:Any]] {
             for dic in cartChoicesArray{
                 let value = CartChoice(fromDictionary: dic)
                 cartChoices.append(value)
             }
         }
+        
+        cartChoicesTwo = [CartChoice]()
+        if let cartChoicesTwoArray = dictionary["cart_choicesTwo"] as? [[String:Any]] {
+            for dic in cartChoicesTwoArray{
+                let value = CartChoice(fromDictionary: dic)
+                cartChoicesTwo.append(value)
+            }
+        }
+        
+        cartChoicesThree = [CartChoice]()
+        if let cartChoicesThreeArray = dictionary["cart_choicesThree"] as? [[String:Any]] {
+            for dic in cartChoicesThreeArray{
+                let value = CartChoice(fromDictionary: dic)
+                cartChoicesThree.append(value)
+            }
+        }
+        
         itemChoices = [ItemChoice]()
-        if let itemChoicesArray = dictionary["item_choices"] as? [[String:Any]]{
+        if let itemChoicesArray = dictionary["item_choices"] as? [[String:Any]] {
             for dic in itemChoicesArray{
                 let value = ItemChoice(fromDictionary: dic)
                 itemChoices.append(value)
             }
         }
+        itemTwoChoices = [ItemChoice]()
+        if let itemTwoChoicesArray = dictionary["item_choicesTwo"] as? [[String:Any]] {
+            for dic in itemTwoChoicesArray{
+                let value = ItemChoice(fromDictionary: dic)
+                itemTwoChoices.append(value)
+            }
+        }
+        itemThreeChoices = [ItemChoice]()
+        if let itemThreeChoicesArray = dictionary["item_choicesThree"] as? [[String:Any]] {
+            for dic in itemThreeChoicesArray{
+                let value = ItemChoice(fromDictionary: dic)
+                itemThreeChoices.append(value)
+            }
+        }
     }
-
+    
     /**
      * Returns all the available property values in the form of [String:Any] object where the key is the approperiate json key and the value is the value of the corresponding property
      */
@@ -81,7 +116,7 @@ class AddedItemDetail : NSObject, NSCoding{
         }
         if cartSplRequest != nil{
             dictionary["cart_spl_request"] = cartSplRequest
-
+            
         }
         if cartQuantity != nil{
             dictionary["cart_quantity"] = cartQuantity
@@ -104,23 +139,43 @@ class AddedItemDetail : NSObject, NSCoding{
         if productName != nil{
             dictionary["product_name"] = productName
         }
-        if cartChoices != nil{
+        if !cartChoices.isEmpty {
             var dictionaryElements = [[String:Any]]()
             for cartChoicesElement in cartChoices {
                 dictionaryElements.append(cartChoicesElement.toDictionary())
             }
-            dictionary["cartChoices"] = dictionaryElements
+            dictionary["cart_choices"] = dictionaryElements
+        }
+        if !cartChoicesTwo.isEmpty {
+            var dictionaryElements = [[String:Any]]()
+            for cartChoicesElement in cartChoicesTwo {
+                dictionaryElements.append(cartChoicesElement.toDictionary())
+            }
+            dictionary["cart_choicesTwo"] = dictionaryElements
+        }
+        if !cartChoicesThree.isEmpty {
+            var dictionaryElements = [[String:Any]]()
+            for cartChoicesElement in cartChoicesThree {
+                dictionaryElements.append(cartChoicesElement.toDictionary())
+            }
+            dictionary["cart_choicesThree"] = dictionaryElements
         }
         if itemChoices != nil{
             var dictionaryElements = [[String:Any]]()
             for itemChoicesElement in itemChoices {
                 dictionaryElements.append(itemChoicesElement.toDictionary())
             }
-            dictionary["itemChoices"] = dictionaryElements
+            dictionary["item_choices"] = dictionaryElements
+        }
+        if !itemTwoChoices.isEmpty {
+            dictionary["item_choicesTwo"] = itemTwoChoices.map { $0.toDictionary() }
+        }
+        if !itemThreeChoices.isEmpty {
+            dictionary["item_choicesThree"] = itemThreeChoices.map { $0.toDictionary() }
         }
         return dictionary
     }
-
+    
     /**
      * NSCoding required initializer.
      * Fills the data from the passed decoder
@@ -128,7 +183,9 @@ class AddedItemDetail : NSObject, NSCoding{
     @objc required init(coder aDecoder: NSCoder)
     {
         availableStock = aDecoder.decodeObject(forKey: "available_stock") as? Int
-        cartChoices = aDecoder.decodeObject(forKey: "cart_choices") as? [CartChoice]
+        cartChoices = aDecoder.decodeObject(forKey: "cart_choices") as? [CartChoice] ?? []
+        cartChoicesTwo = aDecoder.decodeObject(forKey: "cart_choicesTwo") as? [CartChoice] ?? []
+        cartChoicesThree = aDecoder.decodeObject(forKey: "cart_choicesThree") as? [CartChoice] ?? []
         itemChoices = aDecoder.decodeObject(forKey: "item_choices") as? [ItemChoice]
         cartCurrency = aDecoder.decodeObject(forKey: "cart_currency") as? String
         cartHasChoice = aDecoder.decodeObject(forKey: "cart_has_choice") as? String
@@ -143,7 +200,7 @@ class AddedItemDetail : NSObject, NSCoding{
         productImage = aDecoder.decodeObject(forKey: "product_image") as? String
         productName = aDecoder.decodeObject(forKey: "product_name") as? String
     }
-
+    
     /**
      * NSCoding required method.
      * Encodes mode properties into the decoder
@@ -153,8 +210,14 @@ class AddedItemDetail : NSObject, NSCoding{
         if availableStock != nil{
             aCoder.encode(availableStock, forKey: "available_stock")
         }
-        if cartChoices != nil{
+        if !cartChoices.isEmpty {
             aCoder.encode(cartChoices, forKey: "cart_choices")
+        }
+        if !cartChoicesTwo.isEmpty {
+            aCoder.encode(cartChoicesTwo, forKey: "cart_choicesTwo")
+        }
+        if !cartChoicesThree.isEmpty {
+            aCoder.encode(cartChoicesThree, forKey: "cart_choicesThree")
         }
         if itemChoices != nil{
             aCoder.encode(itemChoices, forKey: "item_choices")
@@ -195,5 +258,9 @@ class AddedItemDetail : NSObject, NSCoding{
         if productName != nil{
             aCoder.encode(productName, forKey: "product_name")
         }
+    }
+    
+    func allChoices() -> [CartChoice] {
+        cartChoices + cartChoicesTwo + cartChoicesThree
     }
 }

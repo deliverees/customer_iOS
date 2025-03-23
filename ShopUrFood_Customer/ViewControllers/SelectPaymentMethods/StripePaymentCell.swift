@@ -7,18 +7,22 @@
 //
 
 import UIKit
+import Stripe
 
-class StripePaymentCell: UITableViewCell {
+class StripePaymentCell: UITableViewCell, STPPaymentCardTextFieldDelegate {
 
-    @IBOutlet weak var cvvTxt: UITextField!
-    @IBOutlet weak var dateTxt: UITextField!
-    @IBOutlet weak var ExpDateBtn: UIButton!
-    @IBOutlet weak var cvvView: UIView!
-    @IBOutlet weak var calendarView: UIView!
     @IBOutlet weak var creditCardView: UIView!
     @IBOutlet weak var nameLbl: UILabel!
     @IBOutlet weak var selectionImg: UIImageView!
-    @IBOutlet weak var creditCardNumberTxt: UITextField!
+    
+    lazy var cardTextField: STPPaymentCardTextField = {
+        let cardTextField = STPPaymentCardTextField()
+        cardTextField.postalCodeEntryEnabled = false
+        cardTextField.postalCode = ""
+        cardTextField.delegate = self
+        return cardTextField
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -26,13 +30,14 @@ class StripePaymentCell: UITableViewCell {
         creditCardView.layer.borderWidth = 0.3
         creditCardView.layer.borderColor = UIColor.lightGray.cgColor
         
-        calendarView.layer.cornerRadius = 3.0
-        calendarView.layer.borderWidth = 0.3
-        calendarView.layer.borderColor = UIColor.lightGray.cgColor
-        
-        cvvView.layer.cornerRadius = 3.0
-        cvvView.layer.borderWidth = 0.3
-        cvvView.layer.borderColor = UIColor.lightGray.cgColor
+        cardTextField.translatesAutoresizingMaskIntoConstraints = false
+        creditCardView.addSubview(cardTextField)
+        NSLayoutConstraint.activate([
+            cardTextField.topAnchor.constraint(equalTo: creditCardView.topAnchor),
+            cardTextField.leadingAnchor.constraint(equalTo: creditCardView.leadingAnchor),
+            cardTextField.trailingAnchor.constraint(equalTo: creditCardView.trailingAnchor),
+            cardTextField.bottomAnchor.constraint(equalTo: creditCardView.bottomAnchor)
+            ])
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -41,4 +46,9 @@ class StripePaymentCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func paymentCardTextFieldDidEndEditingCVC(_ textField: STPPaymentCardTextField) {
+        if textField.isValid {
+            textField.resignFirstResponder()
+        }
+    }
 }

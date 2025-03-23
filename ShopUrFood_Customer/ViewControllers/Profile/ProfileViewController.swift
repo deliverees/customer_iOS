@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import AFNetworking
+import Alamofire
 import SCLAlertView
 
 
 
 
 class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
-
+    
     @IBOutlet weak var topNavigationView: UIView!
     @IBOutlet weak var photoBtn: UIButton!
     @IBOutlet weak var navigationTitleLbl: UILabel!
@@ -72,9 +72,9 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         
         self.showLoadingIndicator(senderVC: self)
         self.ProfileData()
-//        self.baseView.layer.cornerRadius = 10.0
-//        baseView = self.setCornorShadowEffects(sender: baseView)
-       
+        //        self.baseView.layer.cornerRadius = 10.0
+        //        baseView = self.setCornorShadowEffects(sender: baseView)
+        
         topNavigationView.layer.shadowOffset = CGSize(width: 0, height: 3)
         topNavigationView.layer.shadowOpacity = 0.6
         topNavigationView.layer.shadowRadius = 3.0
@@ -96,7 +96,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         ActAsSelectedZipCode = ""
         otpVerifyBtn.layer.cornerRadius = 2 //20.0
         otpVerifyBtn.clipsToBounds = true
-
+        
     }
     
     @objc func editBtnAction(sender:UIButton){
@@ -156,7 +156,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         userLatitude = self.resultDict.object(forKey: "user_latitude")as? String ?? ""
         userLongitude = self.resultDict.object(forKey: "user_longitude")as? String ?? ""
     }
-
+    
     @IBAction func backBtnAction(_ sender: Any) {
         if profilepageComesFrom == "settings"{
             self.dismiss(animated: true, completion: nil)
@@ -177,7 +177,7 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     }
     
     
-    @IBAction func changePhotoBtnAction(_ sender: Any) { 
+    @IBAction func changePhotoBtnAction(_ sender: Any) {
         let actionSheet = UIAlertController(title: Appname, message: LanguageDictonary.value(forKey: "chooseimage") as? String, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.openCamera()
@@ -246,64 +246,67 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         }else if mobileNumberTxt.text == ""{
             self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentermobilenumber") as! String)
         }else if userLocationStr == "" && ActAsSelectedAddress == ""{
-            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteraddress") as! String) 
+            self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseenteraddress") as! String)
         }
-        else{
-
-            self.showLoadingIndicator(senderVC: self)
-            let mobilerNumber = mobileNumberTxt.text
-        var params = NSMutableDictionary()
-        params = [
+        else {
+            requestUpdateProfile()
+        }
+    }
+    
+    func requestUpdateProfile() {
+        let finalURL = BASEURL_CUSTOMER + UPDATE_PROFILE
+        let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
+        
+        // Parámetros
+        let params: [String: String] = [
             "lang": "en",
-            "cus_name": "\(self.userNameTxt.text!)",
-            "cus_email": "\(self.emailTxt.text!)",
-            "cus_phone1": "+" + mobilerNumber!,
-            "cus_phone2": mobilenNo2,
+            "cus_name": userNameTxt.text ?? "",
+            "cus_email": emailTxt.text ?? "",
+            "cus_phone1": "+\(mobileNumberTxt.text ?? "")",
+            "cus_phone2": resultDict.object(forKey: "user_phone2") as? String ?? "",
             "cus_address": userLocationStr,
             "cus_lat": userLatitude,
-            "cus_long" : userLongitude,
+            "cus_long": userLongitude
         ]
-        print(params)
-        let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
-        let manager = AFHTTPSessionManager()
-        manager.responseSerializer.acceptableContentTypes = Set(["text/plain", "text/html", "application/json"]) as Set<String>?
-        let finalURL = BASEURL_CUSTOMER + UPDATE_PROFILE
-        manager.requestSerializer.setValue(tokenString, forHTTPHeaderField: "Authorization")
-            manager.post(finalURL, parameters: params, headers: nil, constructingBodyWith: {
-            (data: AFMultipartFormData!) in
-                //profileImageData = self.userImageView.image.jpegData(compressionQuality: 0.5)
-                //profileImageData = self.profileImagefile?.jpegData(compressionQuality: 0.5)!
-            data.appendPart(withFileData: (self.userImageView.image?.pngData())!, name: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
+        var headers = HTTPHeaders()
+        headers["Authorization"] = tokenString
+        // Crear URLRequest
+        var urlRequest = try! URLRequest(
+            url: finalURL,
+            method: .post,
+            headers: headers
+        )
+        
+        AF.upload(multipartFormData: { multipartFormData in
+            // Agregar parámetros al cuerpo
+            for (key, value) in params {
+                multipartFormData.append(Data(value.utf8), withName: key)
+            }
             
-        }, progress: nil, success: {
-            (operation, responseObject) in
-            let responseDict:NSDictionary = responseObject as! NSDictionary
-            print(responseDict)
-            if responseDict.value(forKey: "code") as! NSNumber == 200 {
-                self.showSuccessPopUp(msgStr: responseDict.object(forKey: "message") as! String)
-            }else if responseDict.value(forKey: "code") as! NSNumber == 201{
-                let tempDict = NSMutableDictionary()
-                tempDict.addEntries(from: responseDict.object(forKey: "data") as! [AnyHashable : Any])
-                self.showOTPVerifyView(otpNumber: (tempDict.object(forKey: "otp") as! NSNumber).stringValue)
+            // Agregar imagen
+            if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
+                multipartFormData.append(imageData, withName: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
             }
-            else if responseDict.value(forKey: "code") as! NSNumber == 400 {
-                if responseDict.value(forKey: "message") as! String == "Token is Expired" {
-                    self.showTokenExpiredPopUp(msgStr: "Token is Expired")
-                }else{
-                     self.showToastAlert(senderVC: self, messageStr: responseDict.object(forKey: "message")as! String)
+        }, with: urlRequest).responseJSON(completionHandler: { dataResponse in
+            DispatchQueue.main.async {
+                self.stopLoadingIndicator(senderVC: self)
+            }
+            switch dataResponse.result {
+            case .success(let value):
+                guard let jsonResponse = value as? [String: Any] else {
+                    return
                 }
-                
+                print(jsonResponse)
+                if let code = jsonResponse["code"] as? Int, code == 200 {
+                    self.showSuccessPopUp(msgStr: jsonResponse["message"] as! String)
+                } else {
+                    self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as! String)
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
             }
-            else {
-                self.showToastAlert(senderVC: self, messageStr: responseDict.object(forKey: "message")as! String)
-            }
-            self.stopLoadingIndicator(senderVC: self) 
-        }, failure: {
-            (operation, error) in
-            DispatchQueue.main.async { self.stopLoadingIndicator(senderVC: self) }
-            print(error.localizedDescription)
         })
-    }
     }
     func showOTPVerifyView(otpNumber:String){
         gettingOtp = otpNumber
@@ -359,58 +362,83 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     @IBAction func otpVerifyBtnAction(_ sender: Any) {
         transpertantView.isHidden = true
         let mobilenNo2 = self.resultDict.object(forKey: "user_phone2")as? String ?? ""
-
-            self.showLoadingIndicator(senderVC: self)
+        
+        self.showLoadingIndicator(senderVC: self)
+        
+        requestOtpVerify()
+    }
+    
+    func requestOtpVerify() {
+        let finalURL = BASEURL_CUSTOMER + PROFILE_UPDATE_OTP
+        let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
+        
+        // Parámetros
+        let params: [String: String] = [
+            "lang": "en",
+            "cus_name": userNameTxt.text ?? "",
+            "cus_email": emailTxt.text ?? "",
+            "cus_phone1": mobileNumberTxt.text ?? "",
+            "cus_phone2": resultDict.object(forKey: "user_phone2") as? String ?? "",
+            "cus_address": userLocationStr,
+            "cus_lat": userLatitude,
+            "cus_long": userLongitude,
+            "otp": gettingOtp,
+            "current_otp": gettingOtp
+        ]
+        
+        var headers = HTTPHeaders()
+        headers["Authorization"] = tokenString
+        
+        // Crear URLRequest
+        var urlRequest = try! URLRequest(
+            url: finalURL,
+            method: .post,
+            headers: headers
+        )
+        
+        AF.upload(multipartFormData: { multipartFormData in
+            for (key, value) in params {
+                multipartFormData.append(Data(value.utf8), withName: key)
+            }
             
-            var params = NSMutableDictionary()
-            params = [
-                "lang": "en",
-                "cus_name": "\(self.userNameTxt.text!)",
-                "cus_email": "\(self.emailTxt.text!)",
-                "cus_phone1": "\(self.mobileNumberTxt.text!)",
-                "cus_phone2": mobilenNo2,
-                "cus_address": userLocationStr,
-                "cus_lat": userLatitude,
-                "cus_long" : userLongitude,
-                "otp": gettingOtp,
-                "current_otp":gettingOtp,
-            ]
-            print(params)
-            let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
-            let manager = AFHTTPSessionManager()
-            manager.responseSerializer.acceptableContentTypes = Set(["text/plain", "text/html", "application/json"]) as Set<String>?
-            let finalURL = BASEURL_CUSTOMER + PROFILE_UPDATE_OTP
-            manager.requestSerializer.setValue(tokenString, forHTTPHeaderField: "Authorization")
-        manager.post(finalURL, parameters: params, headers: nil, constructingBodyWith: {
-                (data: AFMultipartFormData!) in
-                //profileImageData = self.userImageView.image.jpegData(compressionQuality: 0.5)
-                //profileImageData = self.profileImagefile?.jpegData(compressionQuality: 0.5)!
-                data.appendPart(withFileData: (self.userImageView.image?.pngData())!, name: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
-                
-            }, progress: nil, success: {
-                (operation, responseObject) in
-                let responseDict:NSDictionary = responseObject as! NSDictionary
-                print(responseDict)
-                if responseDict.value(forKey: "code") as! NSNumber == 200 {
-                    self.showSuccessPopUp(msgStr: responseDict.object(forKey: "message") as! String)
-                }else if responseDict.value(forKey: "code") as! NSNumber == 201{
-                    let tempDict = NSMutableDictionary()
-                    tempDict.addEntries(from: responseDict.object(forKey: "data") as! [AnyHashable : Any])
-                    self.showOTPVerifyView(otpNumber: (tempDict.object(forKey: "otp") as! NSNumber).stringValue)
+            // Agregar imagen al cuerpo
+            if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
+                multipartFormData.append(imageData, withName: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
+            }
+        }, with: urlRequest)
+        .responseJSON(completionHandler: { encodingResult in
+            DispatchQueue.main.async {
+                self.stopLoadingIndicator(senderVC: self)
+            }
+            if encodingResult.error != nil {
+                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
+                return
+            }
+            let result = encodingResult.result
+            switch result {
+            case .success(let value):
+                guard let jsonResponse = value as? [String: Any] else {
+                    return
                 }
-                else if responseDict.value(forKey: "code") as! NSNumber == 400 {
-                    if responseDict.value(forKey: "message") as! String == "Token is Expired" {
+                print(jsonResponse)
+                if let code = jsonResponse["code"] as? Int {
+                    if code == 200 {
+                        self.showSuccessPopUp(msgStr: jsonResponse["message"] as! String)
+                    } else if code == 201 {
+                        if let tempData = jsonResponse["data"] as? [String: Any],
+                           let otp = tempData["otp"] as? String {
+                            self.showOTPVerifyView(otpNumber: otp)
+                        }
+                    } else if code == 400, jsonResponse["message"] as? String == "Token is Expired" {
                         self.showTokenExpiredPopUp(msgStr: "Token is Expired")
+                    } else {
+                        self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as! String)
                     }
                 }
-                else {
-                    self.showToastAlert(senderVC: self, messageStr: responseDict.object(forKey: "message")as! String)
-                }
-                self.stopLoadingIndicator(senderVC: self)
-            }, failure: {
-                (operation, error) in
-                DispatchQueue.main.async { self.stopLoadingIndicator(senderVC: self) }
-                print(error.localizedDescription)
-            })
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
+            }
+        })
     }
 }

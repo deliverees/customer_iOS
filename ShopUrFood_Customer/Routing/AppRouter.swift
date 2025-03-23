@@ -72,6 +72,15 @@ final class AppRouter {
         vc.present(nextViewController, animated:true, completion:nil)
     }
     
+    func presentFoodDetailsPage(from vc: UIViewController?, productId: Int, restaurantId: Int, itemName: String?) {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "FoodDetailsPage") as! FoodDetailsPage
+        nextViewController.item_id = "\(productId)"
+        nextViewController.restaurant_id = "\(restaurantId)"
+        nextViewController.itemName = itemName ?? ""
+        vc?.present(nextViewController, animated:true, completion:nil)
+    }
+    
     func presentInRoot(vc: UIViewController) {
         if root == nil {
             initialize()

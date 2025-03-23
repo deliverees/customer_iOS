@@ -904,7 +904,9 @@ extension UIView {
         }
         set {
             if newValue == true {
-                self.addShadow()
+                addShadow()
+            } else {
+                removeShadow()
             }
         }
     }
@@ -932,5 +934,12 @@ extension UIView {
         layer.shadowOffset = shadowOffset
         layer.shadowOpacity = shadowOpacity
         layer.shadowRadius = shadowRadius
+    }
+    
+    func removeShadow() {
+        layer.shadowColor = UIColor.clear.cgColor
+        layer.shadowOffset = .zero
+        layer.shadowOpacity = 0
+        layer.cornerRadius = 0
     }
 }

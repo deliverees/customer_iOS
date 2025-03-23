@@ -14,7 +14,7 @@ import FacebookCore
 import FBSDKCoreKit
 import GoogleSignIn
 
-class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSignInDelegate,GIDSignInUIDelegate {
+class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate {
     @IBOutlet weak var SocialLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var registerTitleLbl: UILabel!
@@ -384,27 +384,27 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
         if (Reachability()?.isReachable)!
         {
             self.showLoadingIndicator(senderVC: self)
-            GIDSignIn.sharedInstance().delegate = self
-            GIDSignIn.sharedInstance().uiDelegate = self
-            GIDSignIn.sharedInstance().signIn()
+            GIDSignIn.sharedInstance.signIn(withPresenting: self) { result, error in
+                self.sign(didSignInFor: result?.user, withError: error)
+            }
         }
     }
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if (error == nil) {
+    func sign(didSignInFor user: GIDGoogleUser?, withError error: Error?) {
+        if let user, (error == nil) {
             // Perform any operations on signed in user here.
             let requestDict = NSMutableDictionary.init()
             requestDict.setValue("google", forKey: "type")
             requestDict.setValue(user.userID, forKey: "id")
-            requestDict.setValue(user.profile.name, forKey: "full_name")
-            requestDict.setValue(user.profile.email, forKey: "email")
+            requestDict.setValue(user.profile?.name ?? "", forKey: "full_name")
+            requestDict.setValue(user.profile?.email ?? "", forKey: "email")
             print(requestDict)
             let idStr = user.userID
-            let emailStr = user.profile.email
-            let  nameStr = user.profile.name
+            let emailStr = user.profile?.email ?? ""
+            let  nameStr = user.profile?.name ?? ""
             
             
             let Parse = CommomParsing()
-            Parse.GoogleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", google_id:idStr!, email:emailStr!, name:nameStr!, type: device_type,ios_fcm_id:login_session.object(forKey: "fcmToken") as! String, ios_device_id: iPhoneUDIDString , onSuccess: {
+            Parse.GoogleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", google_id:idStr!, email:emailStr, name:nameStr, type: device_type,ios_fcm_id:login_session.object(forKey: "fcmToken") as! String, ios_device_id: iPhoneUDIDString , onSuccess: {
                 response in
                 print(response)
                 let dataDict = NSMutableDictionary()
@@ -429,7 +429,7 @@ class SignUpViewController: BaseViewController,UIGestureRecognizerDelegate,GIDSi
             
         } else {
             self.stopLoadingIndicator(senderVC: self)
-            print("\(error.localizedDescription)")
+            print("\(error?.localizedDescription ?? "")")
         }
     }
 }

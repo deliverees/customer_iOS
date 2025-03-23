@@ -13,7 +13,7 @@ import SWRevealViewController
 import AVFoundation
 
 
-class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSource,BottomPopupDelegate {
+class OrderDetailsPage: BaseViewController, UITableViewDelegate, UITableViewDataSource, BottomPopupDelegate {
     
     @IBOutlet weak var topNavigationView: UIView!
     @IBOutlet weak var noOrdersFoundLbl: UILabel!
@@ -50,9 +50,7 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
     @IBOutlet weak var blackTransprantView: UIView!
     
     @IBOutlet weak var restaurantNameLbl: UILabel!
-    @IBAction func closeBtnAction(_ sender: Any)
-    {
-    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // showIndex = 0
@@ -62,8 +60,6 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         orderTable.dataSource = self
         CommonOrderStatusUpdateStr = ""
         
-        //        baseContentView.layer.cornerRadius = 5.0
-        //        baseContentView = self.setCornorShadowEffects(sender: baseContentView)
         topNavigationView.layer.shadowOffset = CGSize(width: 0, height: 3)
         topNavigationView.layer.shadowOpacity = 0.6
         topNavigationView.layer.shadowRadius = 3.0
@@ -75,8 +71,9 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         self.segmentedControl.insertSegment(withTitle: LanguageDictonary.value(forKey: "cancelled") as? String, image: nil, at: 2)
         
     }
-    override func viewWillAppear(_ animated: Bool)
-    {
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "trackorder") as? String
         let appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
         
@@ -92,14 +89,13 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         if appDelegate!.player.isPlaying
         {
             appDelegate!.playerStop()
-            
-            
         }
     }
     
     @IBAction func popUpCloseBtnTapped(_ sender: Any) {
         self.blackTransprantView.isHidden = true
     }
+    
     func orderDetailsAPICall(){
         self.pendingArray.removeAllObjects()
         self.fulfiledArray.removeAllObjects()
@@ -210,34 +206,7 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
             self.segmentedControl.insertSegment(withTitle: "\("\(LanguageDictonary.value(forKey: "fulfilled") as! String) (")\(self.fulfiledArray.count)\(")")", image: nil, at: 1)
             self.segmentedControl.removeSegment(at: 2)
             self.segmentedControl.insertSegment(withTitle: "\("\(LanguageDictonary.value(forKey: "cancelled") as! String) (")\(self.cancelledArray.count)\(")")", image: nil, at: 2)
-            
-            //        if self.pendingArray.count == 0
-            //        {
-            //            self.segmentedControl.insertSegment(withTitle:"Pending", image: nil, at: 0)
-            //        }
-            //        else
-            //        {
-            //        self.segmentedControl.insertSegment(withTitle: "\("Pending (")\(self.pendingArray.count)\(")")", image: nil, at: 0)
-            //        }
-            //
-            //        if self.fulfiledArray.count == 0
-            //        {
-            //         self.segmentedControl.insertSegment(withTitle: "Fulfilled", image: nil, at: 1)
-            //        }
-            //        else
-            //        {
-            //        self.segmentedControl.insertSegment(withTitle: "\("Fulfilled (")\(self.fulfiledArray.count)\(")")", image: nil, at: 1)
-            //        }
-            //
-            //        if self.cancelledArray.count == 0
-            //        {
-            //        self.segmentedControl.insertSegment(withTitle: "Cancelled", image: nil, at: 2)
-            //        }
-            //        else
-            //        {
-            //        self.segmentedControl.insertSegment(withTitle: "\("Cancelled (")\(self.cancelledArray.count)\(")")", image: nil, at: 2)
-            //        }
-            
+
             self.segmentedControl.underlineSelected = true
             self.segmentedControl.tintColor = AppDarkOrange
             self.segmentedControl.selectedSegmentContentColor = UIColor.black
@@ -343,550 +312,247 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0
-        {
-            var OldStore_id = String()
-            var newStore_id = String()
-            if indexPath.row != 0 {
-                OldStore_id = String((finalArray.object(at: indexPath.row-1)as! NSDictionary).object(forKey: "restaurant_id")as! Int)
-                newStore_id = String((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_id")as! Int)
-            }
-            if indexPath.row == 0 || OldStore_id != newStore_id{
-                return 160
-            }else{
-                return 120
-                
-            }
-        }
-        else
-        {
-            return UITableView.automaticDimension
-        }
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if finalArray.count == 0 { return 0 }
+        if section == 0 {
+            return finalArray.count
+        }
+        else if section == 1 {
+            return 1
+        }
         
-        if section == 0
-        {
-            if finalArray.count == 0
-            {
-                return 0
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard finalArray.count > 0 else { return nil }
+        if section == 0 {
+            guard let view = UINib(nibName: "OrderDetailsTitleCell", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as? OrderDetailsTitleCell
+            else {
+                return nil
             }
-            else
-            {
-                return finalArray.count
+            let restaurantName = ((finalArray.object(at: 0) as? NSDictionary)?.object(forKey: "restaurant_name") as? String)
+            view.titleLbl.text = restaurantName
+            view.trackBtn.setTitle(Localization.value(for: "track"), for: .normal)
+            view.addStoreReviewBtn.setTitle(Localization.value(for: "Addreview"), for: .normal)
+            view.addStoreReviewBtn.addTarget(self, action: #selector(postStoreReview), for: .touchUpInside)
+            view.trackBtn.addTarget(self, action: #selector(trackBtnBtnClicked), for: .touchUpInside)
+            view.infoBtn.addTarget(self, action: #selector(showInfoPopUp), for: .touchUpInside)
+            if showIndex == 0 {
+                view.trackBtn.isHidden = false
+                view.infoBtn.isHidden = false
+                view.addStoreReviewBtn.isHidden = true
             }
+            if showIndex == 1 {
+                view.trackBtn.isHidden = true
+                view.infoBtn.isHidden = true
+                if ((finalArray.object(at: 0) as? NSDictionary)?.object(forKey: "already_order_reviewed") as? String) == "No" {
+                    view.addStoreReviewBtn.isHidden = false
+                } else {
+                    view.addStoreReviewBtn.isHidden = true
+                }
+            }
+            if showIndex == 2 {
+                view.trackBtn.isHidden = true
+                view.infoBtn.isHidden = true
+                view.addStoreReviewBtn.isHidden = true
+            }
+            view.frame.size.width = tableView.frame.size.width
+            return view
         }
-        else
-        {
-            if finalArray.count == 0
-            {
-                return 0
-            }
-            else
-            {
-                return 1
-            }
-            
-        }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if indexPath.section == 0
-        {
-            var OldStore_id = String()
-            var newStore_id = String()
-            if indexPath.row != 0 {
-                OldStore_id = String((finalArray.object(at: indexPath.row-1)as! NSDictionary).object(forKey: "restaurant_id")as! Int)
-                newStore_id = String((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_id")as! Int)
-            }
-            if indexPath.row == 0 || OldStore_id != newStore_id
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "OrderDetailsTitleCell") as? OrderDetailsTitleCell
-                cell?.selectionStyle = .none
-                cell?.trackBtn.setTitle(LanguageDictonary.value(forKey: "track") as? String, for: .normal)
-                cell?.order_Cancel.setTitle(LanguageDictonary.value(forKey: "cancel") as? String, for: .normal)
-                cell?.titleLbl.text  = ((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "restaurant_name")as! String)
-                cell?.status_titleLbl.text = LanguageDictonary.value(forKey: "status") as? String
-                cell?.addStoreReviewBtn.setTitle(LanguageDictonary.value(forKey: "Addreview") as? String, for: .normal)
-                
-                cell?.trackBtn.clipsToBounds = true
-                
-                cell?.trackBtn.layer.borderWidth = 2
-                cell?.trackBtn.layer.borderColor = UIColor.red.cgColor
-                cell?.trackBtn.setTitleColor(UIColor.red, for: .normal)
-                cell?.trackBtn.layer.backgroundColor = UIColor.white.cgColor
-                
-                if showIndex == 1 {
-                    cell?.trackBtn.isHidden = true
-                    cell?.infoBtn.isHidden = true
-                    if ((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "already_order_reviewed")as! String) == "No"{
-                        cell?.addStoreReviewBtn.isHidden = false
-                        cell?.addStoreReviewBtn.addTarget(self, action: #selector(postStoreReview), for: .touchUpInside)
-                    }else{
-                        cell?.addStoreReviewBtn.isHidden = true
-                    }
-                }else if showIndex == 2{
-                    cell?.trackBtn.isHidden = true
-                    cell?.infoBtn.isHidden = true
-                    cell?.addStoreReviewBtn.isHidden = true
-                    
-                }else{
-                    cell?.trackBtn.isHidden = false
-                    cell?.infoBtn.isHidden = false
-                    cell?.addStoreReviewBtn.isHidden = true
-                }
-                cell?.trackBtn.tag = indexPath.row
-                cell?.infoBtn.removeTarget(nil, action: nil, for: .allEvents)
-                cell?.infoBtn.tag = indexPath.row
-                cell?.infoBtn.addTarget(self, action: #selector(showCancellationPopUp), for: .touchUpInside)
-                
-                cell?.trackBtn.addTarget(self,action:#selector(trackBtnBtnClicked(sender:)), for: .touchUpInside)
-                
-                
-                
-                let foodImg = URL(string: (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "item_image") as! String)
-                cell?.orderedFoodImg.kf.setImage(with: foodImg)
-                cell?.nameLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_name")as! String)
-                let currency = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_currency")as! String)
-                let price = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_amount")as! String)
-                cell?.priceLbl.text = "\(currency)\(price)"
-                cell?.statusValueLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "order_status")as! String)
-                cell?.orderedFoodImg.layer.cornerRadius = 10.0
-                cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
-                cell?.baseView.layer.borderWidth = 0.2
-                cell?.baseView.layer.cornerRadius = 10.0
-                cell?.baseView.layer.borderColor = UIColor.lightGray.cgColor
-                cell?.order_Cancel.layer.cornerRadius = 5.0
-                
-                cell?.order_close.tag = indexPath.row
-                cell?.order_close.isHidden = false
-                
-                cell?.order_Cancel.tag = indexPath.row
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "OrderDetailsTBCell") as? OrderDetailsTBCell
+            cell?.selectionStyle = .none
+            cell?.order_Cancel.setTitle(LanguageDictonary.value(forKey: "cancel") as? String, for: .normal)
+            let foodImg = URL(string: (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "item_image") as! String)
+            cell?.orderedFoodImg.kf.setImage(with: foodImg)
+            cell?.nameLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_name")as! String)
+            let currency = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_currency")as! String)
+            let price = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_amount")as! String)
+            cell?.priceLbl.text = "\(currency)\(price)"
+            cell?.statusValueLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "order_status")as! String)
+            cell?.orderedFoodImg.layer.cornerRadius = 10.0
+            cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
+            cell?.baseView.layer.borderWidth = 0.2
+            cell?.baseView.layer.cornerRadius = 10.0
+            cell?.baseView.layer.borderColor = UIColor.lightGray.cgColor
+            cell?.order_Cancel.layer.cornerRadius = 5.0
+            
+            cell?.order_close.tag = indexPath.row - 1
+            cell?.order_close.isHidden = false
+            
+            cell?.order_Cancel.tag = indexPath.row - 1
+            cell?.order_Cancel.isHidden = false
+            
+            // Choices
+            let dict = (finalArray.object(at: indexPath.row) as? NSDictionary)
+            let choices = (dict?.object(forKey: "choice_list") as? [Any] ?? [])
+            let choicesTwo = (dict?.object(forKey: "choiceTwo_list") as? [Any] ?? [])
+            let choicesThree = (dict?.object(forKey: "choiceThree_list") as? [Any] ?? [])
+            
+            let allChoices = choices + choicesTwo + choicesThree
+            cell?.choicesLabel.isHidden = allChoices.count <= 0
+            
+            let choicesNames: [String] = allChoices.compactMap { (($0 as? NSDictionary)?.object(forKey: "choiceName") as? String) ?? (($0 as? NSDictionary)?.object(forKey: "choiceTwoName") as? String) ?? (($0 as? NSDictionary)?.object(forKey: "choiceThreeName") as? String) }
+            cell?.choicesLabel.text = choicesNames.joined(separator: "\n")
+            
+            if showIndex == 0 {
                 cell?.order_Cancel.isHidden = false
+                cell?.order_close.isHidden = true
                 
+                let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date") as? String
                 
-                if showIndex == 0 {
-                    
-                    let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date") as? String
-                    
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     
-                     cell?.order_close.isHidden = true
-                     cell?.order_Cancel.isHidden = false
-                     //cell?.order_close.setImage(UIImage(named: "order_close"), for: .normal)
-                     
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!)
-                     {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     
-                     }
-                     else
-                     {
-                     print("There was an error decoding the string")
-                     }
-                     */
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date")as? String ?? (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_date")as? String
-                    
-                    if orderDateString == ""
-                    {
-                        cell?.dateLbl.isHidden = true
-                        
-                        cell?.dateValueLbl.isHidden = true
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Pre-Order Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "preordereddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                    if ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "cancel_status")as! String) == "Can cancel"
-                    {
-                        
-                        cell?.order_Cancel.removeTarget(nil, action: nil, for: .allEvents)
-                        cell?.order_Cancel.tag = indexPath.row
-                        cell?.order_Cancel.addTarget(self,action:#selector(cancelOrderBtnTapped(sender:)), for: .touchUpInside)
-                        cell?.order_Cancel.isHidden = false
-                    }
-                    else
-                    {
-                        cell?.order_Cancel.isHidden = true
-                        cell?.order_Cancel.isUserInteractionEnabled = false
-                    }
-                }else if showIndex == 1 {
-                    
-                    cell?.order_close.isHidden = false
-                    cell?.order_Cancel.isHidden = true
-                    
-                    if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "already_item_reviewed")as! String == "No"{
-                        cell?.order_close.setImage(UIImage(named: "Add_review"), for: .normal)
-                        cell?.order_close.addTarget(self,action:#selector(postItemReview), for: .touchUpInside)
-                    }else{
-                        cell?.order_close.isHidden = true
-                    }
-                    
-                    let orderDateStringPasser = ((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date") as? String)!
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     }
-                     else {
-                     print("There was an error decoding the string")
-                     }
-                     */
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date")as! String
-                    if orderDateString == ""
-                    {
-                        cell?.dateValueLbl.isHidden = true
-                        cell?.dateLbl.isHidden = true
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Delivered Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "delivereddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                }else if showIndex == 2 {
-                    cell?.order_close.isHidden = false
-                    cell?.order_Cancel.isHidden = true
-                    
-                    cell?.order_close.setImage(UIImage(named: "gray_info"), for: .normal)
-                    cell?.order_close.removeTarget(nil, action: nil, for: .allEvents)
-                    cell?.order_close.tag = indexPath.row
-                    cell?.order_close.addTarget(self, action: #selector(showCancelReasonPopUp), for: .touchUpInside)
-                    
-                    let orderDateStringPasser = ((finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date") as? String)!
-                    
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     }
-                     else {
-                     print("There was an error decoding the string")
-                     }*/
-                    
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date")as? String
-                    if orderDateString == ""
-                    {
-                        cell?.dateValueLbl.isHidden = true
-                        cell?.dateLbl.isHidden = true
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Cancelled Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "cancelleddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                    if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_type")as! String != "COD"{
-                        cell?.statusValueLbl.text = "VIEW"
-                    }
+                let dateFormatterGet = DateFormatter()
+                dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
+                let dateFormatterPrint = DateFormatter()
+                dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
+                dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
+                if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
+                    print(dateFormatterPrint.string(from: date))
+                    orderDateString = dateFormatterPrint.string(from: date)
+                } else {
+                    print("There was an error decoding the string")
                 }
                 
-                return cell!
-            }else{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "OrderDetailsTBCell") as? OrderDetailsTBCell
-                cell?.selectionStyle = .none
-                cell?.order_Cancel.setTitle(LanguageDictonary.value(forKey: "cancel") as? String, for: .normal)
-                let foodImg = URL(string: (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "item_image") as! String)
-                cell?.orderedFoodImg.kf.setImage(with: foodImg)
-                cell?.nameLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_name")as! String)
-                let currency = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_currency")as! String)
-                let price = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "item_amount")as! String)
-                cell?.priceLbl.text = "\(currency)\(price)"
-                cell?.statusValueLbl.text = ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "order_status")as! String)
-                cell?.orderedFoodImg.layer.cornerRadius = 10.0
-                cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
-                cell?.baseView.layer.borderWidth = 0.2
-                cell?.baseView.layer.cornerRadius = 10.0
-                cell?.baseView.layer.borderColor = UIColor.lightGray.cgColor
-                cell?.order_Cancel.layer.cornerRadius = 5.0
-                
-                cell?.order_close.tag = indexPath.row - 1
-                cell?.order_close.isHidden = false
-                
-                cell?.order_Cancel.tag = indexPath.row - 1
-                cell?.order_Cancel.isHidden = false
-                
-                
-                if showIndex == 0 {
+                let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date")as? String ?? (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_date")as? String
+                if orderDateString == ""
+                {
+                    cell?.dateValueLbl.isHidden = true
+                    cell?.dateLbl.isHidden = true
                     
+                }
+                else
+                {
+                    cell?.dateLbl.isHidden = false
+                    //cell?.dateLbl.text = "Pre-Order Date"
+                    cell?.dateLbl.text = LanguageDictonary.value(forKey: "preordereddate") as? String
+                    cell?.dateValueLbl.isHidden = false
+                    cell?.dateValueLbl.text = orderDateString
+                }
+                
+                if ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "cancel_status")as! String) == "Can cancel"{
                     cell?.order_Cancel.isHidden = false
-                    cell?.order_close.isHidden = true
-                    
-                    let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date") as? String
-                    
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!)
-                     {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     }
-                     else
-                     {
-                     print("There was an error decoding the string")
-                     }*/
-                    
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "pre_order_date")as? String ?? (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_date")as? String
-                    if orderDateString == ""
-                    {
-                        cell?.dateValueLbl.isHidden = true
-                        cell?.dateLbl.isHidden = true
-                        
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Pre-Order Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "preordereddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                    // cell?.order_close.setImage(UIImage(named: "order_close"), for: .normal)
-                    
-                    if ((finalArray.object(at: indexPath.row) as! NSDictionary).object(forKey: "cancel_status")as! String) == "Can cancel"{
-                        cell?.order_Cancel.isHidden = false
-                        cell?.order_Cancel.removeTarget(nil, action: nil, for: .allEvents)
-                        cell?.order_Cancel.tag = indexPath.row
-                        cell?.order_Cancel.addTarget(self,action:#selector(cancelOrderBtnTapped(sender:)), for: .touchUpInside)
-                        
-                    }else{
-                        cell?.order_Cancel.isHidden = true
-                        cell?.order_Cancel.isUserInteractionEnabled = false
-                        
-                    }
-                }else if showIndex == 1 {
-                    
+                    cell?.order_Cancel.removeTarget(nil, action: nil, for: .allEvents)
+                    cell?.order_Cancel.tag = indexPath.row
+                    cell?.order_Cancel.addTarget(self,action:#selector(cancelOrderBtnTapped(sender:)), for: .touchUpInside)
+                }else{
                     cell?.order_Cancel.isHidden = true
-                    cell?.order_close.isHidden = false
+                    cell?.order_Cancel.isUserInteractionEnabled = false
                     
-                    
-                    if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "already_item_reviewed")as! String == "No"{
-                        cell?.order_close.setImage(UIImage(named: "Add_review"), for: .normal)
-                        cell?.order_close.removeTarget(nil, action: nil, for: .allEvents)
-                        cell?.order_close.tag = indexPath.row
-                        cell?.order_close.addTarget(self,action:#selector(postItemReview), for: .touchUpInside)
-                    }else{
-                        cell?.order_close.isHidden = true
-                        cell?.order_close.isUserInteractionEnabled = false
-                        
-                    }
-                    
-                    let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date") as? String
-                    
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!)
-                     {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     
-                     }
-                     else
-                     {
-                     print("There was an error decoding the string")
-                     }
-                     */
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date")as! String
-                    if orderDateString == ""
-                    {
-                        cell?.dateValueLbl.isHidden = true
-                        cell?.dateLbl.isHidden = true
-                        
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Delivered Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "delivereddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                    
-                }else if showIndex == 2 {
-                    cell?.order_Cancel.isHidden = true
-                    cell?.order_close.isHidden = false
-                    
-                    cell?.order_close.setImage(UIImage(named: "gray_info"), for: .normal)
+                }
+            } else if showIndex == 1 {
+                
+                cell?.order_Cancel.isHidden = true
+                cell?.order_close.isHidden = false
+                
+                
+                if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "already_item_reviewed")as! String == "No"{
+                    cell?.order_close.setImage(UIImage(named: "Add_review"), for: .normal)
                     cell?.order_close.removeTarget(nil, action: nil, for: .allEvents)
                     cell?.order_close.tag = indexPath.row
-                    cell?.order_close.addTarget(self, action: #selector(showCancelReasonPopUp), for: .touchUpInside)
+                    cell?.order_close.addTarget(self,action:#selector(postItemReview), for: .touchUpInside)
+                }else{
+                    cell?.order_close.isHidden = true
+                    cell?.order_close.isUserInteractionEnabled = false
                     
-                    let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date") as? String
-                    
-                    /*
-                     let dateFormatterGet = DateFormatter()
-                     dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                     
-                     let dateFormatterPrint = DateFormatter()
-                     dateFormatterPrint.locale = NSLocale(localeIdentifier: LanguageDictonary.value(forKey: "localeID") as! String) as Locale
-                     dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                     
-                     if let date = dateFormatterGet.date(from: orderDateStringPasser!)
-                     {
-                     print(dateFormatterPrint.string(from: date))
-                     orderDateString = dateFormatterPrint.string(from: date)
-                     
-                     }
-                     else
-                     {
-                     print("There was an error decoding the string")
-                     }
-                     */
-                    let dateFormatterGet = DateFormatter()
-                    dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
-                    let dateFormatterPrint = DateFormatter()
-                    dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
-                    dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
-                    dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
-                    if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
-                        print(dateFormatterPrint.string(from: date))
-                        orderDateString = dateFormatterPrint.string(from: date)
-                    } else {
-                        print("There was an error decoding the string")
-                    }
-                    
-                    let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date")as? String
-                    if orderDateString == ""
-                    {
-                        cell?.dateValueLbl.isHidden = true
-                        cell?.dateLbl.isHidden = true
-                        
-                    }
-                    else
-                    {
-                        cell?.dateLbl.isHidden = false
-                        //cell?.dateLbl.text = "Cancelled Date"
-                        cell?.dateLbl.text = LanguageDictonary.value(forKey: "cancelleddate") as? String
-                        cell?.dateValueLbl.isHidden = false
-                        cell?.dateValueLbl.text = orderDateString
-                    }
-                    if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_type")as! String != "COD"{
-                        cell?.statusValueLbl.text = "VIEW"
-                    }
                 }
-                return cell!
+                
+                let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date") as? String
+                
+                let dateFormatterGet = DateFormatter()
+                dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
+                let dateFormatterPrint = DateFormatter()
+                dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
+                dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
+                if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
+                    print(dateFormatterPrint.string(from: date))
+                    orderDateString = dateFormatterPrint.string(from: date)
+                } else {
+                    print("There was an error decoding the string")
+                }
+                
+                let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "delivered_date")as! String
+                if orderDateString == ""
+                {
+                    cell?.dateValueLbl.isHidden = true
+                    cell?.dateLbl.isHidden = true
+                    
+                }
+                else
+                {
+                    cell?.dateLbl.isHidden = false
+                    //cell?.dateLbl.text = "Delivered Date"
+                    cell?.dateLbl.text = LanguageDictonary.value(forKey: "delivereddate") as? String
+                    cell?.dateValueLbl.isHidden = false
+                    cell?.dateValueLbl.text = orderDateString
+                }
+                
+            } else if showIndex == 2 {
+                cell?.order_Cancel.isHidden = true
+                cell?.order_close.isHidden = false
+                
+                cell?.order_close.setImage(UIImage(named: "gray_info"), for: .normal)
+                cell?.order_close.removeTarget(nil, action: nil, for: .allEvents)
+                cell?.order_close.tag = indexPath.row
+                cell?.order_close.addTarget(self, action: #selector(showCancelReasonPopUp), for: .touchUpInside)
+                
+                let orderDateStringPasser = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date") as? String
+                
+                let dateFormatterGet = DateFormatter()
+                dateFormatterGet.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormatterGet.locale = Locale(identifier: "en_US_POSIX")
+                let dateFormatterPrint = DateFormatter()
+                dateFormatterPrint.locale = Locale(identifier: LanguageDictonary.value(forKey: "localeID") as! String)
+                dateFormatterPrint.dateFormat = "MMMM dd,yyyy"
+                dateFormatterPrint.locale = Locale(identifier: "en_US_POSIX")
+                if let date = dateFormatterGet.date(from: orderDateStringPasser!) {
+                    print(dateFormatterPrint.string(from: date))
+                    orderDateString = dateFormatterPrint.string(from: date)
+                } else {
+                    print("There was an error decoding the string")
+                }
+                
+                let dateStr = (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "cancelled_date")as? String
+                if orderDateString == ""
+                {
+                    cell?.dateValueLbl.isHidden = true
+                    cell?.dateLbl.isHidden = true
+                    
+                }
+                else
+                {
+                    cell?.dateLbl.isHidden = false
+                    //cell?.dateLbl.text = "Cancelled Date"
+                    cell?.dateLbl.text = LanguageDictonary.value(forKey: "cancelleddate") as? String
+                    cell?.dateValueLbl.isHidden = false
+                    cell?.dateValueLbl.text = orderDateString
+                }
+                if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_type")as! String != "COD"{
+                    cell?.statusValueLbl.text = "VIEW"
+                }
             }
-        }
-        else
-        {
+            return cell!
+        } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "InvoiceTotalWithWalletCell") as? InvoiceTotalWithWalletCell
             
             cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
@@ -922,7 +588,7 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if showIndex == 2
         {
-            if (finalArray.object(at: indexPath.row)as! NSDictionary).object(forKey: "order_type")as! String != "COD"{
+            if (finalArray.object(at: indexPath.row) as? NSDictionary)?.object(forKey: "order_type") as? String != "COD" {
                 let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
                 let nextViewController = storyBoard.instantiateViewController(withIdentifier: "RefundDetailsViewController") as! RefundDetailsViewController
                 nextViewController.orderId = resultDict.object(forKey: "order_transaction_id")as! String
@@ -932,20 +598,17 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         }
     }
     
-    @objc func trackBtnBtnClicked(sender:UIButton) {
-        let buttonRow = sender.tag
-        print("buttonRow is:",buttonRow)
+    @objc func trackBtnBtnClicked() {
         if navigationTypeStr == "present"{
             let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackingScreen") as! TrackingScreen
-            //
             nextViewController.order_id = resultDict.object(forKey: "order_transaction_id")as! String
-            nextViewController.store_id = ((finalArray.object(at: sender.tag) as! NSDictionary).object(forKey: "restaurant_id")as! NSNumber).stringValue
+            nextViewController.store_id = ((finalArray.object(at: 0) as! NSDictionary).object(forKey: "restaurant_id")as! NSNumber).stringValue
             nextViewController.navigationTypeStr = navigationTypeStr
             self.present(nextViewController, animated:true, completion:nil)
         }else{
             let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "TrackingScreen") as! TrackingScreen
             nextViewController.order_id = resultDict.object(forKey: "order_transaction_id")as! String
-            nextViewController.store_id = ((finalArray.object(at: sender.tag) as! NSDictionary).object(forKey: "restaurant_id")as! NSNumber).stringValue
+            nextViewController.store_id = ((finalArray.object(at: 0) as! NSDictionary).object(forKey: "restaurant_id")as! NSNumber).stringValue
             nextViewController.navigationTypeStr = navigationTypeStr
             self.navigationController?.pushViewController(nextViewController, animated: true)
         }
@@ -963,11 +626,10 @@ class OrderDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSo
         
     }
     
-    @objc func showCancellationPopUp(sender:UIButton) {
-        let index = sender.tag
-        restaurantNameLbl.text = ((finalArray.object(at: index) as! NSDictionary).object(forKey: "restaurant_name")as! String)
+    @objc func showInfoPopUp() {
+        restaurantNameLbl.text = ((finalArray.object(at: 0) as! NSDictionary).object(forKey: "restaurant_name")as! String)
         subTitleNameLbl.text = LanguageDictonary.object(forKey: "cancellationpolicy") as? String
-        messageNameLbl.text = (finalArray.object(at: index) as! NSDictionary).object(forKey: "cancel_policy")as? String
+        messageNameLbl.text = (finalArray.object(at: 0) as! NSDictionary).object(forKey: "cancel_policy")as? String
         blackTransprantView.isHidden = false
         
     }

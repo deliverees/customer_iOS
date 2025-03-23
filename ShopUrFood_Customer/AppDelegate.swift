@@ -18,7 +18,6 @@ import Firebase
 import IQKeyboardManager
 import UserNotifications
 import FirebaseMessaging
-import Fabric
 import AVFoundation
 
 
@@ -75,7 +74,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         // Init FaceBook login
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         //Init Google
-        GIDSignIn.sharedInstance().clientID = GOOGLE_CLIENT_ID
+        
+        GIDSignIn.sharedInstance.configuration = .init(clientID: GOOGLE_CLIENT_ID)
 
         GMSServices.provideAPIKey(googleMapsApiKey)
         GMSPlacesClient.provideAPIKey(googleMapsApiKey)
@@ -93,9 +93,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
             self.ConnectToFCM()
         }
         
-#if DEBUG
-        Fabric.sharedSDK().debug = true
-#endif
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
                                                name: NSNotification.Name.MessagingRegistrationTokenRefreshed, object: nil)
         
@@ -229,11 +226,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,UNUserNotificationCenterDe
         if (ApplicationDelegate.shared.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation))
         {
             return true
-        }else if(GIDSignIn.sharedInstance().handle(url as URL?,
-                                                   sourceApplication: sourceApplication, annotation:annotation)){
-            return true
+        } else {
+            return GIDSignIn.sharedInstance.handle(url)
         }
-        return false
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool

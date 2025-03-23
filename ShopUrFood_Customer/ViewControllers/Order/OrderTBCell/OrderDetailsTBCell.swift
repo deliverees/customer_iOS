@@ -20,11 +20,10 @@ class OrderDetailsTBCell: UITableViewCell {
     @IBOutlet weak var order_Cancel: UIButton!
     @IBOutlet weak var dateValueLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var choicesLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
-    
-
 }

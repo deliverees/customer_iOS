@@ -24,15 +24,21 @@ class BaseParsing: NSObject {
         print("PARAMETER : \(params!)")
         print("Pruned PARAMETERs : \(prunedParameters!)")
         //webservice call
-        Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: ["Content-Type": "application/json"]).responseJSON { response in
+        AF.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: ["Content-Type": "application/json"]).responseJSON { response in
             print(response.request?.cURL(pretty: true) ?? "")
-            //sucesss block
-            if let JSON = response.result.value as? NSDictionary {
-                success(JSON)
+            if let error = response.error {
+                failure(error)
                 return
             }
-            let error = response.result.error
-            failure(error)
+            
+            switch response.result {
+            case .success(let value):
+                if let JSON = value as? NSDictionary {
+                    success(JSON)
+                }
+            case .failure(let error):
+                failure(error)
+            }
         }
     }
     
@@ -43,12 +49,20 @@ class BaseParsing: NSObject {
         
         
         //webservice call
-        Alamofire.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: nil).responseJSON { response in
+        AF.request(finalURL!, method:.post, parameters: params!, encoding: URLEncoding.httpBody, headers: nil).responseJSON { response in
             //sucesss block
-            let JSON = response.result.value as? NSDictionary
-            if((JSON) != nil)
-            {
-                success(JSON!)
+            if let error = response.error {
+                failure(error)
+                return
+            }
+            
+            switch response.result {
+            case .success(let value):
+                if let JSON = value as? NSDictionary {
+                    success(JSON)
+                }
+            case .failure(let error):
+                failure(error)
             }
         }
     }
@@ -70,22 +84,21 @@ class BaseParsing: NSObject {
             let postheaders : HTTPHeaders = ["Content-Type":"application/json"]
             print(postheaders)
             let url = URL(string: BASEURL_CUSTOMER+("v1_"+(subURl as String)))
-            Alamofire.request(url!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
+            AF.request(url!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
                 print(response.request?.cURL(pretty: true) ?? "")
                 //sucesss block
-                switch response.result {
-                case .success:
-                    let JSON = response.result.value as? NSDictionary
-                    if((JSON) != nil)
-                    {
-                        success(JSON!)
-                    }
-                    break
-                case .failure(let error):
-                    //handler(nil)
-                    print(error)
+                if let error = response.error {
                     failure(error)
-                    break
+                    return
+                }
+                
+                switch response.result {
+                case .success(let value):
+                    if let JSON = value as? NSDictionary {
+                        success(JSON)
+                    }
+                case .failure(let error):
+                    failure(error)
                 }
             }
         }
@@ -96,22 +109,21 @@ class BaseParsing: NSObject {
                                              "Content-Type": "application/json"]
             print(postheaders)
             
-            Alamofire.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
+            AF.request(finalURL!, method:.post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON { response in
                 //sucesss block
                 print(response.request?.cURL(pretty: true) ?? "")
-                switch response.result {
-                case .success:
-                    let JSON = response.result.value as? NSDictionary
-                    if((JSON) != nil)
-                    {
-                        success(JSON!)
-                    }
-                    break
-                case .failure(let error):
-                    //handler(nil)
-                    print(error)
+                if let error = response.error {
                     failure(error)
-                    break
+                    return
+                }
+                
+                switch response.result {
+                case .success(let value):
+                    if let JSON = value as? NSDictionary {
+                        success(JSON)
+                    }
+                case .failure(let error):
+                    failure(error)
                 }
             }
             
@@ -134,16 +146,20 @@ class BaseParsing: NSObject {
         print(postheaders)
         
         
-        Alamofire.request(finalURL!, method: .post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON{ response in
+        AF.request(finalURL!, method: .post, parameters: prunedParameters, encoding: encoding, headers: postheaders).responseJSON{ response in
             print(response.request?.cURL(pretty: true) ?? "")
-            switch(response.result) {
-            case .success(_):
-                if let data = response.result.value{
-                    print(data)
+            if let error = response.error {
+                failure(error)
+                return
+            }
+            
+            switch response.result {
+            case .success(let value):
+                if let JSON = value as? NSDictionary {
+                    success(JSON)
                 }
-            case .failure(_):
-                print("Error message:\(String(describing: response.result.error))")
-                break
+            case .failure(let error):
+                failure(error)
             }
         }
     }

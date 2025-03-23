@@ -22,7 +22,7 @@ import UserNotifications
 import AppTrackingTransparency
 
 
-class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDelegate,UITextFieldDelegate  {
+class LoginViewController: BaseViewController, UITextFieldDelegate  {
     //@IBOutlet weak var newUserLbl: UILabel!
     
     
@@ -224,12 +224,12 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
     }
     
     @objc func imagedTapedGoogleBtnSignIn(tapGestureRecognizer:UITapGestureRecognizer) {
-        if (Reachability()?.isReachable)!
+        if Reachability()?.isReachable == true
         {
             self.showLoadingIndicator(senderVC: self)
-            GIDSignIn.sharedInstance().delegate = self
-            GIDSignIn.sharedInstance().uiDelegate = self
-            GIDSignIn.sharedInstance().signIn()
+            GIDSignIn.sharedInstance.signIn(withPresenting: self) { result, error in
+                self.sign(didSignInFor: result?.user, withError: error)
+            }
         }
     }
     
@@ -370,22 +370,24 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
         if Reachability()?.isReachable ?? false
         {
             self.showLoadingIndicator(senderVC: self)
-            GIDSignIn.sharedInstance().signIn()
+            GIDSignIn.sharedInstance.signIn(withPresenting: self) { result, error in
+                self.sign(didSignInFor: result?.user, withError: error)
+            }
         }
     }
     
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if (error == nil) {
+    func sign(didSignInFor user: GIDGoogleUser?, withError error: Error?) {
+        if let user, (error == nil) {
             // Perform any operations on signed in user here.
             let requestDict = NSMutableDictionary.init()
             requestDict.setValue("google", forKey: "type")
             requestDict.setValue(user.userID, forKey: "id")
-            requestDict.setValue(user.profile.name, forKey: "full_name")
-            requestDict.setValue(user.profile.email, forKey: "email")
+            requestDict.setValue(user.profile?.name, forKey: "full_name")
+            requestDict.setValue(user.profile?.email, forKey: "email")
             print(requestDict)
             let idStr = user.userID
-            let emailStr = user.profile.email
-            let  nameStr = user.profile.name
+            let emailStr = user.profile?.email
+            let  nameStr = user.profile?.name
             
             let Parse = CommomParsing()
             Parse.GoogleLogin(lang: login_session.value(forKey: "Language") as? String ?? "es", google_id:idStr!, email:emailStr!, name:nameStr!, type: device_type,ios_fcm_id:login_session.object(forKey: "fcmToken") as! String ,ios_device_id:iPhoneUDIDString, onSuccess: {
@@ -416,7 +418,7 @@ class LoginViewController: BaseViewController,GIDSignInDelegate,GIDSignInUIDeleg
             
         } else {
             self.stopLoadingIndicator(senderVC: self)
-            print("\(error.localizedDescription)")
+            print("\(error?.localizedDescription ?? "")")
         }
     }
     
@@ -632,9 +634,7 @@ extension LoginViewController {
         appleButton.translatesAutoresizingMaskIntoConstraints = false
         appleButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
         let googleButton = GIDSignInButton()
-//        googleButton.addTarget(self, action: #selector(googleBtnAction), for: .touchUpInside) Not needed Google handles action already
-        GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
+        googleButton.addTarget(self, action: #selector(googleBtnAction), for: .touchUpInside)
         googleButton.translatesAutoresizingMaskIntoConstraints = false
         let facebookButton = FBLoginButton(frame: .zero, permissions: [.email])
         facebookButton.addTarget(self, action: #selector(fbBtnAction), for: .touchUpInside)

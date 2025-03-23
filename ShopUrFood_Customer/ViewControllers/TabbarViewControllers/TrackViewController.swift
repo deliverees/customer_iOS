@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CRRefresh
 import Lottie
 import BottomPopup
 
@@ -115,8 +114,8 @@ class TrackViewController: BaseViewController,UITableViewDelegate,UITableViewDat
             else{
             }
             self.stopLoadingIndicator(senderVC: self)
-            self.orderTable.cr.endHeaderRefresh()
-            self.orderTable.cr.endLoadingMore()
+//            self.orderTable.cr.endHeaderRefresh()
+//            self.orderTable.cr.endLoadingMore()
         }, onFailure: {errorResponse in})
     }
     func setNoitemFound()  {

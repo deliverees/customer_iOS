@@ -12,6 +12,7 @@ class Choice : NSObject, NSCoding{
     var choiceId : Int!
     var choiceName : String!
     var choicePrice : String!
+    var choiceTitle: String?
 
 
     /**
@@ -22,6 +23,13 @@ class Choice : NSObject, NSCoding{
         choiceId = dictionary["choice_id"] as? Int
         choiceName = dictionary["choice_name"] as? String
         choicePrice = dictionary["choice_price"] as? String
+        if let title = dictionary["title_choice"] as? String {
+            choiceTitle = title
+        } else if let title = dictionary["titleTwo_choice"] as? String {
+            choiceTitle = title
+        } else if let title = dictionary["titleThree_choice"] as? String {
+            choiceTitle = title
+        }
     }
 
     /**

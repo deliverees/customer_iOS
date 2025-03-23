@@ -33,17 +33,13 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
     @IBOutlet weak var toppingsTableView: UITableView!
     
     @IBOutlet weak var quantityLbl: UILabel!
-    @IBOutlet weak var choiceLbl: UILabel!
     @IBOutlet weak var preorderDate: UILabel!
     @IBOutlet weak var taxLbl: UILabel!
     @IBOutlet weak var priceLbl: UILabel!
     @IBOutlet weak var preorderDateLblHeightConstraints: NSLayoutConstraint!
     @IBOutlet weak var preorderDatevalueHeightConstraints: NSLayoutConstraint!
-    @IBOutlet weak var choiceLblHeightConstraints: NSLayoutConstraint!
     @IBOutlet weak var toppingsTableviewHeightConstraints: NSLayoutConstraint!
     
-    @IBOutlet weak var choiceTopYHeightConstraints: NSLayoutConstraint!
-    @IBOutlet weak var preOrderDateTopYHeightConstraints: NSLayoutConstraint!
     
     var toppingsArray = NSMutableArray()
     
@@ -65,12 +61,14 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
     
     var useWallet = Bool()
     
+    private var choicesAdapter: InvoiceDetailChoicesTableViewAdapter?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        toppingsTableView.delegate = nil
+        toppingsTableView.dataSource = nil
         self.navigationTitleLbl.text = LanguageDictonary.value(forKey: "invoicedetails") as? String
         self.preorderDate.text = LanguageDictonary.value(forKey: "preorderdate") as? String
-        self.choiceLbl.text = LanguageDictonary.value(forKey: "choice") as? String
         self.quantityLbl.text = LanguageDictonary.value(forKey: "quantity") as? String
         
         self.addressHeaderLabel.text = LanguageDictonary.value(forKey: "address:") as? String
@@ -101,20 +99,16 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
         quantityBGView.isUserInteractionEnabled = true
         self.view.addSubview(quantityBGView)
         
-        
-        
         self.GetData()
-        // Do any additional setup after loading the view.
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-        print("Hello World")
         addressBGView.isHidden = true
     }
     
     @objc func handleTap1(_ sender: UITapGestureRecognizer) {
-        print("Hello World")
         quantityBGView.isHidden = true
+        choicesAdapter = nil
     }
     
     
@@ -169,196 +163,133 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
     
     //MARK:- Tableview Delegate & DataSource Methods
     func numberOfSections(in tableView: UITableView) -> Int {
-        if tableView == toppingsTableView
-        {
-            return 1
-        }
-        else
-        {
-            return totalStoreArray.count + 3
-        }
+        totalStoreArray.count + 3
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView == toppingsTableView
-        {
-            return 20
-        }
-        else if indexPath.section == totalStoreArray.count + 2
-        {
-            return UITableView.automaticDimension
-            //            if !useWallet
-            //            {
-            //                return 250
-            //            }
-            //            else
-            //            {
-            //                return 250
-            //            }
-            
-        }
-        else
-        {
-            return UITableView.automaticDimension
-        }
+        UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == toppingsTableView
-        {
-            
-            return toppingsArray.count
-        }
-        else
-        {
-            
-            if resultDict.object(forKey: "customerDetailArray") != nil{
-                if section == 0 || section == 1 || section == totalStoreArray.count + 2 {
-                    return  1
-                }else{
-                    return ((totalStoreArray.object(at: section-2)as! NSDictionary).object(forKey: "item_lists")as! NSArray).count+1
-                }
+        if resultDict.object(forKey: "customerDetailArray") != nil{
+            if section == 0 || section == 1 || section == totalStoreArray.count + 2 {
+                return  1
+            }else{
+                return ((totalStoreArray.object(at: section-2)as! NSDictionary).object(forKey: "item_lists")as! NSArray).count+1
             }
-            return 0
         }
+        return 0
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        if tableView == toppingsTableView
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_addressCell") as? Invoice_addressCell
+            cell?.selectionStyle = .none
+            cell?.addressNameLbl.text = (addressDict.object(forKey: "customeName") as? String)
+            cell?.deliveryAddress_titleLbl.text = LanguageDictonary.value(forKey: "deliveryaddress") as? String
+            cell?.contact_number_title.text = LanguageDictonary.value(forKey: "contactnumber") as? String
+            cell?.emailAddress_titleLbl.text = LanguageDictonary.value(forKey: "emailaddress") as? String
+            
+            let addressOne  = (addressDict.object(forKey: "customerAddress2") as? String) ?? ""
+            let addressTwo = (addressDict.object(forKey: "customerAddress1") as? String) ?? ""
+            cell?.address_valueLbl.text = addressOne + "\n" + addressTwo
+            cell?.mobileNumberLbl.text = (addressDict.object(forKey: "customerMobile") as! String)
+            cell?.emailValueLbl.text = (addressDict.object(forKey: "customerEmail") as! String)
+            cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
+            cell?.baseView.layer.cornerRadius = 5.0
+            return cell!
+        }else if indexPath.section == 1{
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_order_detailsTBCell") as? Invoice_order_detailsTBCell
+            
+            cell?.orderTitleLbl.text = LanguageDictonary.value(forKey: "orderdetail") as? String
+            cell?.orderNumber_titleLbl.text = LanguageDictonary.value(forKey: "ordernumber") as? String
+            cell?.orderDate_titleLbl.text = LanguageDictonary.value(forKey: "orderdate") as? String
+            cell?.payment_titleLbl.text = LanguageDictonary.value(forKey: "payment") as? String
+            cell?.orderTypeLbl.text = LanguageDictonary.value(forKey: "ordertype") as? String
+            cell?.paymentStatusLbl.text = LanguageDictonary.value(forKey: "paymentstatus") as? String
+            cell?.orderNumberValueLbl.text = (resultDict.object(forKey: "order_id") as! String)
+            cell?.orderDate_valueLbl.text = (resultDict.object(forKey: "order_date") as! String)
+            cell?.paymentValueLbl.text = (resultDict.object(forKey: "paytype") as! String)
+            cell?.paymentStatusValueLbl.text = (resultDict.object(forKey: "payment_status") as! String)
+            
+            if String (resultDict.object(forKey: "self_pickup") as! Int) == "0"
+            {
+                cell?.orderTypeValueLbl.text = "Delivery"
+            }
+            else
+            {
+                cell?.orderTypeValueLbl.text = LanguageDictonary.value(forKey: "selfpickup") as? String
+                
+            }
+            cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
+            cell?.baseView.layer.cornerRadius = 5.0
+            cell?.selectionStyle = .none
+            return cell!
+        }
+        else if indexPath.section == totalStoreArray.count + 2
         {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ToppingsTableViewCell") as? ToppingsTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "InvoiceTotalWithWalletCell") as? InvoiceTotalWithWalletCell
             cell?.selectionStyle = .none
             
-            cell?.toppingsValueLbl.text = ((toppingsArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "choicename") as! String) + " : " + ((toppingsArray.object(at: indexPath.row) as! NSDictionary).value(forKey: "choice_amount") as! NSNumber).stringValue
+            cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
+            cell?.walletLbl.text = LanguageDictonary.value(forKey: "walletused") as? String
+            cell?.offerUsedLbl.text = LanguageDictonary.value(forKey: "offerused") as? String
+            cell?.cancelledLbl.text = LanguageDictonary.value(forKey: "cancelleditemtotal") as? String
+            cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
+            cell?.managmenetFeeLbl.text = Localization.value(for: "managementFee")
+            cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
+            cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
+            
+            
+            cell?.subTotalAmtLbl.text = self.currencyStr + " " + self.order_amount
+            cell?.walletAmtLbl.text = "- " + self.currencyStr + " " + self.wallet_amount
+            cell?.taxAmountLbl.text = self.currencyStr + " " + self.grand_tax
+            cell?.offerUsedAmountLbl.text = "- " + self.currencyStr + " " + self.offerUsed_amount
+            cell?.deliveryAmtlbl.text = self.currencyStr + " " + self.delivery_fee
+            cell?.managementFeeAmountLbl.text = self.currencyStr + " " + (self.managementFee ?? "")
+            cell?.cancelledAmountLbl.text = "- " + self.currencyStr + " " + self.cancelled_amount
+            cell?.totalValueLbl.text = self.currencyStr + " " + self.grand_total
+            
+            cell?.walletLbl.superview?.isHidden = self.wallet_amount == "0.00"
+            cell?.offerUsedLbl.superview?.isHidden = self.offerUsed_amount == "0.00"
+            cell?.taxLbl.superview?.isHidden = self.grand_tax == "0.00"
+            cell?.cancelledLbl.superview?.isHidden = self.cancelled_amount == "0.00"
+            cell?.managmenetFeeLbl.superview?.isHidden = self.managementFee == nil || self.managementFee == "0.00"
+            
             return cell!
             
-        }
-        else
-        {
-            if indexPath.section == 0
+        }else {
+            if indexPath.row == 0
             {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_addressCell") as? Invoice_addressCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_Item_titleTBCell") as? Invoice_Item_titleTBCell
+                cell?.restaurantNameLbl.text = ((totalStoreArray.object(at: indexPath.section-2)as! NSDictionary).object(forKey: "store_name")as! String)
                 cell?.selectionStyle = .none
-                cell?.addressNameLbl.text = (addressDict.object(forKey: "customeName") as? String)
-                cell?.deliveryAddress_titleLbl.text = LanguageDictonary.value(forKey: "deliveryaddress") as? String
-                cell?.contact_number_title.text = LanguageDictonary.value(forKey: "contactnumber") as? String
-                cell?.emailAddress_titleLbl.text = LanguageDictonary.value(forKey: "emailaddress") as? String
-                
-                let addressOne  = (addressDict.object(forKey: "customerAddress2") as? String) ?? ""
-                let addressTwo = (addressDict.object(forKey: "customerAddress1") as? String) ?? ""
-                cell?.address_valueLbl.text = addressOne + "\n" + addressTwo
-                cell?.mobileNumberLbl.text = (addressDict.object(forKey: "customerMobile") as! String)
-                cell?.emailValueLbl.text = (addressDict.object(forKey: "customerEmail") as! String)
-                cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
-                cell?.baseView.layer.cornerRadius = 5.0
-                return cell!
-            }else if indexPath.section == 1{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_order_detailsTBCell") as? Invoice_order_detailsTBCell
-                
-                cell?.orderTitleLbl.text = LanguageDictonary.value(forKey: "orderdetail") as? String
-                cell?.orderNumber_titleLbl.text = LanguageDictonary.value(forKey: "ordernumber") as? String
-                cell?.orderDate_titleLbl.text = LanguageDictonary.value(forKey: "orderdate") as? String
-                cell?.payment_titleLbl.text = LanguageDictonary.value(forKey: "payment") as? String
-                cell?.orderTypeLbl.text = LanguageDictonary.value(forKey: "ordertype") as? String
-                cell?.paymentStatusLbl.text = LanguageDictonary.value(forKey: "paymentstatus") as? String
-                cell?.orderNumberValueLbl.text = (resultDict.object(forKey: "order_id") as! String)
-                cell?.orderDate_valueLbl.text = (resultDict.object(forKey: "order_date") as! String)
-                cell?.paymentValueLbl.text = (resultDict.object(forKey: "paytype") as! String)
-                cell?.paymentStatusValueLbl.text = (resultDict.object(forKey: "payment_status") as! String)
-                
-                if String (resultDict.object(forKey: "self_pickup") as! Int) == "0"
-                {
-                    cell?.orderTypeValueLbl.text = "Delivery"
-                }
-                else
-                {
-                    cell?.orderTypeValueLbl.text = LanguageDictonary.value(forKey: "selfpickup") as? String
-                    
-                }
-                cell?.baseView = self.setCornorShadowEffects(sender: (cell?.baseView)!)
-                cell?.baseView.layer.cornerRadius = 5.0
-                cell?.selectionStyle = .none
-                return cell!
-            }
-            else if indexPath.section == totalStoreArray.count + 2
-            {
-                //            if !useWallet
-                //            {
-                //            let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_price_TBCell") as? Invoice_price_TBCell
-                //            cell?.selectionStyle = .none
-                //            cell?.subTotalValueLbl.text = self.currencyStr + " " + self.order_amount
-                //            cell?.deliveryFeeValueLbl.text = self.currencyStr + " " + self.delivery_fee
-                //            cell?.totalValueLbl.text = self.currencyStr + " " + self.grand_total
-                //            return cell!
-                //            }
-                //            else
-                //            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "InvoiceTotalWithWalletCell") as? InvoiceTotalWithWalletCell
-                cell?.selectionStyle = .none
-                
-                cell?.deliveryLbl.text = LanguageDictonary.value(forKey: "deliveryfee") as? String
-                cell?.walletLbl.text = LanguageDictonary.value(forKey: "walletused") as? String
-                cell?.offerUsedLbl.text = LanguageDictonary.value(forKey: "offerused") as? String
-                cell?.cancelledLbl.text = LanguageDictonary.value(forKey: "cancelleditemtotal") as? String
-                cell?.subTotalLbl.text = LanguageDictonary.value(forKey: "subtotal") as? String
-                cell?.managmenetFeeLbl.text = Localization.value(for: "managementFee")
-                cell?.taxLbl.text = LanguageDictonary.value(forKey: "tax") as? String
-                cell?.totalLbl.text = LanguageDictonary.value(forKey: "total") as? String
-                
-                
-                cell?.subTotalAmtLbl.text = self.currencyStr + " " + self.order_amount
-                cell?.walletAmtLbl.text = "- " + self.currencyStr + " " + self.wallet_amount
-                cell?.taxAmountLbl.text = self.currencyStr + " " + self.grand_tax
-                cell?.offerUsedAmountLbl.text = "- " + self.currencyStr + " " + self.offerUsed_amount
-                cell?.deliveryAmtlbl.text = self.currencyStr + " " + self.delivery_fee
-                cell?.managementFeeAmountLbl.text = self.currencyStr + " " + (self.managementFee ?? "")
-                cell?.cancelledAmountLbl.text = "- " + self.currencyStr + " " + self.cancelled_amount
-                cell?.totalValueLbl.text = self.currencyStr + " " + self.grand_total
-                
-                cell?.walletLbl.superview?.isHidden = self.wallet_amount == "0.00"
-                cell?.offerUsedLbl.superview?.isHidden = self.offerUsed_amount == "0.00"
-                cell?.taxLbl.superview?.isHidden = self.grand_tax == "0.00"
-                cell?.cancelledLbl.superview?.isHidden = self.cancelled_amount == "0.00"
-                cell?.managmenetFeeLbl.superview?.isHidden = self.managementFee == nil || self.managementFee == "0.00"
+                cell?.infoBtn.tag = indexPath.section-2
+                cell?.infoBtn.addTarget(self,action:#selector(infoButtonClicked(sender:)), for: .touchUpInside)
                 
                 return cell!
+            }else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_Item_cell") as? Invoice_Item_cell
+                cell?.selectionStyle = .none
+                let indexDict = NSMutableDictionary()
+                let itemArray = (totalStoreArray.object(at: indexPath.section-2)as! NSDictionary).object(forKey: "item_lists")as! NSArray
+                var tempArray = NSMutableArray()
+                tempArray = itemArray.mutableCopy() as! NSMutableArray
+                indexDict.addEntries(from: (tempArray.object(at: indexPath.row-1)as! NSDictionary) as! [AnyHashable : Any])
+                let foodImg = URL(string: indexDict.object(forKey: "pdt_image")as! String)
+                cell?.food_image.kf.setImage(with: foodImg)
+                cell?.foodNameLbl.text = (indexDict.object(forKey: "item_name")as! String)
+                let currency = (indexDict.object(forKey: "ord_currency")as! String)
+                let price = (indexDict.object(forKey: "ord_unit_price")as! String)
+                let qtyStr = (indexDict.object(forKey: "ord_quantity")as! NSNumber).stringValue
+                cell?.foodPriceLbl.text = "\(currency)\(price)"
+                cell?.qtyButton.setTitle("Qty:\(qtyStr)", for: .normal)
+                let section = indexPath.section-2
+                let row = indexPath.row-1
+                cell!.qtyButton.tag = (section*100)+row
+                cell?.qtyButton.addTarget(self,action:#selector(qtyButtonClicked(sender:)), for: .touchUpInside)
                 
-                // }
-            }else {
-                if indexPath.row == 0
-                {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_Item_titleTBCell") as? Invoice_Item_titleTBCell
-                    cell?.restaurantNameLbl.text = ((totalStoreArray.object(at: indexPath.section-2)as! NSDictionary).object(forKey: "store_name")as! String)
-                    cell?.selectionStyle = .none
-                    cell?.infoBtn.tag = indexPath.section-2
-                    cell?.infoBtn.addTarget(self,action:#selector(infoButtonClicked(sender:)), for: .touchUpInside)
-                    
-                    return cell!
-                }else{
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "Invoice_Item_cell") as? Invoice_Item_cell
-                    cell?.selectionStyle = .none
-                    let indexDict = NSMutableDictionary()
-                    let itemArray = (totalStoreArray.object(at: indexPath.section-2)as! NSDictionary).object(forKey: "item_lists")as! NSArray
-                    var tempArray = NSMutableArray()
-                    tempArray = itemArray.mutableCopy() as! NSMutableArray
-                    indexDict.addEntries(from: (tempArray.object(at: indexPath.row-1)as! NSDictionary) as! [AnyHashable : Any])
-                    let foodImg = URL(string: indexDict.object(forKey: "pdt_image")as! String)
-                    cell?.food_image.kf.setImage(with: foodImg)
-                    cell?.foodNameLbl.text = (indexDict.object(forKey: "item_name")as! String)
-                    let currency = (indexDict.object(forKey: "ord_currency")as! String)
-                    let price = (indexDict.object(forKey: "ord_unit_price")as! String)
-                    let qtyStr = (indexDict.object(forKey: "ord_quantity")as! NSNumber).stringValue
-                    cell?.foodPriceLbl.text = "\(currency)\(price)"
-                    //cell?.qtyLbl.text = "Qty:\(qtyStr)"
-                    cell?.qtyButton.setTitle("Qty:\(qtyStr)", for: .normal)
-                    let section = indexPath.section-2
-                    let row = indexPath.row-1
-                    cell!.qtyButton.tag = (section*100)+row
-                    cell?.qtyButton.addTarget(self,action:#selector(qtyButtonClicked(sender:)), for: .touchUpInside)
-                    
-                    
-                    return cell!
-                }
+                
+                return cell!
             }
         }
     }
@@ -389,27 +320,29 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
         var tempArray = NSMutableArray()
         tempArray = itemArray.mutableCopy() as! NSMutableArray
         indexDict.addEntries(from: (tempArray.object(at: row)as! NSDictionary) as! [AnyHashable : Any])
-        if (indexDict.object(forKey: "choice") as! NSArray).count == 0
-        {
-            toppingsArray.removeAllObjects()
+        let choicesDict = indexDict.object(forKey: "choice") as? [[String: Any]] ?? []
+        let choicesTwoDict = indexDict.object(forKey: "choiceTwo") as? [[String: Any]] ?? []
+        let choicesThreeDict = indexDict.object(forKey: "choiceThree") as? [[String: Any]] ?? []
+        if choicesDict.isEmpty && choicesTwoDict.isEmpty && choicesThreeDict.isEmpty {
             toppingsTableView.reloadData()
             toppingsTableView.isHidden = true
             toppingsTableviewHeightConstraints.constant = 0
-            choiceLblHeightConstraints.constant = 0
-            choiceTopYHeightConstraints.constant = 0
-            
         }
-        else
-        {
+        else {
             toppingsTableView.isHidden = false
             toppingsTableviewHeightConstraints.constant = 94
-            choiceLblHeightConstraints.constant = 16.5
-            choiceTopYHeightConstraints.constant = 16.5
-            
-            toppingsArray.removeAllObjects()
-            toppingsArray.addObjects(from: (indexDict.object(forKey: "choice") as! NSArray) as! [Any])
-            print (toppingsArray)
+            let toppingsAdapter = InvoiceDetailChoicesTableViewAdapter(
+                titleOne: indexDict.object(forKey: "pro_title_choice") as? String,
+                titleTwo: indexDict.object(forKey: "pro_titleTwo_choice") as? String,
+                titleThree: indexDict.object(forKey: "pro_titleThree_choice") as? String,
+                dictionaryChoices: choicesDict,
+                dictionaryChoicesTwo: choicesTwoDict,
+                dictionaryChoicesThree: choicesThreeDict)
+            self.choicesAdapter = toppingsAdapter
+            toppingsTableView.delegate = toppingsAdapter
+            toppingsTableView.dataSource = toppingsAdapter
             toppingsTableView.reloadData()
+            toppingsTableviewHeightConstraints.constant = min(toppingsTableView.contentSize.height, 180)
         }
         let currency = (indexDict.object(forKey: "ord_currency")as! String)
         let price = (indexDict.object(forKey: "ord_unit_price")as! String)
@@ -423,17 +356,159 @@ class InvoiceViewController: BaseViewController,UITableViewDelegate,UITableViewD
         {
             preorderDateLblHeightConstraints.constant = 0
             preorderDatevalueHeightConstraints.constant = 0
-            preOrderDateTopYHeightConstraints.constant = 0
         }
         else
         {
             preorderDateLblHeightConstraints.constant = 16.5
             preorderDatevalueHeightConstraints.constant = 17
-            preOrderDateTopYHeightConstraints.constant = 9
             preorderDateValueLabel.text = (indexDict.object(forKey: "pre_order_date") as! String)
         }
         quantityValueLabel.text = qtyStr
         
     }
     
+}
+
+fileprivate struct InvoiceChoice {
+    enum ChoiceType {
+        case one
+        case two
+        case three
+    }
+    var choiceName: String = ""
+    var choiceAmount: String = ""
+    var choiceType: ChoiceType = .one
+    
+    init(dictionary: [String: Any]) {
+        var choiceAmountKey = "choice_amount"
+        if let name = dictionary["choicename"] as? String {
+            choiceName = name
+            choiceType = .one
+        } else if let name = dictionary["choiceTwoname"] as? String {
+            choiceName = name
+            choiceType = .two
+            choiceAmountKey = "choiceTwo_amount"
+        } else if let name = dictionary["choiceThreename"] as? String {
+            choiceName = name
+            choiceType = .three
+            choiceAmountKey = "choiceThree_amount"
+        }
+        if let amountString = dictionary[choiceAmountKey] as? NSNumber {
+            choiceAmount = String(format: "%.2f", amountString.doubleValue)
+        }
+    }
+    
+    var isOne: Bool {
+        choiceType == .one
+    }
+    
+    var isTwo: Bool {
+        choiceType == .two
+    }
+    
+    var isThree: Bool {
+        choiceType == .three
+    }
+}
+
+fileprivate final class InvoiceDetailChoicesTableViewAdapter: NSObject, UITableViewDataSource, UITableViewDelegate {
+    private var titleOne: String = ""
+    private var titleTwo: String = ""
+    private var titleThree: String = ""
+    private var choices: [InvoiceChoice] = []
+    private var sectionedChoices: [[InvoiceChoice]] {
+        [choices.filter(\.isOne),choices.filter(\.isTwo), choices.filter(\.isThree)]
+            .filter({ !$0.isEmpty })
+    }
+    
+    init(
+        titleOne: String?,
+        titleTwo: String?,
+        titleThree: String?,
+        dictionaryChoices: [[String: Any]],
+        dictionaryChoicesTwo: [[String: Any]],
+        dictionaryChoicesThree: [[String: Any]]) {
+            self.titleOne = titleOne ?? ""
+            self.titleTwo = titleTwo ?? ""
+            self.titleThree = titleThree ?? ""
+            let choices = dictionaryChoices.map({ InvoiceChoice(dictionary: $0) })
+            self.choices.append(contentsOf: choices)
+            let choicesTwo = dictionaryChoicesTwo.map({ InvoiceChoice(dictionary: $0) })
+            self.choices.append(contentsOf: choicesTwo)
+            let choicesThree = dictionaryChoicesThree.map({ InvoiceChoice(dictionary: $0) })
+            self.choices.append(contentsOf: choicesThree)
+        }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        sectionedChoices.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sectionedChoices[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToppingsTableViewCell") as? ToppingsTableViewCell
+        cell?.selectionStyle = .none
+        let choice = sectionedChoices[indexPath.section][indexPath.row]
+        cell?.toppingsValueLbl.text = choice.choiceName + " : " + choice.choiceAmount
+        return cell!
+    }
+    
+    private func titleForSection(_ section: Int) -> String {
+        switch section {
+        case 0:
+            if !choices.filter(\.isOne).isEmpty {
+                return titleOne
+            } else if !choices.filter(\.isTwo).isEmpty {
+                return titleTwo
+            } else {
+                return titleThree
+            }
+        case 1:
+            if !choices.filter(\.isTwo).isEmpty {
+                return titleTwo
+            } else {
+                return titleThree
+            }
+        case 2:
+            return titleThree
+        default:
+            return ""
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView()
+        header.backgroundColor = .white
+        let label = UILabel()
+        
+        label.text = titleForSection(section)
+        label.textColor = UIColor.black
+        label.font = UIFont.truenoRegular(size: 14)
+        header.addSubview(label)
+        header.frame = CGRect()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: header.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: header.trailingAnchor),
+            label.topAnchor.constraint(equalTo: header.topAnchor, constant: 10),
+            label.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -10),
+            label.widthAnchor.constraint(equalToConstant: tableView.frame.width - 20)
+        ])
+        return header
+    }
 }
