@@ -49,7 +49,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         let deleteaccount = LanguageDictonary.object(forKey: "deleteaccount") as! String
         let settingsStr = LanguageDictonary.object(forKey: "settings") as! String
         
-        nameArray = [homeStr,orderstr,offerStr,walletStr,settingsStr,helpStr,deleteaccount,signoutStr]
+        nameArray = [homeStr,orderstr,offerStr,walletStr,settingsStr,helpStr,referFriendStr,deleteaccount,signoutStr]
         
         imageArray.append("ic_home_red")
         imageArray.append("ic_order_red")
@@ -58,13 +58,14 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
         //imageArray.append("rewards1")
         imageArray.append("OfferPercent1")
         imageArray.append("ic_wallet_red")
-        //imageArray.append("side_ReferFriend_icon")
         imageArray.append("ic_settings_red")
         imageArray.append("ic_help_red")
+        imageArray.append("side_ReferFriend_icon")
         imageArray.append("ic_delete")
         //imageArray.append("Image")
         imageArray.append("ic_signout_red")
-        self.getProfileData()
+        sideTable.reloadData()
+        getProfileData()
     }
     
     //MARK:- Calling API methods
@@ -238,7 +239,12 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             NotificationVC.navigaionType = "sidebar"
             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)
-        }else if indexPath.row == 7 {
+        } else if indexPath.row == 7 {
+            let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ReferFriendsPageViewController") as! ReferFriendsPageViewController
+             NotificationVC.navigationType = "sidebar"
+             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
+             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)
+        } else if indexPath.row == 8 {
             if login_session.isUserLogged() {
                 let url = URL(string: "https://delivereesapp.com/compliance")
                 if UIApplication.shared.canOpenURL(url!) {
@@ -252,7 +258,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             } else {
                 AppRouter.shared.presentLogin()
             }
-        }else if indexPath.row == 8 {
+        } else if indexPath.row == 9 {
             /*if login_session.object(forKey: "user_longitude") != nil{
              self.window = UIWindow(frame: UIScreen.main.bounds)
              let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -273,13 +279,7 @@ class SideBarViewController: BaseViewController,UITableViewDataSource,UITableVie
             } else {
                 AppRouter.shared.presentLogin()
             }
-        }
-        else if indexPath.row == 8 {
-            /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "ReferFriendsPageViewController") as! ReferFriendsPageViewController
-             NotificationVC.navigationType = "sidebar"
-             let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
-             self.revealViewController()?.pushFrontViewController(newFrontController, animated: true)*/
-        }else if indexPath.row == 9 {
+        } else if indexPath.row == 9 {
             /*let NotificationVC = storyboard?.instantiateViewController(withIdentifier: "HelpPageViewController") as! HelpPageViewController
              NotificationVC.navigaionType = "sidebar"
              let newFrontController = UINavigationController.init(rootViewController: NotificationVC)
