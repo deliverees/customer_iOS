@@ -730,18 +730,24 @@ class CommomParsing: BaseParsing {
     }
     
     
-    //Get Available Payment methods
-    public func getCountryList(lang:String,onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
+    //Get Available Country List with optional country code
+    public func getCountryList(lang: String, countryCode: String? = nil, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
     {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         
+        // AÑADIR: Agregar country_code solo si tiene valor
+        if let countryCode = countryCode, !countryCode.isEmpty {
+            requestDict.setValue(countryCode, forKey: "country_code")
+            print("Enviando country_code a API: \(countryCode)")
+        }
+        
         self.blockResponse = self.blockStatus
         
         //make base method call
-        self.ParsingFunctionCall(subURl:COUNTRY_LIST as NSString, params: (requestDict as! Parameters), onSuccess: {response in
+        self.ParsingFunctionCall(subURl: COUNTRY_LIST as NSString, params: (requestDict as! Parameters), onSuccess: { response in
             success(response)
-        }, onFailure: {errorResponse in
+        }, onFailure: { errorResponse in
             failure(errorResponse)
         })
     }
@@ -1635,4 +1641,141 @@ class CommomParsing: BaseParsing {
     
     
     
+}
+
+// MARK: - 🔥 EXTENSIÓN PARA VERIFICACIÓN DE TELÉFONO CON FIREBASE
+
+extension CommomParsing {
+    
+    /// Verificar token de Firebase después del registro
+    /// - Parameters:
+    ///   - userId: ID del usuario registrado
+    ///   - phoneNumber: Número de teléfono en formato E.164 (ej: +1656897412)
+    ///   - idToken: Token de ID obtenido de Firebase Auth
+    ///   - credentialType: Tipo de credencial (AppiOS_SMS_customer para iOS)
+    ///   - lang: Idioma de la respuesta
+    public func verifyPhoneToken(
+        userId: Int,
+        phoneNumber: String,
+        idToken: String,
+        credentialType: String = "AppiOS_SMS_customer",
+        lang: String,
+        onSuccess success: @escaping (NSDictionary) -> Void,
+        onFailure failure: @escaping (NSDictionary) -> Void
+    ) {
+        let requestDict = NSMutableDictionary()
+        requestDict.setValue(userId, forKey: "user_id")
+        requestDict.setValue(phoneNumber, forKey: "phone_number")
+        requestDict.setValue(idToken, forKey: "id_token")
+        requestDict.setValue(credentialType, forKey: "credentialType")
+        requestDict.setValue(lang, forKey: "lang")
+        
+        self.blockResponse = self.blockStatus
+        
+        print("📱 verifyPhoneToken request:", requestDict)
+        
+        // Llamada a la API de verificación
+        self.ParsingFunctionCall(
+            subURl: VERIFY_PHONE_TOKEN as NSString,
+            params: (requestDict as! Parameters),
+            encoding: JSONEncoding.default,
+            onSuccess: { response in
+                print("✅ Respuesta verificación:", response)
+                success(response)
+            },
+            onFailure: { error in
+                print("❌ Error verificación:", error as Any)
+                let errorDict: NSDictionary = [
+                    "code": 500,
+                    "message": "Error de conexión al verificar teléfono"
+                ]
+                failure(errorDict)
+            }
+        )
+    }
+    
+    /// Obtener estado de verificación del teléfono
+    /// - Parameters:
+    ///   - userId: ID del usuario
+    ///   - lang: Idioma de la respuesta
+    ///   - checkFirebase: Si debe verificar también en Firebase
+    public func getPhoneVerificationStatus(
+        userId: Int,
+        lang: String,
+        checkFirebase: Bool = false,
+        onSuccess success: @escaping (NSDictionary) -> Void,
+        onFailure failure: @escaping (NSDictionary) -> Void
+    ) {
+        let requestDict = NSMutableDictionary()
+        requestDict.setValue(userId, forKey: "user_id")
+        requestDict.setValue(lang, forKey: "lang")
+        requestDict.setValue("AppiOS_SMS_customer", forKey: "credentialType")
+        
+        if checkFirebase {
+            requestDict.setValue(true, forKey: "check_firebase")
+        }
+        
+        self.blockResponse = self.blockStatus
+        
+        print("📱 getPhoneVerificationStatus request:", requestDict)
+        
+        self.ParsingFunctionCall(
+            subURl: PHONE_VERIFICATION_STATUS as NSString,
+            params: (requestDict as! Parameters),
+            encoding: URLEncoding.default,
+            onSuccess: { response in
+                print("✅ Status verificación:", response)
+                success(response)
+            },
+            onFailure: { error in
+                print("❌ Error obteniendo status:", error as Any)
+                let errorDict: NSDictionary = [
+                    "code": 500,
+                    "message": "Error al obtener estado de verificación"
+                ]
+                failure(errorDict)
+            }
+        )
+    }
+    
+    /// Reenviar código de verificación
+    /// - Parameters:
+    ///   - userId: ID del usuario
+    ///   - phoneNumber: Número de teléfono en formato E.164
+    ///   - lang: Idioma de la respuesta
+    public func resendPhoneVerification(
+        userId: Int,
+        phoneNumber: String,
+        lang: String,
+        onSuccess success: @escaping (NSDictionary) -> Void,
+        onFailure failure: @escaping (NSDictionary) -> Void
+    ) {
+        let requestDict = NSMutableDictionary()
+        requestDict.setValue(userId, forKey: "user_id")
+        requestDict.setValue(phoneNumber, forKey: "phone_number")
+        requestDict.setValue("AppiOS_SMS_customer", forKey: "credentialType")
+        requestDict.setValue(lang, forKey: "lang")
+        
+        self.blockResponse = self.blockStatus
+        
+        print("📱 resendPhoneVerification request:", requestDict)
+        
+        self.ParsingFunctionCall(
+            subURl: RESEND_PHONE_VERIFICATION as NSString,
+            params: (requestDict as! Parameters),
+            encoding: JSONEncoding.default,
+            onSuccess: { response in
+                print("✅ Código reenviado:", response)
+                success(response)
+            },
+            onFailure: { error in
+                print("❌ Error reenviando código:", error as Any)
+                let errorDict: NSDictionary = [
+                    "code": 500,
+                    "message": "Error al reenviar código de verificación"
+                ]
+                failure(errorDict)
+            }
+        )
+    }
 }

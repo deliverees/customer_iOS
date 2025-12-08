@@ -20,7 +20,7 @@ class CartChoice : NSObject, NSCoding{
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
      */
-    init(fromDictionary dictionary: [String:Any]) {
+    init(fromDictionary dictionary: [String: Any]) {
         if let choiceIdInt = dictionary["choice_id"] as? Int {
             choiceId = choiceIdInt
             choiceType = .one
@@ -32,27 +32,29 @@ class CartChoice : NSObject, NSCoding{
             choiceType = .three
         } else {
             choiceId = -1
-            assertionFailure("Invalid choice id")
+            print("⚠️ Invalid or missing choice_id")
         }
-        
+
+        // Mostrar tipo y valor de choice_amount
+        if let value = dictionary["choice_amount"] {
+            print("choice_amount value: \(value), type: \(type(of: value))")
+        }
+
+        // Manejar diferentes tipos para choice_amount
         if let choiceAmountString = dictionary["choice_amount"] as? String {
             choiceAmount = choiceAmountString
         } else if let choiceAmountInt = dictionary["choice_amount"] as? Int {
             choiceAmount = "\(choiceAmountInt)"
-        } else if let choiceAmountString = dictionary["choiceTwo_amount"] as? String {
-            choiceAmount = choiceAmountString
-        } else if let choiceAmountInt = dictionary["choiceTwo_amount"] as? Int {
-            choiceAmount = "\(choiceAmountInt)"
-        } else if let choiceAmountString = dictionary["choiceThree_amount"] as? String {
-            choiceAmount = choiceAmountString
-        } else if let choiceAmountInt = dictionary["choiceThree_amount"] as? Int {
-            choiceAmount = "\(choiceAmountInt)"
+        } else if let choiceAmountDouble = dictionary["choice_amount"] as? Double {
+            choiceAmount = "\(choiceAmountDouble)"
         } else {
             choiceAmount = ""
-            assertionFailure("Invalid choice amount kind")
+            print("⚠️ Invalid choice amount kind: \(dictionary["choice_amount"] ?? "nil")")
         }
+
         choiceName = dictionary["choice_name"] as? String ?? ""
     }
+
 
     /**
      * Returns all the available property values in the form of [String:Any] object where the key is the approperiate json key and the value is the value of the corresponding property

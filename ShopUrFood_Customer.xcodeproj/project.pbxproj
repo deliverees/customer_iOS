@@ -211,7 +211,6 @@
 		2C172DF623C99AB300D02578 /* Datas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C172DF523C99AB300D02578 /* Datas.swift */; };
 		2C5CE6872252465A003ECC0E /* OrderStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5CE68622524659003ECC0E /* OrderStatusViewController.swift */; };
 		2C81FF6C22490BEA00E176E5 /* BottomSheetTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C81FF6B22490BEA00E176E5 /* BottomSheetTableCell.swift */; };
-		5BF8D2A708061C878D834AEA /* Pods_ShopUrFood_Customer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */; };
 		5E40EABB29DF0D620091661E /* CategoriesHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E40EABA29DF0D620091661E /* CategoriesHome.swift */; };
 		5E40EABD29DF1A890091661E /* CategoriesHomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E40EABC29DF1A890091661E /* CategoriesHomeModel.swift */; };
 		5E40EAC129DF1D570091661E /* Home_Categories_Collection_Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E40EAC029DF1D570091661E /* Home_Categories_Collection_Cell.swift */; };
@@ -220,9 +219,7 @@
 		72FD722823840C6200F344AD /* marimba_arpegio.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 72FD722723840C5F00F344AD /* marimba_arpegio.aiff */; };
 		A855D37C23C7073800654118 /* TrackingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37B23C7073800654118 /* TrackingScreen.swift */; };
 		A855D37E23C7075900654118 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A855D37D23C7075900654118 /* BottomSheetViewController.swift */; };
-		C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */; };
-		D4154EE52D8D641C002D2811 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = D4154EE42D8D641C002D2811 /* Stripe */; };
-		D4154EE72D8D67CD002D2811 /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = D4154EE62D8D67CD002D2811 /* StripePaymentSheet */; };
+		BE2B35AC51962F62225BF32E /* Pods_ShopUrFood_Customer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2887FD141CD6D0F620D57330 /* Pods_ShopUrFood_Customer.framework */; };
 		D42A98B22CC04FF800A73909 /* ChangeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B12CC04FF800A73909 /* ChangeAddress.swift */; };
 		D42A98B52CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */; };
 		D445225C2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */; };
@@ -244,6 +241,7 @@
 		D4BE924E2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */; };
 		D4BFAEA92D5E537600FF7764 /* OrderDetailsTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4BFAEA82D5E537600FF7764 /* OrderDetailsTitleCell.xib */; };
 		D4CE865E2CB93B6F00AB1AEE /* push-notification-template.apns in Resources */ = {isa = PBXBuildFile; fileRef = D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */; };
+		ECC86488CB8637C1E69D8316 /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6789764CE2C12BEA393987F0 /* Pods_ShopUrFood_CustomerTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -257,7 +255,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AAAF872150305B57118F514 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerTests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerTests/Pods-ShopUrFood_CustomerTests.release.xcconfig"; sourceTree = "<group>"; };
 		1B62B73A2276C57F00C2B8C2 /* InvoiceTotalWithWalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceTotalWithWalletCell.swift; sourceTree = "<group>"; };
 		1BD637B92271E26E002B814D /* ToppingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToppingsTableViewCell.swift; sourceTree = "<group>"; };
 		209E77FC235882290061AF01 /* DummyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyViewController.swift; sourceTree = "<group>"; };
@@ -465,27 +463,25 @@
 		24FCAACD222FFB5100CFF631 /* Invoice_Item_titleTBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invoice_Item_titleTBCell.swift; sourceTree = "<group>"; };
 		24FCAACF222FFBD100CFF631 /* Invoice_Item_cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invoice_Item_cell.swift; sourceTree = "<group>"; };
 		24FCAAD1222FFDB200CFF631 /* Invoice_price_TBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invoice_price_TBCell.swift; sourceTree = "<group>"; };
+		2887FD141CD6D0F620D57330 /* Pods_ShopUrFood_Customer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_Customer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C172DEE23C9859900D02578 /* GoogleApiHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleApiHelper.swift; sourceTree = "<group>"; };
 		2C172DEF23C9859D00D02578 /* GoogleApiHelper+Nearby.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GoogleApiHelper+Nearby.swift"; sourceTree = "<group>"; };
 		2C172DF023C985A000D02578 /* NearByEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearByEnum.swift; sourceTree = "<group>"; };
 		2C172DF523C99AB300D02578 /* Datas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Datas.swift; sourceTree = "<group>"; };
 		2C5CE68622524659003ECC0E /* OrderStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStatusViewController.swift; sourceTree = "<group>"; };
 		2C81FF6B22490BEA00E176E5 /* BottomSheetTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTableCell.swift; sourceTree = "<group>"; };
-		2E2C8AFDCF309F4E301F401D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerTests.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerTests/Pods-ShopUrFood_CustomerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		54747E0CA11CA997AC0D4E00 /* Pods-ShopUrFood_CustomerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E40EABA29DF0D620091661E /* CategoriesHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesHome.swift; sourceTree = "<group>"; };
 		5E40EABC29DF1A890091661E /* CategoriesHomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesHomeModel.swift; sourceTree = "<group>"; };
 		5E40EAC029DF1D570091661E /* Home_Categories_Collection_Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home_Categories_Collection_Cell.swift; sourceTree = "<group>"; };
 		5E40EAC229DF49D90091661E /* AllCategoriesDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCategoriesDetail.swift; sourceTree = "<group>"; };
+		6789764CE2C12BEA393987F0 /* Pods_ShopUrFood_CustomerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70393BC71CE13F8DFFCDB08F /* Pods-ShopUrFood_Customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.debug.xcconfig"; sourceTree = "<group>"; };
 		7205F89B2382AAE20061A1D0 /* marimba_arpegio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = marimba_arpegio.wav; sourceTree = "<group>"; };
 		72FD722723840C5F00F344AD /* marimba_arpegio.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = marimba_arpegio.aiff; sourceTree = "<group>"; };
+		918EA24393337BC409D0038D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerTests.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerTests/Pods-ShopUrFood_CustomerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A855D37B23C7073800654118 /* TrackingScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingScreen.swift; sourceTree = "<group>"; };
 		A855D37D23C7075900654118 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
-		B50E41BEDB8069A4D0BBEEB4 /* Pods-ShopUrFood_Customer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.release.xcconfig"; sourceTree = "<group>"; };
-		BD0F1C3A5E1EB376DD3139B2 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerTests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerTests/Pods-ShopUrFood_CustomerTests.release.xcconfig"; sourceTree = "<group>"; };
-		C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_Customer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShopUrFood_CustomerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.debug.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.debug.xcconfig"; sourceTree = "<group>"; };
+		B462DE5E1D2F3FAC07FD35D3 /* Pods-ShopUrFood_Customer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_Customer.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer.release.xcconfig"; sourceTree = "<group>"; };
 		D42A98B12CC04FF800A73909 /* ChangeAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAddress.swift; sourceTree = "<group>"; };
 		D42A98B42CC0519600A73909 /* NSError+ExpressibleByStringLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+ExpressibleByStringLiteral.swift"; sourceTree = "<group>"; };
 		D445225B2CB52C7F0031FDFA /* SaveUserLocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveUserLocationUseCase.swift; sourceTree = "<group>"; };
@@ -507,7 +503,6 @@
 		D4BE924D2CC2FB6E00F72A4F /* SaveCartShippingAddressUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCartShippingAddressUseCase.swift; sourceTree = "<group>"; };
 		D4BFAEA82D5E537600FF7764 /* OrderDetailsTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderDetailsTitleCell.xib; sourceTree = "<group>"; };
 		D4CE865C2CB93B6F00AB1AEE /* push-notification-template.apns */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "push-notification-template.apns"; sourceTree = "<group>"; };
-		EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopUrFood_CustomerUITests.release.xcconfig"; path = "Target Support Files/Pods-ShopUrFood_CustomerUITests/Pods-ShopUrFood_CustomerUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -515,10 +510,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4154EE72D8D67CD002D2811 /* StripePaymentSheet in Frameworks */,
 				226F51B122F07D6400035DF3 /* AMPopTip.framework in Frameworks */,
-				5BF8D2A708061C878D834AEA /* Pods_ShopUrFood_Customer.framework in Frameworks */,
-				D4154EE52D8D641C002D2811 /* Stripe in Frameworks */,
+				BE2B35AC51962F62225BF32E /* Pods_ShopUrFood_Customer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,7 +519,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C355C060CA43FF64878C031A /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */,
+				ECC86488CB8637C1E69D8316 /* Pods_ShopUrFood_CustomerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1260,12 +1253,10 @@
 		884480CF2FC862FE5DB1BEFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */,
-				B50E41BEDB8069A4D0BBEEB4 /* Pods-ShopUrFood_Customer.release.xcconfig */,
-				2E2C8AFDCF309F4E301F401D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */,
-				BD0F1C3A5E1EB376DD3139B2 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */,
-				54747E0CA11CA997AC0D4E00 /* Pods-ShopUrFood_CustomerUITests.debug.xcconfig */,
-				EBFA6B16C46C717C1A1F43C2 /* Pods-ShopUrFood_CustomerUITests.release.xcconfig */,
+				70393BC71CE13F8DFFCDB08F /* Pods-ShopUrFood_Customer.debug.xcconfig */,
+				B462DE5E1D2F3FAC07FD35D3 /* Pods-ShopUrFood_Customer.release.xcconfig */,
+				918EA24393337BC409D0038D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */,
+				1AAAF872150305B57118F514 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1275,9 +1266,8 @@
 			children = (
 				226F51B022F07D6400035DF3 /* AMPopTip.framework */,
 				226F51AE22F07CE100035DF3 /* AMPopTip.framework */,
-				C2D0378E36C7CD732DE3B178 /* Pods_ShopUrFood_Customer.framework */,
-				CA9EF512E48309A78EE5C5E0 /* Pods_ShopUrFood_CustomerTests.framework */,
-				028D4F57A9419C941523F82C /* Pods_ShopUrFood_CustomerUITests.framework */,
+				2887FD141CD6D0F620D57330 /* Pods_ShopUrFood_Customer.framework */,
+				6789764CE2C12BEA393987F0 /* Pods_ShopUrFood_CustomerTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1397,12 +1387,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 24346F9A220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_Customer" */;
 			buildPhases = (
-				1F3BB30AC779EBF958C5310C /* [CP] Check Pods Manifest.lock */,
+				ECBA5CBB8C114BA107210164 /* [CP] Check Pods Manifest.lock */,
 				24346F6E220972C000446252 /* Sources */,
 				24346F6F220972C000446252 /* Frameworks */,
 				24346F70220972C000446252 /* Resources */,
-				A132EE4E1D815EF2F9514CDB /* [CP] Embed Pods Frameworks */,
-				631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */,
+				CBCA7121F43FBBCE15508EAE /* [CP] Embed Pods Frameworks */,
+				7EF92CC6572163D16BE0A59B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1417,7 +1407,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 24346F9D220972CC00446252 /* Build configuration list for PBXNativeTarget "ShopUrFood_CustomerTests" */;
 			buildPhases = (
-				A92E142BF931BA2318F5B308 /* [CP] Check Pods Manifest.lock */,
+				CB7513E686BA6CDCBB163371 /* [CP] Check Pods Manifest.lock */,
 				24346F82220972CC00446252 /* Sources */,
 				24346F83220972CC00446252 /* Frameworks */,
 				24346F84220972CC00446252 /* Resources */,
@@ -1470,9 +1460,6 @@
 				Base,
 			);
 			mainGroup = 24346F69220972C000446252;
-			packageReferences = (
-				D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
-			);
 			productRefGroup = 24346F73220972C000446252 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1543,29 +1530,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1F3BB30AC779EBF958C5310C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ShopUrFood_Customer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		631AEBE48CC175EF3B59C42A /* [CP] Copy Pods Resources */ = {
+		7EF92CC6572163D16BE0A59B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1582,24 +1547,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A132EE4E1D815EF2F9514CDB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A92E142BF931BA2318F5B308 /* [CP] Check Pods Manifest.lock */ = {
+		CB7513E686BA6CDCBB163371 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1615,6 +1563,45 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-ShopUrFood_CustomerTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CBCA7121F43FBBCE15508EAE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShopUrFood_Customer/Pods-ShopUrFood_Customer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ECBA5CBB8C114BA107210164 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShopUrFood_Customer-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1975,7 +1962,7 @@
 		};
 		24346F9B220972CC00446252 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CD318813D303930DFD92AB37 /* Pods-ShopUrFood_Customer.debug.xcconfig */;
+			baseConfigurationReference = 70393BC71CE13F8DFFCDB08F /* Pods-ShopUrFood_Customer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1983,11 +1970,11 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1.12;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = ShopUrFood_Customer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1995,7 +1982,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.6;
+				MARKETING_VERSION = 5.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2029,7 +2016,7 @@
 		};
 		24346F9C220972CC00446252 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B50E41BEDB8069A4D0BBEEB4 /* Pods-ShopUrFood_Customer.release.xcconfig */;
+			baseConfigurationReference = B462DE5E1D2F3FAC07FD35D3 /* Pods-ShopUrFood_Customer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2037,10 +2024,10 @@
 				CODE_SIGN_ENTITLEMENTS = ShopUrFood_Customer/ShopUrFood_Customer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1.12;
 				DEVELOPMENT_TEAM = TLYLSK6Y55;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = ShopUrFood_Customer/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -2048,7 +2035,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.6;
+				MARKETING_VERSION = 5.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2081,7 +2068,7 @@
 		};
 		24346F9E220972CC00446252 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E2C8AFDCF309F4E301F401D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */;
+			baseConfigurationReference = 918EA24393337BC409D0038D /* Pods-ShopUrFood_CustomerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -2108,7 +2095,7 @@
 		};
 		24346F9F220972CC00446252 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD0F1C3A5E1EB376DD3139B2 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */;
+			baseConfigurationReference = 1AAAF872150305B57118F514 /* Pods-ShopUrFood_CustomerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -2158,30 +2145,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 24.8.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		D4154EE42D8D641C002D2811 /* Stripe */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
-			productName = Stripe;
-		};
-		D4154EE62D8D67CD002D2811 /* StripePaymentSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4154EE32D8D6418002D2811 /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
-			productName = StripePaymentSheet;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 24346F6A220972C000446252 /* Project object */;
 }

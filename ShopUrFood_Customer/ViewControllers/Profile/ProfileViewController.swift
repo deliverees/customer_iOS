@@ -254,10 +254,15 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     }
     
     func requestUpdateProfile() {
+        self.showLoadingIndicator(senderVC: self)
+        
         let finalURL = BASEURL_CUSTOMER + UPDATE_PROFILE
         let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
         
-        // Parámetros
+        let headers: HTTPHeaders = [
+            "Authorization": tokenString
+        ]
+        
         let params: [String: String] = [
             "lang": "en",
             "cus_name": userNameTxt.text ?? "",
@@ -268,45 +273,64 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             "cus_lat": userLatitude,
             "cus_long": userLongitude
         ]
-        var headers = HTTPHeaders()
-        headers["Authorization"] = tokenString
-        // Crear URLRequest
-        var urlRequest = try! URLRequest(
-            url: finalURL,
+        
+        // ✅ NUEVO FORMATO ALAMOFIRE 5.8
+        AF.upload(
+            multipartFormData: { multipartFormData in
+                // Agregar parámetros
+                for (key, value) in params {
+                    multipartFormData.append(Data(value.utf8), withName: key)
+                }
+                
+                // Agregar imagen si existe
+                if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
+                    multipartFormData.append(
+                        imageData,
+                        withName: "cus_image",
+                        fileName: "profile.jpeg",
+                        mimeType: "image/jpeg"
+                    )
+                }
+            },
+            to: finalURL,
             method: .post,
             headers: headers
         )
-        
-        AF.upload(multipartFormData: { multipartFormData in
-            // Agregar parámetros al cuerpo
-            for (key, value) in params {
-                multipartFormData.append(Data(value.utf8), withName: key)
-            }
+        .uploadProgress { progress in
+            print("Upload Progress: \(progress.fractionCompleted)")
+        }
+        .responseJSON { [weak self] response in
+            guard let self = self else { return }
             
-            // Agregar imagen
-            if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
-                multipartFormData.append(imageData, withName: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
-            }
-        }, with: urlRequest).responseJSON(completionHandler: { dataResponse in
-            DispatchQueue.main.async {
-                self.stopLoadingIndicator(senderVC: self)
-            }
-            switch dataResponse.result {
+            self.stopLoadingIndicator(senderVC: self)
+            
+            switch response.result {
             case .success(let value):
                 guard let jsonResponse = value as? [String: Any] else {
+                    self.showToastAlert(senderVC: self, messageStr: "Invalid response")
                     return
                 }
-                print(jsonResponse)
+                
+                print("✅ Response: \(jsonResponse)")
+                
                 if let code = jsonResponse["code"] as? Int, code == 200 {
                     self.showSuccessPopUp(msgStr: jsonResponse["message"] as! String)
+                } else if let code = jsonResponse["code"] as? Int,
+                          code == 400,
+                          jsonResponse["message"] as? String == "Token is Expired" {
+                    self.showTokenExpiredPopUp(msgStr: "Token is Expired")
                 } else {
-                    self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as! String)
+                    self.showToastAlert(
+                        senderVC: self,
+                        messageStr: jsonResponse["message"] as? String ?? "Error occurred"
+                    )
                 }
+                
             case .failure(let error):
-                print("Error: \(error.localizedDescription)")
-                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
+                print("❌ Error: \(error.localizedDescription)")
+                self.showToastAlert(senderVC: self, messageStr: "Network error occurred")
             }
-        })
+        }
     }
     func showOTPVerifyView(otpNumber:String){
         gettingOtp = otpNumber
@@ -369,10 +393,15 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     }
     
     func requestOtpVerify() {
+        self.showLoadingIndicator(senderVC: self)
+        
         let finalURL = BASEURL_CUSTOMER + PROFILE_UPDATE_OTP
         let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
         
-        // Parámetros
+        let headers: HTTPHeaders = [
+            "Authorization": tokenString
+        ]
+        
         let params: [String: String] = [
             "lang": "en",
             "cus_name": userNameTxt.text ?? "",
@@ -386,41 +415,45 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
             "current_otp": gettingOtp
         ]
         
-        var headers = HTTPHeaders()
-        headers["Authorization"] = tokenString
-        
-        // Crear URLRequest
-        var urlRequest = try! URLRequest(
-            url: finalURL,
+        // ✅ NUEVO FORMATO ALAMOFIRE 5.8
+        AF.upload(
+            multipartFormData: { multipartFormData in
+                // Agregar parámetros
+                for (key, value) in params {
+                    multipartFormData.append(Data(value.utf8), withName: key)
+                }
+                
+                // Agregar imagen
+                if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
+                    multipartFormData.append(
+                        imageData,
+                        withName: "cus_image",
+                        fileName: "profile.jpeg",
+                        mimeType: "image/jpeg"
+                    )
+                }
+            },
+            to: finalURL,
             method: .post,
             headers: headers
         )
-        
-        AF.upload(multipartFormData: { multipartFormData in
-            for (key, value) in params {
-                multipartFormData.append(Data(value.utf8), withName: key)
-            }
+        .uploadProgress { progress in
+            print("Upload Progress: \(progress.fractionCompleted)")
+        }
+        .responseJSON { [weak self] response in
+            guard let self = self else { return }
             
-            // Agregar imagen al cuerpo
-            if let imageData = self.userImageView.image?.jpegData(compressionQuality: 0.5) {
-                multipartFormData.append(imageData, withName: "cus_image", fileName: "profile.jpeg", mimeType: "image/jpeg")
-            }
-        }, with: urlRequest)
-        .responseJSON(completionHandler: { encodingResult in
-            DispatchQueue.main.async {
-                self.stopLoadingIndicator(senderVC: self)
-            }
-            if encodingResult.error != nil {
-                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
-                return
-            }
-            let result = encodingResult.result
-            switch result {
+            self.stopLoadingIndicator(senderVC: self)
+            
+            switch response.result {
             case .success(let value):
                 guard let jsonResponse = value as? [String: Any] else {
+                    self.showToastAlert(senderVC: self, messageStr: "Invalid response")
                     return
                 }
-                print(jsonResponse)
+                
+                print("✅ Response: \(jsonResponse)")
+                
                 if let code = jsonResponse["code"] as? Int {
                     if code == 200 {
                         self.showSuccessPopUp(msgStr: jsonResponse["message"] as! String)
@@ -429,16 +462,22 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
                            let otp = tempData["otp"] as? String {
                             self.showOTPVerifyView(otpNumber: otp)
                         }
-                    } else if code == 400, jsonResponse["message"] as? String == "Token is Expired" {
+                    } else if code == 400,
+                              jsonResponse["message"] as? String == "Token is Expired" {
                         self.showTokenExpiredPopUp(msgStr: "Token is Expired")
                     } else {
-                        self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as! String)
+                        self.showToastAlert(
+                            senderVC: self,
+                            messageStr: jsonResponse["message"] as? String ?? "Error occurred"
+                        )
                     }
                 }
+                
             case .failure(let error):
-                print("Error: \(error.localizedDescription)")
-                self.showToastAlert(senderVC: self, messageStr: "An error occurred. Please try again.")
+                print("❌ Error: \(error.localizedDescription)")
+                self.showToastAlert(senderVC: self, messageStr: "Network error occurred")
             }
-        })
+        }
     }
+    
 }
