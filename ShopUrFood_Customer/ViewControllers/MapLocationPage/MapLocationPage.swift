@@ -234,36 +234,33 @@ class MapLocationPage: BaseViewController,CLLocationManagerDelegate,GMSMapViewDe
     func getAddressFromLatLong(latitude: Double, longitude : Double) {
         let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(googleMapsApiKey)"
         
-        Alamofire.request(url).validate().responseJSON { response in
-            switch response.result {
-            case .success:
-                
-                guard let responseJson = response.result.value as? NSDictionary else {
-                    return
-                }
-                
-                if let results = responseJson.object(forKey: "results")! as? [NSDictionary] {
-                    if results.count > 0 {
-                        if let addressComponents = results[0]["address_components"]! as? [NSDictionary],
+        AF.request(url)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success(let value):
+                    guard let responseJson = value as? NSDictionary else { return }
+                    
+                    if let results = responseJson["results"] as? [NSDictionary], results.count > 0 {
+                        if let addressComponents = results[0]["address_components"] as? [NSDictionary],
                            let addressStr = results[0]["formatted_address"] as? String {
+                            
                             print(addressStr)
                             for component in addressComponents {
-                                if let temp = component.object(forKey: "types") as? [String] {
-                                    if temp.count != 0 {
-                                        if (temp[0] == "postal_code") {
-                                            self.passZipCode = component["long_name"] as? String ?? .init()
-                                        }
-                                    }
+                                if let types = component["types"] as? [String],
+                                   types.contains("postal_code") {
+                                    self.passZipCode = component["long_name"] as? String ?? ""
                                 }
                             }
                         }
                     }
+                    
+                case .failure(let error):
+                    print("Alamofire error: \(error)")
                 }
-            case .failure(let error):
-                print(error)
             }
-        }
     }
+
     
     @objc func typingName(textField:UITextField){
         if let typedText = textField.text {

@@ -1,69 +1,80 @@
-# Uncomment the next line to define a global platform for your project
-platform :ios, '16.6'
+#Uncomment the next line to define a global platform for your project
+
+platform :ios, '13.0'
 
 target 'ShopUrFood_Customer' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
-
-  # Pods for ShopUrFood_Customer
 
   target 'ShopUrFood_CustomerTests' do
     inherit! :search_paths
-    # Pods for testing
   end
+
+# Pods básicos
 pod 'Bolts'
 pod 'RAMAnimatedTabBarController'
 pod 'Toast-Swift', '~> 4.0.0'
 pod 'NVActivityIndicatorView'
-pod 'Alamofire', '~> 4.0.0'
-pod 'FacebookCore'
-pod 'FacebookLogin'
-pod 'FBSDKLoginKit'
-pod 'FBSDKCoreKit'
-pod 'GoogleSignIn', '~> 4.4.0'
+
+# Facebook SDK - versión compatible con tu proyecto
+pod 'FBSDKCoreKit', '~> 9.0'
+pod 'FBSDKLoginKit', '~> 9.0'
+
+# Google - ACTUALIZADO
+pod 'GoogleSignIn', '~> 7.0'
 pod 'JonAlert', :git => 'https://github.com/jonSurrey/JonAlert.git', :branch => 'master'
 pod 'GoogleMaps'
-pod 'GooglePlaces'
+pod 'GooglePlaces'   
 pod 'GoogleUtilities'
+
+# UI & Utilities
 pod 'Kingfisher'
 pod 'SWRevealViewController'
 pod 'DropDown', :git => 'https://github.com/AssistoLab/DropDown.git', :branch => 'master'
 pod 'DateTimePicker'
-pod 'BottomPopup'
+pod 'BottomPopup'   
 pod 'IQKeyboardManager'
 pod 'CRRefresh'
 pod 'ScrollableSegmentedControl', '~> 1.4.0'
 pod 'lottie-ios'
 pod 'MarqueeLabel/Swift'
-pod 'ListPlaceholder'
-pod 'SCLAlertView'
-pod 'PayPal-iOS-SDK', :git => 'https://github.com/paypal/PayPal-iOS-SDK.git'
-pod 'CCValidator'
+pod 'ListPlaceholder'   
+pod 'SCLAlertView'   
+pod 'CCValidator' 
 pod 'MIBlurPopup'
-pod 'CocoaMQTT'
+pod 'CocoaMQTT'  
 pod 'SwiftyGif'
 pod 'Segmentio', '~> 3.3'
 pod 'Popover'
 pod 'AMPopTip'
 pod 'BetterSegmentedControl', '~> 1.0'
-pod 'Crashlytics'
-pod 'Firebase/Auth', '9.6.0'
-pod 'Firebase/Core', '9.6.0'
-pod 'Firebase/Functions', '9.6.0'
-pod 'Firebase/Messaging', '9.6.0'
-pod 'Firebase/Crashlytics'
+
+# Networking & Payment
+pod 'Alamofire', '~> 5.8'
+pod 'PayPalCheckout', '~> 1.0'
+
+# Firebase - versión fija para evitar conflictos
+pod 'Firebase/Auth', '10.18.0'
+pod 'Firebase/Core', '10.18.0'
+pod 'Firebase/Functions', '10.18.0'
+pod 'Firebase/Messaging', '10.18.0'  
+pod 'Firebase/Crashlytics', '10.18.0'
+
+end
 
 post_install do |installer|
-  installer.pods_project.build_configurations.each do |config|
-    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-  end
-  
   installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "16.6"
-        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-      end
+    target.build_configurations.each do |config|
+      # Minimum deployment target
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      
+      # Excluir arm64 para simulador (si usas Mac Intel)
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      
+      # ✅ CRÍTICO: Fixes para GoogleSignIn 7.x
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+    end
   end
 end
 
-end
+

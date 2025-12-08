@@ -9,6 +9,7 @@
 import Foundation
 import AppTrackingTransparency
 import UserNotifications
+import UIKit
 
 final class PermissionsManager {
     public static let shared: PermissionsManager = .init()
