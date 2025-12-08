@@ -803,25 +803,27 @@ class FoodDetailsPage: BaseViewController,UITableViewDelegate,UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let selectedChoice = currentItemDetailModel?.data.choice(for: indexPath.section, row: indexPath.row) else {
-            return
-        }
-        let selected_id = selectedChoice.choiceId!
-        let choicePrice = Float(selectedChoice.choicePrice)!
-        let currency = selectedChoice.choiceCurrency! as String
-        if isChoiceSelected(for: indexPath.section, id: selected_id) {
-            removeChoice(for: indexPath.section, id: selected_id)
-            finalPrice = finalPrice - choicePrice
-            toppingsPrice = toppingsPrice - choicePrice
-            
-        }else{
-            addChoice(for: indexPath.section, id: selected_id)
-            finalPrice = finalPrice + choicePrice
-            toppingsPrice = toppingsPrice + choicePrice
-        }
-        toppingsTable.reloadData()
-        self.checkExistCart()
-    }
+          guard let selectedChoice = currentItemDetailModel?.data.choice(for: indexPath.section, row: indexPath.row) else {
+              return
+          }
+
+          let selected_id = selectedChoice.choiceId!
+          let choicePrice = (selectedChoice.choicePrice ?? "").floatValue
+          let currency = selectedChoice.choiceCurrency ?? ""
+
+          if isChoiceSelected(for: indexPath.section, id: selected_id) {
+              removeChoice(for: indexPath.section, id: selected_id)
+              finalPrice = finalPrice - choicePrice
+              toppingsPrice = toppingsPrice - choicePrice
+          } else {
+              addChoice(for: indexPath.section, id: selected_id)
+              finalPrice = finalPrice + choicePrice
+              toppingsPrice = toppingsPrice + choicePrice
+          }
+
+          toppingsTable.reloadData()
+          self.checkExistCart()
+      }
     
     private func updateTotalPrice() {
         let currency = Singleton.sharedInstance.ItemDetailModel.data.itemtInfo.itemCurrency as String
@@ -1085,3 +1087,8 @@ extension UIView{
     }
 }
 
+extension String {
+    var floatValue: Float {
+        return self.isEmpty ? 0.0 : (Float(self) ?? 0.0)
+    }
+}

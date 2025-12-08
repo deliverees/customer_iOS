@@ -99,11 +99,31 @@ let login_session = UserDefaults.standard
 
 
 // V2.1 QA Testing URL
-let BASEURL = "https://delivereesapp.com/api/"
-//let BASEURL = "https://grupojovima.com/api/"
+//let BASEURL = "https://delivereesapp.com/api/"
+let BASEURL = "https://phpstack-1267000-4567253.cloudwaysapps.com/api/"
 let BASEURL_CUSTOMER = "\(BASEURL)customer/"
 
+// MARK: - API Configuration
+let API_BASE_URL = BASEURL_CUSTOMER
 
+// MARK: - PayPal Configuration
+// MARK: - PayPal Configuration
+#if DEBUG
+let PAYPAL_CLIENT_ID = "AVCYWeG83j6mjj0dQ3FFo7SuTKQUrmv2yTdbxrd3v4r2-HFdCXAS41aqVwtA_TPsBOSVPOkQZjZXle0N"
+let PAYPAL_ENVIRONMENT = "sandbox"
+let PAYPAL_RETURN_URL = "deliverees://paypal-return"  // ✅ Deep link iOS
+let PAYPAL_CANCEL_URL = "deliverees://paypal-cancel"  // ✅ Deep link iOS
+#else
+let PAYPAL_CLIENT_ID = "TU_PAYPAL_LIVE_CLIENT_ID"
+let PAYPAL_ENVIRONMENT = "live"
+let PAYPAL_RETURN_URL = "deliverees://paypal-return"
+let PAYPAL_CANCEL_URL = "deliverees://paypal-cancel"
+#endif
+
+// MARK: - PayPal API Endpoints (URLs COMPLETAS)
+let PAYPAL_CREATE_ORDER = BASEURL_CUSTOMER + "create-order"    // ✅ URL COMPLETA
+let PAYPAL_EXECUTE_PAYMENT = BASEURL_CUSTOMER + "return"       // ✅ URL COMPLETA
+let PAYPAL_CANCEL_PAYMENT = BASEURL_CUSTOMER + "cancel"        // ✅ URL COMPLET
 
 //Customer Login Api
 let USER_LOGIN = "user_login"
@@ -113,6 +133,11 @@ let APPLE_LOGIN = "apple_login"
 let FORGET_PASSWORD = "customer_forgot_password"
 let PROFILE = "customer_my_account"
 let REGISTER = "registration"
+
+// 🔥 VERIFICACIÓN DE TELÉFONO CON FIREBASE
+let VERIFY_PHONE_TOKEN = "verify-phone-token"
+let PHONE_VERIFICATION_STATUS = "phone-verification-status"
+let RESEND_PHONE_VERIFICATION = "resend-phone-verification"
 
 //Home Page API
 let RESTURANT_HOME = "restaurant_home_page"
@@ -189,12 +214,4 @@ let googleMapsApiKey = "AIzaSyANmjA7UotZ6A_x45w83-vbOKYKX1lKp1I"
 var isRunningTests: Bool {
     ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     || ProcessInfo.processInfo.environment["XCTestBundlePath"] != nil
-}
-
-var stripePublishableKey: String {
-    #if DEBUG
-    return "pk_test_51FN3GdAa2pEXf3KLc3G3hRBKEjTyaRwYNx3IPNcVTzruWKgwWpryXHomKY9eMfJ6cLJVUZuf6NeHVTKdhrZzcQT400nfKPMqdW"
-    #else
-    return "pk_live_Uyd8zUwlVrjMtUPSuiqvKP8N006dj8cXw8"
-    #endif
 }

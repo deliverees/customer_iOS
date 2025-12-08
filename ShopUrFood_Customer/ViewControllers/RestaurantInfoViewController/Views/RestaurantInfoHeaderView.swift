@@ -104,11 +104,12 @@ final class RestaurantInfoHeaderView: UIView {
                                                          name: categoryName)
             )
         }
+        
         let restaurantInfo = ((responseDict["restaurant_info"] as! NSDictionary))
-        let deliveryTime = restaurantInfo.object(forKey: "delivery_time") as! String
-        let restaurantStatus = restaurantInfo.object(forKey: "restaurant_status") as! String
-        let currency = restaurantInfo.object(forKey: "restaurant_currency") as! String
-        let price = (restaurantInfo.object(forKey: "minimum_order") as! NSNumber).stringValue
+        let deliveryTime = restaurantInfo["delivery_time"] as? String ?? ""
+        let restaurantStatus = restaurantInfo["restaurant_status"] as? String ?? ""
+        let currency = restaurantInfo["restaurant_currency"] as? String ?? ""
+        let price = (restaurantInfo["minimum_order"] as? NSNumber)?.stringValue ?? "0"
         let minimumPrice = currency + price
         let headerData = RestaurantInfoHeaderViewData(deliveryTime: deliveryTime,
                                                       restaurantStatus: restaurantStatus,

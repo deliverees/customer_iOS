@@ -18,18 +18,62 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
+		<!-- Facebook -->
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.deliverees.customer.facebook</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb947105282289402</string>
 			</array>
 		</dict>
+		<!-- Google Sign In -->
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.deliverees.customer.google</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.802377568198-ck0p6fn9irk8803na2c12f18aseh0tvm</string>
+			</array>
+		</dict>
+
+		<!-- Firebase Phone Auth -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.deliverees.customer.firebaseauth</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>app-1-802377568198-ios-f61f66c81ed66b54b12cc7</string>
+            </array>
+        </dict>
+
+		<!-- ✅ AGREGAR: Bundle ID como URL Scheme (NECESARIO PARA GOOGLE 7.x) -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.deliverees.customer.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.app.delivereesCustomer</string>
+			</array>
+		</dict>
+		
+		<!-- PayPal Deep Linking -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.deliverees.customer.paypal</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>deliverees</string>
 			</array>
 		</dict>
 	</array>
@@ -53,10 +97,24 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<!-- Facebook -->
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
+		<!-- PayPal -->
+		<string>paypal</string>
+		<string>paypal-sandbox</string>
+		<string>com.paypal.ppclient.touch.v1</string>
+		<string>com.paypal.ppclient.touch.v2</string>
+		<string>com.paypal.ppclient.touch.v1-or-v2</string>
+		<!-- ⚠️ GOOGLE SIGN IN - AGREGADO -->
+		<string>googlegmail</string>
+		<string>googlemail</string>
+		<string>googleplus</string>
+		<string>googlechrome</string>
+		<string>googlechromes</string>
+		<string>google-gmb</string>
 	</array>
 	<key>LSMinimumSystemVersion</key>
 	<string>12</string>
@@ -130,4 +188,5 @@
 		<string>Default</string>
 	</array>
 </dict>
+
 </plist>
