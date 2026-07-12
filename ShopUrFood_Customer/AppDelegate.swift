@@ -105,21 +105,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // =====================================
         UNUserNotificationCenter.current().delegate = self
         IQKeyboardManager.shared().isEnabled = true
-        
+
+        // 🔔 REGISTRO APNS — CRÍTICO PARA FIREBASE PHONE AUTH
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            print("🔔 Permisos de notificación: \(granted ? "concedidos" : "denegados")")
+            guard granted else { return }
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+                print("✅ Registrado para notificaciones remotas (APNs)")
+            }
+        }
+
         // 🔥 CONFIGURAR FIREBASE DEFAULT (SOLO PARA FCM/NOTIFICACIONES)
-        // Las apps secundarias (PhoneAuthApp) se configuran dinámicamente
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
-            print("✅ Firebase configurado (default app para FCM/Notificaciones)")
+            print("✅ Firebase configurado")
         } else {
             print("✅ Firebase ya estaba configurado")
-        }
-        
-        Messaging.messaging().delegate = self
-        
-        if let token = Messaging.messaging().fcmToken {
-            print("📱 FCM token inicial: \(token)")
-            self.ConnectToFCM()
         }
         
         NotificationCenter.default.addObserver(
@@ -180,10 +182,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             return true
         }
         
-        // 🔥 4. PAYPAL
+        // 🔥 4. PAYPAL - CORREGIR
         if let scheme = url.scheme, scheme == "deliverees" {
-            print("✅ PayPal handled")
-            // Tu código de PayPal aquí
+            print("✅ PayPal deep link detected: \(url.absoluteString)")
+            
+            // Extraer parámetros del URL
+            guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+                  let queryItems = components.queryItems else {
+                print("❌ No se pudieron extraer parámetros")
+                return true
+            }
+            
+            var paymentId: String?
+            var payerId: String?
+            var token: String?
+            
+            for item in queryItems {
+                if item.name == "paymentId" {
+                    paymentId = item.value
+                } else if item.name == "PayerID" {
+                    payerId = item.value
+                } else if item.name == "token" {
+                    token = item.value
+                }
+            }
+            
+            print("📋 Parámetros extraídos:")
+            print("   paymentId: \(paymentId ?? "N/A")")
+            print("   payerId: \(payerId ?? "N/A")")
+            print("   token: \(token ?? "N/A")")
+            
+            // PayPal return
+            if url.host == "paypal-return",
+               let validPaymentId = paymentId, !validPaymentId.isEmpty,
+               let validPayerId = payerId, !validPayerId.isEmpty {
+                
+                print("✅ Enviando notificación a SelectPaymetOptionPage")
+                
+                // ✅ ENVIAR NOTIFICACIÓN (ESTO ES LO QUE FALTA)
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("PayPalPaymentApproved"),
+                    object: nil,
+                    userInfo: [
+                        "paymentId": validPaymentId,
+                        "payerId": validPayerId,
+                        "token": token ?? ""
+                    ]
+                )
+            }
+            // PayPal cancel
+            else if url.host == "paypal-cancel" {
+                print("❌ PayPal cancel detected")
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("PayPalPaymentCancelled"),
+                    object: nil
+                )
+            }
+            
             return true
         }
         
@@ -248,6 +303,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         } else {
             print("⚠️ FCM token no disponible aún")
         }
+    }
+    
+    // =====================================
+    // 🔑 CRÍTICO: PASAR TOKEN APNS A FIREBASE AUTH
+    // =====================================
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // Firebase Messaging
+        Messaging.messaging().apnsToken = deviceToken
+        // Firebase Auth — CRÍTICO para Phone Auth en producción
+        Auth.auth().setAPNSToken(deviceToken, type: .unknown)
+        print("✅ APNs token registrado en Firebase Auth")
+    }
+
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("❌ Error registrando APNs: \(error.localizedDescription)")
     }
     
     // =====================================
@@ -472,14 +544,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         Messaging.messaging().appDidReceiveMessage(userInfo)
     }
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
         print("📬 Notificación remota recibida con fetch handler")
         
-        // 🔥 IGNORAR NOTIFICACIONES DE FIREBASE AUTH
-        if let _ = userInfo["com.google.firebase.auth"] {
-            print("🔥 Notificación de Firebase Auth (reCAPTCHA), ignorando...")
-            completionHandler(UIBackgroundFetchResult.noData)
+        // 🔥 DEJAR QUE FIREBASE AUTH MANEJE SUS NOTIFICACIONES
+        if Auth.auth().canHandleNotification(userInfo) {
+            print("✅ Notificación manejada por Firebase Auth")
+            completionHandler(.noData)
             return
         }
         
@@ -487,6 +561,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("📱 Estado de la app: \(state == .background ? "background" : state == .active ? "foreground" : "inactive")")
         
         Messaging.messaging().appDidReceiveMessage(userInfo)
-        completionHandler(UIBackgroundFetchResult.newData)
+        completionHandler(.newData)
     }
 }
