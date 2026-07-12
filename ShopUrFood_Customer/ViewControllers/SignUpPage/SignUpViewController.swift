@@ -774,6 +774,7 @@ class SignUpViewController: BaseViewController, UIGestureRecognizerDelegate {
     }
     
     // ✅ GOOGLE SIGN IN ACTUALIZADO A 7.x
+   
     @IBAction func googleBtnTapped(_ sender: Any) {
         print("🔍 Google button tapped - SignUp")
         
@@ -784,7 +785,6 @@ class SignUpViewController: BaseViewController, UIGestureRecognizerDelegate {
         
         self.showLoadingIndicator(senderVC: self)
         
-        // ✅ SOLUCIÓN: Obtener el presenting VC correcto
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first,
               let rootVC = window.rootViewController else {
@@ -803,60 +803,109 @@ class SignUpViewController: BaseViewController, UIGestureRecognizerDelegate {
         GIDSignIn.sharedInstance.signIn(withPresenting: topVC) { [weak self] signInResult, error in
             guard let self = self else { return }
             
-            if let error = error {
-                print("❌ Google Sign In Error: \(error.localizedDescription)")
-                self.stopLoadingIndicator(senderVC: self)
-                self.showToastAlert(senderVC: self, messageStr: "Error al iniciar sesión con Google")
-                return
-            }
-            
-            guard let signInResult = signInResult else {
-                print("❌ No se obtuvo resultado de Google Sign In")
-                self.stopLoadingIndicator(senderVC: self)
-                return
-            }
-            
-            print("✅ Google Sign In exitoso desde SignUp")
-            
-            let user = signInResult.user
-            let idStr = user.userID ?? ""
-            let emailStr = user.profile?.email ?? ""
-            let nameStr = user.profile?.name ?? ""
-            
-            let Parse = CommomParsing()
-            Parse.GoogleLogin(
-                lang: login_session.value(forKey: "Language") as? String ?? "es",
-                google_id: idStr,
-                email: emailStr,
-                name: nameStr,
-                type: device_type,
-                ios_fcm_id: login_session.object(forKey: "fcmToken") as? String ?? "",
-                ios_device_id: self.iPhoneUDIDString,
-                onSuccess: { response in
-                    print(response)
-                    let dataDict = NSMutableDictionary()
-                    dataDict.addEntries(from: response.object(forKey: "data") as! [AnyHashable : Any])
-                    let user_email = dataDict.object(forKey: "user_email")as! String
-                    let user_id = String(dataDict.object(forKey: "user_id")as! Int)
-                    let user_name = dataDict.object(forKey: "user_name")as! String
-                    let token = dataDict.object(forKey: "token")as! String
-                    login_session.setValue(user_email, forKey: "user_email")
-                    login_session.setValue("0", forKey: "userCartCount")
-                    login_session.setValue(user_id, forKey: "user_id")
-                    login_session.setValue(user_name, forKey: "user_name")
-                    login_session.setValue(token, forKey: "user_token")
-                    login_session.setUserLogged(true)
-                    login_session.synchronize()
+            // ✅ SIEMPRE en hilo principal
+            DispatchQueue.main.async {
+                
+                if let error = error {
+                    print("❌ Google Sign In Error: \(error.localizedDescription)")
                     self.stopLoadingIndicator(senderVC: self)
-                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                    let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
-                    nextViewController.ComingType = "FIRST"
-                    self.present(nextViewController, animated:true, completion:nil)
-                },
-                onFailure: { errorResponse in
-                    self.stopLoadingIndicator(senderVC: self)
+                    // ✅ Mostrar error al usuario
+                    if (error as NSError).code != GIDSignInError.canceled.rawValue {
+                        self.showToastAlert(senderVC: self, messageStr: "Error al iniciar sesión con Google")
+                    }
+                    return
                 }
-            )
+                
+                guard let signInResult = signInResult else {
+                    print("❌ No se obtuvo resultado de Google Sign In")
+                    self.stopLoadingIndicator(senderVC: self)
+                    return
+                }
+                
+                print("✅ Google Sign In exitoso desde SignUp")
+                
+                let user = signInResult.user
+                let idStr = user.userID ?? ""
+                let emailStr = user.profile?.email ?? ""
+                let nameStr = user.profile?.name ?? ""
+                
+                print("📧 Email: \(emailStr)")
+                print("👤 Name: \(nameStr)")
+                print("🆔 ID: \(idStr)")
+                
+                let Parse = CommomParsing()
+                Parse.GoogleLogin(
+                    lang: login_session.value(forKey: "Language") as? String ?? "es",
+                    google_id: idStr,
+                    email: emailStr,
+                    name: nameStr,
+                    type: device_type,
+                    ios_fcm_id: login_session.object(forKey: "fcmToken") as? String ?? "",
+                    ios_device_id: self.iPhoneUDIDString,
+                    onSuccess: { response in
+                        DispatchQueue.main.async {
+                            self.stopLoadingIndicator(senderVC: self)
+                            
+                            print("📦 Google Login Response:", response)
+                            
+                            // ✅ Verificar código ANTES de hacer force cast
+                            guard let code = response.object(forKey: "code") as? Int else {
+                                print("❌ No hay código en la respuesta")
+                                self.showToastAlert(senderVC: self, messageStr: "Error en la respuesta del servidor")
+                                return
+                            }
+                            
+                            guard code == 200 else {
+                                let msg = response.object(forKey: "message") as? String ?? "Error desconocido"
+                                print("❌ Error del servidor: \(msg)")
+                                self.showToastAlert(senderVC: self, messageStr: msg)
+                                return
+                            }
+                            
+                            // ✅ Acceso seguro a data
+                            guard let data = response.object(forKey: "data") as? [AnyHashable: Any] else {
+                                print("❌ No hay data en la respuesta")
+                                self.showToastAlert(senderVC: self, messageStr: "Error al procesar datos")
+                                return
+                            }
+                            
+                            let dataDict = NSMutableDictionary()
+                            dataDict.addEntries(from: data)
+                            
+                            guard let user_email = dataDict.object(forKey: "user_email") as? String,
+                                  let user_id = dataDict.object(forKey: "user_id") as? Int,
+                                  let user_name = dataDict.object(forKey: "user_name") as? String,
+                                  let token = dataDict.object(forKey: "token") as? String else {
+                                print("❌ Faltan campos en la respuesta")
+                                self.showToastAlert(senderVC: self, messageStr: "Error: datos incompletos")
+                                return
+                            }
+                            
+                            print("✅ Login exitoso - guardando sesión")
+                            login_session.setValue(user_email, forKey: "user_email")
+                            login_session.setValue("0", forKey: "userCartCount")
+                            login_session.setValue(String(user_id), forKey: "user_id")
+                            login_session.setValue(user_name, forKey: "user_name")
+                            login_session.setValue(token, forKey: "user_token")
+                            login_session.setUserLogged(true)
+                            login_session.synchronize()
+                            
+                            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "LocationOptionPage") as! LocationOptionPage
+                            nextViewController.ComingType = "FIRST"
+                            self.present(nextViewController, animated: true, completion: nil)
+                        }
+                    },
+                    onFailure: { errorResponse in
+                        DispatchQueue.main.async {
+                            self.stopLoadingIndicator(senderVC: self)
+                            // ✅ Ahora muestra el error
+                            print("❌ Error en API Google Login:", errorResponse)
+                            self.showToastAlert(senderVC: self, messageStr: "Error al conectar con el servidor")
+                        }
+                    }
+                )
+            }
         }
     }
 }
