@@ -841,8 +841,34 @@ class CommomParsing: BaseParsing {
     }
     
     //PAY BY COD
-    public func payByStripe(lang:String,ord_self_pickup:String,cus_name:String,cus_last_name:String,cus_email:String,cus_phone1:String,cus_phone2:String,cus_address:String,cus_address1:String,cus_lat:String,cus_long:String,use_wallet:String,wallet_amt:String,card_no:String,ccExpiryMonth:String,ccExpiryYear:String,cvvNumber:String,use_coupon:String,coupon_id:String,coupon_amount:String, onSuccess success: @escaping (NSDictionary) -> Void, onFailure failure: @escaping (_ error: Error?) -> Void)
-    {
+    public func payByStripe(
+        lang: String,
+        ord_self_pickup: String,
+        cus_name: String,
+        cus_last_name: String,
+        cus_email: String,
+        cus_phone1: String,
+        cus_phone2: String,
+        cus_address: String,
+        cus_address1: String,
+        cus_lat: String,
+        cus_long: String,
+        use_wallet: String,
+        wallet_amt: String,
+        card_no: String,
+        ccExpiryMonth: String,
+        ccExpiryYear: String,
+        cvvNumber: String,
+        use_coupon: String,
+        coupon_id: String,
+        coupon_amount: String,
+        order_amount: String,
+        delivery_fee: String,
+        management_fee: String,
+        peak_hour_fee: String,
+        onSuccess success: @escaping (NSDictionary) -> Void,
+        onFailure failure: @escaping (_ error: Error?) -> Void
+    ) {
         let requestDict = NSMutableDictionary.init()
         requestDict.setValue(lang, forKey: "lang")
         requestDict.setValue(ord_self_pickup, forKey: "ord_self_pickup")
@@ -864,6 +890,10 @@ class CommomParsing: BaseParsing {
         requestDict.setValue(use_coupon, forKey: "use_coupon")
         requestDict.setValue(coupon_id, forKey: "coupon_id")
         requestDict.setValue(coupon_amount, forKey: "coupon_amount")
+        requestDict.setValue(order_amount, forKey: "order_amount")
+        requestDict.setValue(delivery_fee, forKey: "del_fee")
+        requestDict.setValue(management_fee, forKey: "management_fee")
+        requestDict.setValue(peak_hour_fee, forKey: "pk_hr_fee")
         
         
         guard let tokenStr = login_session.object(forKey: "user_token") as? String else {
