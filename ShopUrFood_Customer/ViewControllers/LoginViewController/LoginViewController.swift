@@ -914,7 +914,7 @@ class LoginViewController: BaseViewController, UITextFieldDelegate {
     
     // ✅ GOOGLE LOGIN - Button Action (NUEVA IMPLEMENTACIÓN 7.x)
     @IBAction func googleBtnAction(_ sender: Any?) {
-        print("\n🔍 ========== GOOGLE SIGN IN TEST V2 ==========")
+        print("\n🔍 ========== GOOGLE SIGN IN ==========")
         
         guard Reachability()?.isReachable ?? false else {
             self.showToastAlert(senderVC: self, messageStr: "No hay conexión a Internet")
@@ -923,7 +923,6 @@ class LoginViewController: BaseViewController, UITextFieldDelegate {
         
         self.showLoadingIndicator(senderVC: self)
         
-        // ✅ SOLUCIÓN: Usar el rootViewController en lugar de self
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first(where: { $0.isKeyWindow }),
               let rootVC = window.rootViewController else {
@@ -933,50 +932,50 @@ class LoginViewController: BaseViewController, UITextFieldDelegate {
             return
         }
         
-        // Encontrar el VC más alto en la jerarquía
         var topVC = rootVC
         while let presented = topVC.presentedViewController {
             topVC = presented
         }
         
         print("🔍 Presenting from: \(type(of: topVC))")
-        print("🔍 Window: \(window)")
-        print("🔍 Window isKeyWindow: \(window.isKeyWindow)")
         
         GIDSignIn.sharedInstance.signIn(withPresenting: topVC) { [weak self] result, error in
             guard let self = self else { return }
             
-            print("\n✅ ========== CALLBACK RECEIVED ==========")
-            
-            self.stopLoadingIndicator(senderVC: self)
-            
-            if let error = error {
-                let nsError = error as NSError
-                print("❌ ERROR:")
-                print("   - Code: \(nsError.code)")
-                print("   - Domain: \(nsError.domain)")
-                print("   - Description: \(error.localizedDescription)")
+            // ✅ SIEMPRE en hilo principal
+            DispatchQueue.main.async {
                 
-                if nsError.code != -5 {
-                    self.showToastAlert(senderVC: self, messageStr: "Error: \(error.localizedDescription)")
+                if let error = error {
+                    let nsError = error as NSError
+                    print("❌ Google Sign In Error: \(error.localizedDescription)")
+                    print("❌ Code: \(nsError.code), Domain: \(nsError.domain)")
+                    self.stopLoadingIndicator(senderVC: self)
+                    // -5 = usuario canceló, no mostrar error
+                    if nsError.code != -5 {
+                        self.showToastAlert(senderVC: self, messageStr: "Error al iniciar sesión con Google")
+                    }
+                    return
                 }
-                return
+                
+                guard let result = result else {
+                    print("❌ No result from Google Sign In")
+                    self.stopLoadingIndicator(senderVC: self)
+                    return
+                }
+                
+                print("✅ Google Sign In exitoso")
+                print("   - Email: \(result.user.profile?.email ?? "nil")")
+                print("   - Name: \(result.user.profile?.name ?? "nil")")
+                
+                // ✅ AHORA SÍ LLAMA A handleGoogleSignIn
+                self.handleGoogleSignIn(signInResult: result)
             }
-            
-            guard let result = result else {
-                print("❌ No result")
-                return
-            }
-            
-            print("✅ SUCCESS!")
-            print("   - Email: \(result.user.profile?.email ?? "nil")")
-            
-            // Tu código de API aquí...
         }
         
-        print("🔍 signIn() llamado desde topVC")
+        print("🔍 signIn() llamado")
         print("========================================\n")
     }
+    
     // PASO 2: Agrega este nuevo método privado
     private func performGoogleSignIn() {
         // Obtener el presenting ViewController correcto
