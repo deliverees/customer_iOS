@@ -12,6 +12,7 @@ import SCLAlertView
 import CCValidator
 import AMPopTip
 import PayPalCheckout
+import Stripe
 import Alamofire
 
 @available(iOS 11.0, *)
@@ -46,6 +47,7 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
     var useWallet = Bool()
     let popTip = PopTip()
     var direction = PopTipDirection.up
+    var currentStripeCell: StripePaymentCell?
     
     //Coupon Variables
     var useCouponOffer = Bool()
@@ -228,28 +230,55 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
             self.payByPaypal()
             login_session.setValue("0", forKey: "userCartCount")
         }
-        else if selectedPaymetMethod == "STRIPE" || selectedPaymetMethod == "Raya" {
+        else if selectedPaymetMethod == "STRIPE" || selectedPaymetMethod == "Raya" {          
             if userAllowedToPay {
-                let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
-                let tempExp = self.paymentTable.viewWithTag(222) as? UITextField
-                let tempCvv = self.paymentTable.viewWithTag(333) as? UITextField
-                
-                if tempCard?.text == "" || tempCard?.text?.count == 0 {
+                // ✅ EXTRAER DATOS MANUALMENTE DEL CARD FIELD
+                guard let stripeCell = currentStripeCell,
+                    stripeCell.cardTextField.isValid else {
                     self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-                } else if tempExp?.text == "" || tempExp?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
-                } else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
-                    self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-                } else {
-                    let commonDateStr = tempExp?.text
-                    let dateArray = commonDateStr?.components(separatedBy: "-")
-                    let expMonth = self.monthConverstion(month: dateArray![0])
-                    let expYear = dateArray![1]
-                    self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
-                    login_session.setValue("0", forKey: "userCartCount")
+                    return
                 }
+                
+                // ✅ Obtener datos del campo de tarjeta
+                let cardNumber = stripeCell.cardTextField.cardNumber ?? ""
+                let expMonth = String(format: "%02d", stripeCell.cardTextField.expirationMonth)
+                let expYear = String(format: "%02d", stripeCell.cardTextField.expirationYear % 100)
+                let cvv = stripeCell.cardTextField.cvc ?? ""
+                
+                // ✅ PROCESAR PAGO CON DATOS EXTRAÍDOS
+                self.processStripePaymentWithData(cardNumber: cardNumber, expMonth: expMonth, expYear: expYear, cvv: cvv)
+                login_session.setValue("0", forKey: "userCartCount")
             }
         }
+    }
+
+    func processStripePaymentWithData(cardNumber: String, expMonth: String, expYear: String, cvv: String) {
+        // Validar que los campos no estén vacíos
+        guard !cardNumber.isEmpty, cardNumber.count >= 13 else {
+            self.showToastAlert(senderVC: self, messageStr: "Número de tarjeta inválido")
+            return
+        }
+        
+        guard !cvv.isEmpty, (cvv.count == 3 || cvv.count == 4) else {
+            self.showToastAlert(senderVC: self, messageStr: "CVV inválido")
+            return
+        }
+        
+        guard let month = Int(expMonth), month >= 1, month <= 12,
+            let year = Int(expYear), year >= 23 else {
+            self.showToastAlert(senderVC: self, messageStr: "Fecha de expiración inválida")
+            return
+        }
+        
+        self.showLoadingIndicator(senderVC: self)
+        
+        print("📦 Stripe Card Data:")
+        print("   Card: \(cardNumber)")
+        print("   Exp: \(expMonth)/\(expYear)")
+        print("   CVV: \(cvv)")
+        
+        // ✅ VALIDAR Y PROCESAR
+        self.isValidCard(cardNumber: cardNumber, ExpMonth: expMonth, ExpYear: expYear, cvv: cvv)
     }
     
     //MARK:- API Methods
@@ -551,24 +580,22 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
                 if userAllowedToPay {
                     self.cartGrayView.isHidden = true
                     
-                    let tempCard = self.paymentTable.viewWithTag(111) as? UITextField
-                    let tempExp = self.paymentTable.viewWithTag(222) as? UITextField
-                    let tempCvv = self.paymentTable.viewWithTag(333) as? UITextField
-                    
-                    if tempCard?.text == "" || tempCard?.text?.count == 0 {
+                    // ✅ EXTRAER DATOS MANUALMENTE DEL CARD FIELD
+                    guard let stripeCell = currentStripeCell,
+                        stripeCell.cardTextField.isValid else {
                         self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "carddetails") as! String)
-                    } else if tempExp?.text == "" || tempExp?.text?.count == 0 {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "cardexpired") as! String)
-                    } else if tempCvv?.text == "" || tempCvv?.text?.count == 0 {
-                        self.showToastAlert(senderVC: self, messageStr: LanguageDictonary.value(forKey: "pleaseentercvv") as! String)
-                    } else {
-                        let commonDateStr = tempExp?.text
-                        let dateArray = commonDateStr?.components(separatedBy: "-")
-                        let expMonth = self.monthConverstion(month: dateArray![0])
-                        let expYear = dateArray![1]
-                        self.isValidCard(cardNumber: (tempCard?.text)!, ExpMonth: expMonth, ExpYear: expYear, cvv: (tempCvv?.text)!)
-                        login_session.setValue("0", forKey: "userCartCount")
+                        return
                     }
+                    
+                    // ✅ Obtener datos del campo de tarjeta
+                    let cardNumber = stripeCell.cardTextField.cardNumber ?? ""
+                    let expMonth = String(format: "%02d", stripeCell.cardTextField.expirationMonth)
+                    let expYear = String(format: "%02d", stripeCell.cardTextField.expirationYear % 100)
+                    let cvv = stripeCell.cardTextField.cvc ?? ""
+                    
+                    // ✅ PROCESAR PAGO CON DATOS EXTRAÍDOS
+                    self.processStripePaymentWithData(cardNumber: cardNumber, expMonth: expMonth, expYear: expYear, cvv: cvv)
+                    login_session.setValue("0", forKey: "userCartCount")
                 } else {
                     self.cartGrayView.isHidden = false
                 }
@@ -577,6 +604,29 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
             }
         }
     }
+
+    // ============================================
+    // MÉTODO PARA PROCESAR PAGO CON STRIPE
+    // ============================================
+
+    func processStripePayment(cardParams: STPCardParams) {
+        self.showLoadingIndicator(senderVC: self)
+        
+        // ✅ Extraer datos de la tarjeta desde cardParams
+        let cardNumber = cardParams.number ?? ""
+        let expMonth = String(format: "%02d", cardParams.expMonth)
+        let expYear = String(format: "%02d", cardParams.expYear % 100)
+        let cvv = cardParams.cvc ?? ""
+        
+        print("📦 Stripe Card Data:")
+        print("   Card: \(cardNumber)")
+        print("   Exp: \(expMonth)/\(expYear)")
+        print("   CVV: \(cvv)")
+        
+        // ✅ VALIDAR Y PROCESAR
+        self.isValidCard(cardNumber: cardNumber, ExpMonth: expMonth, ExpYear: expYear, cvv: cvv)
+    }
+
     
     @objc func handlePayPalApproved(_ notification: Notification) {
         print("🎉 PayPal payment approved notification received")
@@ -1348,9 +1398,25 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
             self.selectedCouponID = ""
             self.selectedCouponPrice = ""
         }
+
+         // ✅ AGREGAR MONTOS NECESARIOS (igual que en PayPal)
+        let cartData = Singleton.sharedInstance.MyCartModel.data
+        let deliveryFee = cartData?.deliveryFee as? String ?? "0.00"
+        let managementFee = cartData?.managementFee ?? "0.00"
+        let peakHourFeeValue = peakHourFee.isEmpty ? "0.00" : peakHourFee
+        let totalAmount = cartData?.totalCartAmount ?? "0.00"
+        let orderAmount = self.finalPayable_amount.isEmpty ? totalAmount : self.finalPayable_amount
+        
+        print("💳 Stripe Payment Details:")
+        print("   Order Amount: \(orderAmount)")
+        print("   Delivery Fee: \(deliveryFee)")
+        print("   Management Fee: \(managementFee)")
+        print("   Peak Hour Fee: \(peakHourFeeValue)")
+        print("   Wallet Amount: \(walletAmtStr)")
+        print("   Coupon Amount: \(selectedCouponPrice)")
         
         let Parse = CommomParsing()
-        Parse.payByStripe(
+          Parse.payByStripe(
             lang: login_session.value(forKey: "Language") as? String ?? "es",
             ord_self_pickup: self_pickupStr,
             cus_name: firstName,
@@ -1371,6 +1437,10 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
             use_coupon: self.couponisUsed,
             coupon_id: selectedCouponID,
             coupon_amount: selectedCouponPrice,
+            order_amount: orderAmount,
+            delivery_fee: deliveryFee,
+            management_fee: managementFee,
+            peak_hour_fee: peakHourFeeValue,
             onSuccess: {
                 response in
                 print(response)
@@ -1655,15 +1725,10 @@ class SelectPaymetOptionPage: BaseViewController, UITableViewDelegate, UITableVi
                     let cell = tableView.dequeueReusableCell(withIdentifier: "StripePaymentCell") as? StripePaymentCell
                     cell?.selectionStyle = .none
                     cell?.nameLbl.text = LanguageDictonary.value(forKey: "stripe") as? String
-                    cell?.creditCardNumberTxt.placeholder = LanguageDictonary.value(forKey: "creditcard") as? String
-                    cell?.dateTxt.placeholder = LanguageDictonary.value(forKey: "mmyy") as? String
-                    cell?.cvvTxt.placeholder = LanguageDictonary.value(forKey: "cvv") as? String
-                    cell?.ExpDateBtn.addTarget(self, action: #selector(showMonthAndYear), for: .touchUpInside)
-                    cell?.creditCardNumberTxt.keyboardType = .numberPad
-                    cell?.cvvTxt.keyboardType = .numberPad
-                    cell?.creditCardNumberTxt.tag = 111
-                    cell?.dateTxt.tag = 222
-                    cell?.cvvTxt.tag = 333
+                    
+                    // ✅ GUARDAR REFERENCIA A LA CELDA
+                    currentStripeCell = cell
+                    
                     if paymentMethodsArray[indexPath.row] == selectedPaymetMethod {
                         cell?.selectionImg.isHidden = false
                         cell?.selectionImg.image = UIImage.init(named: "select_radio")
