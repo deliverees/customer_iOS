@@ -99,18 +99,19 @@ let login_session = UserDefaults.standard
 
 
 // V2.1 QA Testing URL
-//let BASEURL = "https://delivereesapp.com/api/"
-let BASEURL = "https://phpstack-1267000-4567253.cloudwaysapps.com/api/"
+let BASEURL = "https://delivereesapp.com/api/"
+//let BASEURL = "https://phpstack-1267000-4567253.cloudwaysapps.com/api/"
 let BASEURL_CUSTOMER = "\(BASEURL)customer/"
 
 // MARK: - API Configuration
 let API_BASE_URL = BASEURL_CUSTOMER
 
 // MARK: - PayPal Configuration
-// MARK: - PayPal Configuration
 #if DEBUG
-let PAYPAL_CLIENT_ID = "AVCYWeG83j6mjj0dQ3FFo7SuTKQUrmv2yTdbxrd3v4r2-HFdCXAS41aqVwtA_TPsBOSVPOkQZjZXle0N"
-let PAYPAL_ENVIRONMENT = "sandbox"
+//let PAYPAL_CLIENT_ID = "AVCYWeG83j6mjj0dQ3FFo7SuTKQUrmv2yTdbxrd3v4r2-HFdCXAS41aqVwtA_TPsBOSVPOkQZjZXle0N" //SANDBOX PAYPAL
+//let PAYPAL_ENVIRONMENT = "sandbox"
+let PAYPAL_CLIENT_ID = "AVucIF_8lGzaFnYwkC9cy7QVI1rE1s53uIiv4RI_GcFinxx9rPjzgx0qEV1IihLZeiUM-GK2s_DGbuzM" //LIFE PAYPAL
+let PAYPAL_ENVIRONMENT = "Live"
 let PAYPAL_RETURN_URL = "deliverees://paypal-return"  // ✅ Deep link iOS
 let PAYPAL_CANCEL_URL = "deliverees://paypal-cancel"  // ✅ Deep link iOS
 #else
