@@ -9,6 +9,8 @@
 import UIKit
 import Alamofire
 import SCLAlertView
+import FirebaseCore
+import FirebaseAuth
 
 
 
@@ -55,6 +57,10 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
     @IBOutlet weak var mobileNumberBtn: UIButton!
     @IBOutlet weak var emailBtn: UIButton!
     @IBOutlet weak var userNameBtn: UIButton!
+    var verificationID: String?
+    var pendingVerificationToken: String?
+    var firebaseConfig: [String: Any]?
+    
     var gettingOtp = String()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -301,37 +307,216 @@ class ProfileViewController: BaseViewController,UIImagePickerControllerDelegate,
         }
         .responseJSON { [weak self] response in
             guard let self = self else { return }
-            
             self.stopLoadingIndicator(senderVC: self)
-            
+
             switch response.result {
             case .success(let value):
                 guard let jsonResponse = value as? [String: Any] else {
                     self.showToastAlert(senderVC: self, messageStr: "Invalid response")
                     return
                 }
-                
+
                 print("✅ Response: \(jsonResponse)")
-                
-                if let code = jsonResponse["code"] as? Int, code == 200 {
-                    self.showSuccessPopUp(msgStr: jsonResponse["message"] as! String)
-                } else if let code = jsonResponse["code"] as? Int,
-                          code == 400,
-                          jsonResponse["message"] as? String == "Token is Expired" {
+
+                guard let code = jsonResponse["code"] as? Int else {
+                    self.showToastAlert(senderVC: self, messageStr: "Invalid response")
+                    return
+                }
+
+                if code == 200 {
+                    self.showSuccessPopUp(msgStr: jsonResponse["message"] as? String ?? "Actualizado")
+
+                } else if code == 201 {
+                    // 🔥 Requiere verificación de teléfono vía Firebase
+                    guard let dataDict = jsonResponse["data"] as? [String: Any] else {
+                        self.showToastAlert(senderVC: self, messageStr: "Error: datos incompletos")
+                        return
+                    }
+
+                    if let error = dataDict["error"] as? String {
+                        print("❌ Firebase config error:", error)
+                        self.showToastAlert(senderVC: self, messageStr: "Error de configuración. Contacta soporte.")
+                        return
+                    }
+
+                    self.pendingVerificationToken = dataDict["verification_token"] as? String
+                    self.firebaseConfig = dataDict["firebase_config"] as? [String: Any]
+
+                    guard self.pendingVerificationToken != nil, self.firebaseConfig != nil else {
+                        self.showToastAlert(senderVC: self, messageStr: "Error: datos incompletos del servidor")
+                        return
+                    }
+
+                    let fullPhone = "+\(self.mobileNumberTxt.text ?? "")"
+
+                    self.configureFirebase()
+                    self.startPhoneVerification(phoneNumber: fullPhone)
+
+                } else if code == 400, jsonResponse["message"] as? String == "Token is Expired" {
                     self.showTokenExpiredPopUp(msgStr: "Token is Expired")
                 } else {
-                    self.showToastAlert(
-                        senderVC: self,
-                        messageStr: jsonResponse["message"] as? String ?? "Error occurred"
-                    )
+                    self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as? String ?? "Error occurred")
                 }
-                
+
             case .failure(let error):
                 print("❌ Error: \(error.localizedDescription)")
                 self.showToastAlert(senderVC: self, messageStr: "Network error occurred")
             }
         }
     }
+    
+    func configureFirebase() {
+        guard let config = firebaseConfig,
+              let apiKey = config["apiKey"] as? String,
+              let projectId = config["projectId"] as? String,
+              let appId = config["appId"] as? String,
+              let messagingSenderId = config["messagingSenderId"] as? String else {
+            print("❌ Error: Firebase config incompleta")
+            return
+        }
+
+        if let existingApp = FirebaseApp.app(name: "PhoneAuthApp") {
+            existingApp.delete { _ in }
+        }
+
+        let options = FirebaseOptions(googleAppID: appId, gcmSenderID: messagingSenderId)
+        options.apiKey = apiKey
+        options.projectID = projectId
+        if let storageBucket = config["storageBucket"] as? String {
+            options.storageBucket = storageBucket
+        }
+        options.bundleID = Bundle.main.bundleIdentifier ?? "com.deliverees.customer"
+        if let clientId = config["clientId"] as? String, !clientId.isEmpty {
+            options.clientID = clientId
+        }
+
+        FirebaseApp.configure(name: "PhoneAuthApp", options: options)
+        print("✅ Firebase PhoneAuthApp configurado (update profile)")
+    }
+
+    func startPhoneVerification(phoneNumber: String) {
+        print("📞 [UPDATE] Iniciando verificación para:", phoneNumber)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            guard let app = FirebaseApp.app(name: "PhoneAuthApp") else {
+                print("❌ [UPDATE] Firebase PhoneAuthApp no encontrada")
+                self.showToastAlert(senderVC: self, messageStr: "Error de configuración")
+                return
+            }
+            
+            print("✅ [UPDATE] Firebase PhoneAuthApp obtenida, llamando a verifyPhoneNumber...")
+
+            let auth = Auth.auth(app: app)
+            PhoneAuthProvider.provider(auth: auth).verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationID, error in
+                if let error = error {
+                    print("❌ [UPDATE] Error en verificación:", error.localizedDescription)
+                    if let authError = error as NSError? {
+                        print("❌ [UPDATE] Código:", authError.code, "Dominio:", authError.domain)
+                    }
+                    self.showToastAlert(senderVC: self, messageStr: "Error: \(error.localizedDescription)")
+                    return
+                }
+                print("✅ [UPDATE] Código enviado. VerificationID:", verificationID ?? "nil")
+                self.verificationID = verificationID
+                self.showVerificationCodeInput()
+            }
+        }
+    }
+
+    func showVerificationCodeInput() {
+        let appearance = SCLAlertView.SCLAppearance(showCloseButton: false)
+        let alert = SCLAlertView(appearance: appearance)
+        let txt = alert.addTextField("Código de verificación")
+        txt.keyboardType = .numberPad
+
+        alert.addButton("Verificar") {
+            let code = txt.text ?? ""
+            if code.count < 6 {
+                self.showToastAlert(senderVC: self, messageStr: "El código debe tener 6 dígitos")
+            } else {
+                self.verifyCode(code: code)
+            }
+        }
+
+        alert.showCustom("Verificación de Teléfono", subTitle: "Ingresa el código enviado a tu nuevo número", color: AppLightOrange, icon: UIImage(named: "ic_phone")!)
+    }
+
+    func verifyCode(code: String) {
+        guard let verificationID = verificationID,
+              let app = FirebaseApp.app(name: "PhoneAuthApp") else {
+            self.showToastAlert(senderVC: self, messageStr: "Error de configuración")
+            return
+        }
+
+        self.showLoadingIndicator(senderVC: self)
+        let auth = Auth.auth(app: app)
+        let credential = PhoneAuthProvider.provider(auth: auth).credential(withVerificationID: verificationID, verificationCode: code)
+
+        auth.signIn(with: credential) { authResult, error in
+            if let error = error {
+                self.stopLoadingIndicator(senderVC: self)
+                self.showToastAlert(senderVC: self, messageStr: "Código inválido")
+                print("❌ Error verificando:", error.localizedDescription)
+                return
+            }
+
+            authResult?.user.getIDToken { idToken, error in
+                guard let idToken = idToken, error == nil else {
+                    self.stopLoadingIndicator(senderVC: self)
+                    self.showToastAlert(senderVC: self, messageStr: "Error al obtener token")
+                    return
+                }
+                self.confirmPhoneVerification(idToken: idToken)
+            }
+        }
+    }
+
+    func confirmPhoneVerification(idToken: String) {
+        guard let verificationToken = pendingVerificationToken else {
+            self.stopLoadingIndicator(senderVC: self)
+            self.showToastAlert(senderVC: self, messageStr: "Error: falta el token de verificación")
+            return
+        }
+
+        let finalURL = BASEURL_CUSTOMER + PROFILE_UPDATE_OTP // debe apuntar a customer_update_account_with_otp
+        let tokenString = "Bearer \(login_session.object(forKey: "user_token") as! String)"
+        let headers: HTTPHeaders = ["Authorization": tokenString]
+
+        let params: [String: String] = [
+            "lang": "en",
+            "verification_token": verificationToken,
+            "firebase_id_token": idToken
+        ]
+
+        AF.request(finalURL, method: .post, parameters: params, headers: headers)
+            .responseJSON { [weak self] response in
+                guard let self = self else { return }
+                self.stopLoadingIndicator(senderVC: self)
+
+                switch response.result {
+                case .success(let value):
+                    guard let jsonResponse = value as? [String: Any],
+                          let code = jsonResponse["code"] as? Int else {
+                        self.showToastAlert(senderVC: self, messageStr: "Invalid response")
+                        return
+                    }
+
+                    if code == 200 {
+                        if let app = FirebaseApp.app(name: "PhoneAuthApp") {
+                            app.delete { _ in }
+                        }
+                        self.showSuccessPopUp(msgStr: jsonResponse["message"] as? String ?? "Actualizado")
+                    } else {
+                        self.showToastAlert(senderVC: self, messageStr: jsonResponse["message"] as? String ?? "Error al confirmar")
+                    }
+
+                case .failure(let error):
+                    print("❌ Error:", error.localizedDescription)
+                    self.showToastAlert(senderVC: self, messageStr: "Error de red")
+                }
+            }
+    }
+    
     func showOTPVerifyView(otpNumber:String){
         gettingOtp = otpNumber
         self.transpertantView.isHidden = false
