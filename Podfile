@@ -51,13 +51,15 @@ pod 'BetterSegmentedControl', '~> 1.0'
 # Networking & Payment
 pod 'Alamofire', '~> 5.8'
 pod 'PayPalCheckout', '~> 1.0'
+pod 'Stripe', '~> 23.0.0'
+pod 'StripePaymentSheet', '~> 23.0.0'
 
-# Firebase - versión fija para evitar conflictos
-pod 'Firebase/Auth', '10.18.0'
-pod 'Firebase/Core', '10.18.0'
-pod 'Firebase/Functions', '10.18.0'
-pod 'Firebase/Messaging', '10.18.0'  
-pod 'Firebase/Crashlytics', '10.18.0'
+# Firebase - versión
+pod 'Firebase/Auth'
+pod 'Firebase/Core'
+pod 'Firebase/Functions'
+pod 'Firebase/Messaging'  
+pod 'Firebase/Crashlytics'
 
 end
 
